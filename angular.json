@@ -81,7 +81,10 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "hospitalclinic/node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "hospitalclinic/node_modules/font-awesome/css/font-awesome.css"
+
             ]
           }
         }
