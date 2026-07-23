@@ -1,0 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:host {
+  // ---- Pharmacy design tokens ----
+  // Deep pine (trust/clinical) + warm ledger amber, kept off the
+  // cream/terracotta and near-black/acid-green admin-template defaults.
+  --pharm-ink: #16241f;
+  --pharm-pine: #1f4d3f;
+  --pharm-pine-light: #2f6e59;
+  --pharm-pine-pale: #e7efe9;
+  --pharm-paper: #eef2ed;
+  --pharm-card: #ffffff;
+  --pharm-line: #d8ded4;
+  --pharm-amber: #b8792a;
+  --pharm-amber-pale: #f5e6d0;
+  --pharm-rose: #a8433f;
+  --pharm-rose-pale: #f3dedd;
+
+  --pharm-font-display: 'Fraunces', Georgia, serif;
+  --pharm-font-body: 'IBM Plex Sans', -apple-system, sans-serif;
+  --pharm-font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  display: block;
+  height: 100%;
+  font-family: var(--pharm-font-body);
+  color: var(--pharm-ink);
+}
+
+.pharm-shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--pharm-paper);
+}
+
+// ---------- Sidebar ----------
+
+.pharm-side {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--pharm-pine);
+  color: #f2f6f3;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem;
+}
+
+.pharm-side__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0 0.5rem 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.pharm-side__mark {
+  font-family: var(--pharm-font-display);
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.pharm-side__title {
+  font-family: var(--pharm-font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.pharm-side__subtitle {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(242, 246, 243, 0.65);
+}
+
+.pharm-side__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pharm-side__link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  color: rgba(242, 246, 243, 0.82);
+  text-decoration: none;
+  font-size: 0.92rem;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.pharm-side__icon {
+  width: 1.1rem;
+  text-align: center;
+}
+
+.pharm-side__link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.pharm-side__link.is-active {
+  background: var(--pharm-pine-light);
+  color: #fff;
+  font-weight: 500;
+}
+
+// ---------- Main area ----------
+
+.pharm-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+// The signature element: a hairline ledger strip of live counter stats,
+// set in mono type like a running tally sheet at the dispensary counter.
+.pharm-ledger {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  padding: 0.65rem 1.5rem;
+  background: var(--pharm-ink);
+  color: #dfe8e2;
+  font-family: var(--pharm-font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.03em;
+}
+
+.pharm-ledger__item {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+
+  strong {
+    color: #fff;
+    font-weight: 600;
+  }
+}
+
+.pharm-ledger__item--muted {
+  color: rgba(223, 232, 226, 0.55);
+}
+
+.pharm-ledger__item--alert strong {
+  color: var(--pharm-amber);
+}
+
+.pharm-ledger__item--critical strong {
+  color: #e28683;
+}
+
+.pharm-ledger__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pharm-amber);
+  animation: pharm-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pharm-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.pharm-ledger__tick {
+  width: 1px;
+  height: 0.8rem;
+  background: rgba(223, 232, 226, 0.25);
+}
+
+.pharm-content {
+  flex: 1;
+  padding: 1.75rem 2rem 3rem;
+  overflow-y: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pharm-ledger__dot {
+    animation: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .pharm-shell {
+    flex-direction: column;
+  }
+  .pharm-side {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .pharm-side__nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .pharm-content {
+    padding: 1.25rem;
+  }
+}

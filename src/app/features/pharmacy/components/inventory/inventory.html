@@ -1,0 +1,199 @@
+<header class="pharm-page-head">
+  <h1>Inventory</h1>
+  <p>Stock on hand, batch and expiry tracking for every medicine.</p>
+</header>
+
+@if (error()) {
+  <div class="pharm-banner pharm-banner--error">{{ error() }}</div>
+}
+@if (successMessage()) {
+  <div class="pharm-banner pharm-banner--success">{{ successMessage() }}</div>
+}
+
+<div class="pharm-toolbar">
+  <div class="pharm-filters">
+    <button type="button" class="pharm-filter-chip" [class.is-active]="filter() === 'all'" (click)="setFilter('all')">All</button>
+    <button type="button" class="pharm-filter-chip" [class.is-active]="filter() === 'low-stock'" (click)="setFilter('low-stock')">Low Stock</button>
+    <button type="button" class="pharm-filter-chip" [class.is-active]="filter() === 'expiring-soon'" (click)="setFilter('expiring-soon')">Expiring Soon</button>
+    <button type="button" class="pharm-filter-chip" [class.is-active]="filter() === 'expired'" (click)="setFilter('expired')">Expired</button>
+  </div>
+
+  <div class="pharm-toolbar__right" style="display:flex; gap:0.6rem; align-items:center;">
+    <input
+      class="pharm-search"
+      type="text"
+      placeholder="Search medicine, batch or supplier…"
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+    />
+    <button type="button" class="pharm-btn pharm-btn--primary" (click)="openAddForm()">+ Add Medicine</button>
+  </div>
+</div>
+
+@if (showAddForm()) {
+  <div class="pharm-card-form">
+    <div class="pharm-card-form__head">
+      <h2>Add Medicine</h2>
+      <button type="button" class="pharm-link-btn" (click)="cancelAdd()">Close</button>
+    </div>
+    <form (ngSubmit)="submitAdd()" class="pharm-form-grid">
+      <div class="pharm-field">
+        <label>Medicine name</label>
+        <input type="text" required [(ngModel)]="createForm().medicineName" name="cMedicineName" />
+      </div>
+      <div class="pharm-field">
+        <label>Batch number</label>
+        <input type="text" required [(ngModel)]="createForm().batchNumber" name="cBatchNumber" />
+      </div>
+      <div class="pharm-field">
+        <label>Expiry date</label>
+        <input type="date" required [(ngModel)]="createForm().expiryDate" name="cExpiryDate" />
+      </div>
+      <div class="pharm-field">
+        <label>Quantity in</label>
+        <input type="number" min="1" required [(ngModel)]="createForm().quantityIn" name="cQuantityIn" />
+      </div>
+      <div class="pharm-field">
+        <label>Unit price (₹)</label>
+        <input type="number" min="0.01" step="0.01" required [(ngModel)]="createForm().unitPrice" name="cUnitPrice" />
+      </div>
+      <div class="pharm-field">
+        <label>Reorder level</label>
+        <input type="number" min="0" required [(ngModel)]="createForm().reorderLevel" name="cReorderLevel" />
+      </div>
+      <div class="pharm-field">
+        <label>Purchase date</label>
+        <input type="date" [(ngModel)]="createForm().purchaseDate" name="cPurchaseDate" />
+      </div>
+      <div class="pharm-field">
+        <label>Supplier</label>
+        <input type="text" [(ngModel)]="createForm().supplierName" name="cSupplierName" />
+      </div>
+      <div class="pharm-form-actions">
+        <button type="submit" class="pharm-btn pharm-btn--primary">Save Medicine</button>
+        <button type="button" class="pharm-btn pharm-btn--ghost" (click)="cancelAdd()">Cancel</button>
+      </div>
+    </form>
+  </div>
+}
+
+@if (editingItem(); as item) {
+  @if (editForm(); as form) {
+    <div class="pharm-card-form">
+      <div class="pharm-card-form__head">
+        <h2>Edit {{ item.medicineName }}</h2>
+        <button type="button" class="pharm-link-btn" (click)="cancelEdit()">Close</button>
+      </div>
+      <form (ngSubmit)="submitEdit()" class="pharm-form-grid">
+        <div class="pharm-field">
+          <label>Medicine name</label>
+          <input type="text" required [(ngModel)]="form.medicineName" name="eMedicineName" />
+        </div>
+        <div class="pharm-field">
+          <label>Batch number</label>
+          <input type="text" required [(ngModel)]="form.batchNumber" name="eBatchNumber" />
+        </div>
+        <div class="pharm-field">
+          <label>Expiry date</label>
+          <input type="date" required [(ngModel)]="form.expiryDate" name="eExpiryDate" />
+        </div>
+        <div class="pharm-field">
+          <label>Unit price (₹)</label>
+          <input type="number" min="0.01" step="0.01" required [(ngModel)]="form.unitPrice" name="eUnitPrice" />
+        </div>
+        <div class="pharm-field">
+          <label>Reorder level</label>
+          <input type="number" min="0" required [(ngModel)]="form.reorderLevel" name="eReorderLevel" />
+        </div>
+        <div class="pharm-field">
+          <label>Supplier</label>
+          <input type="text" [(ngModel)]="form.supplierName" name="eSupplierName" />
+        </div>
+        <div class="pharm-form-actions">
+          <button type="submit" class="pharm-btn pharm-btn--primary">Save Changes</button>
+          <button type="button" class="pharm-btn pharm-btn--ghost" (click)="cancelEdit()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  }
+}
+
+@if (restockingItem(); as item) {
+  <div class="pharm-card-form">
+    <div class="pharm-card-form__head">
+      <h2>Restock {{ item.medicineName }}</h2>
+      <button type="button" class="pharm-link-btn" (click)="cancelRestock()">Close</button>
+    </div>
+    <form (ngSubmit)="submitRestock()" class="pharm-form-grid">
+      <div class="pharm-field">
+        <label>Quantity to add</label>
+        <input type="number" min="1" required [(ngModel)]="restockForm().quantity" name="rQuantity" />
+      </div>
+      <div class="pharm-field">
+        <label>Supplier</label>
+        <input type="text" [(ngModel)]="restockForm().supplierName" name="rSupplierName" />
+      </div>
+      <div class="pharm-field">
+        <label>Purchase date</label>
+        <input type="date" [(ngModel)]="restockForm().purchaseDate" name="rPurchaseDate" />
+      </div>
+      <div class="pharm-form-actions">
+        <button type="submit" class="pharm-btn pharm-btn--primary">Add Stock</button>
+        <button type="button" class="pharm-btn pharm-btn--ghost" (click)="cancelRestock()">Cancel</button>
+      </div>
+    </form>
+  </div>
+}
+
+<div class="pharm-table-wrap">
+  <table class="pharm-table">
+    <thead>
+      <tr>
+        <th>Medicine</th>
+        <th>Batch</th>
+        <th>Expiry</th>
+        <th>Available</th>
+        <th>Unit Price</th>
+        <th>Status</th>
+        <th>Supplier</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (loading()) {
+        <tr><td colspan="8">Loading inventory…</td></tr>
+      } @else if (filteredItems().length === 0) {
+        <tr><td colspan="8" class="pharm-empty">No medicines match this view.</td></tr>
+      } @else {
+        @for (item of filteredItems(); track item.inventoryId) {
+          <tr>
+            <td>{{ item.medicineName }}</td>
+            <td class="pharm-num">{{ item.batchNumber }}</td>
+            <td class="pharm-num">{{ item.expiryDate }}</td>
+            <td class="pharm-num">{{ item.availableQuantity }}</td>
+            <td class="pharm-num">₹{{ item.unitPrice }}</td>
+            <td>
+              @if (item.isExpired) {
+                <span class="pharm-badge pharm-badge--danger">Expired</span>
+              } @else if (item.isLowStock) {
+                <span class="pharm-badge pharm-badge--warn">Low Stock</span>
+              } @else if (item.isExpiringSoon) {
+                <span class="pharm-badge pharm-badge--warn">Expiring Soon</span>
+              } @else {
+                <span class="pharm-badge pharm-badge--ok">In Stock</span>
+              }
+            </td>
+            <td>{{ item.supplierName || '—' }}</td>
+            <td>
+              <div class="pharm-row-actions">
+                <button type="button" class="pharm-btn pharm-btn--ghost pharm-btn--sm" (click)="openRestock(item)">Restock</button>
+                <button type="button" class="pharm-btn pharm-btn--ghost pharm-btn--sm" (click)="openEdit(item)">Edit</button>
+                <button type="button" class="pharm-btn pharm-btn--danger pharm-btn--sm" (click)="deleteItem(item)">Delete</button>
+              </div>
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>

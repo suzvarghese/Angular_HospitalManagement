@@ -1,0 +1,69 @@
+<div class="pharm-shell">
+  <aside class="pharm-side">
+    <div class="pharm-side__brand">
+      <span class="pharm-side__mark"></span>
+      <div>
+        <p class="pharm-side__title">Syntax Pharmacy</p>
+        <p class="pharm-side__subtitle">Dispensary Counter</p>
+      </div>
+    </div>
+
+    <nav class="pharm-side__nav">
+      <a routerLink="/pharmacy/dashboard" routerLinkActive="is-active" class="pharm-side__link">
+        <span class="pharm-side__icon">◧</span> Dashboard
+      </a>
+      <a routerLink="/pharmacy/inventory" routerLinkActive="is-active" class="pharm-side__link">
+        <span class="pharm-side__icon">▤</span> Inventory
+      </a>
+      <a routerLink="/pharmacy/prescriptions" routerLinkActive="is-active" class="pharm-side__link">
+        <span class="pharm-side__icon">✎</span> Prescriptions
+      </a>
+      <a routerLink="/pharmacy/billing" routerLinkActive="is-active" class="pharm-side__link">
+        <span class="pharm-side__icon">⎘</span> Billing
+      </a>
+    </nav>
+  </aside>
+
+  <div class="pharm-main">
+    <div class="pharm-ledger">
+      @if (statsError()) {
+        <span class="pharm-ledger__item pharm-ledger__item--muted">Live counter unavailable</span>
+      } @else if (stats(); as s) {
+        <span class="pharm-ledger__item">
+          MEDICINES <strong>{{ s.totalMedicines }}</strong>
+        </span>
+        <span class="pharm-ledger__tick"></span>
+        <span class="pharm-ledger__item" [class.pharm-ledger__item--alert]="s.lowStockCount > 0">
+          @if (s.lowStockCount > 0) { <span class="pharm-ledger__dot"></span> }
+          LOW STOCK <strong>{{ s.lowStockCount }}</strong>
+        </span>
+        <span class="pharm-ledger__tick"></span>
+        <span class="pharm-ledger__item" [class.pharm-ledger__item--alert]="s.expiringSoonCount > 0">
+          EXPIRING SOON <strong>{{ s.expiringSoonCount }}</strong>
+        </span>
+        <span class="pharm-ledger__tick"></span>
+        <span class="pharm-ledger__item" [class.pharm-ledger__item--critical]="s.expiredCount > 0">
+          EXPIRED <strong>{{ s.expiredCount }}</strong>
+        </span>
+        <span class="pharm-ledger__tick"></span>
+        <span class="pharm-ledger__item">
+          DISPENSED TODAY <strong>{{ s.dispensedToday }}</strong>
+        </span>
+        <span class="pharm-ledger__tick"></span>
+        <span class="pharm-ledger__item">
+          REVENUE TODAY <strong>₹{{ s.revenueToday | number: '1.2-2' }}</strong>
+        </span>
+        <span class="pharm-ledger__tick"></span>
+        <span class="pharm-ledger__item">
+          PENDING <strong>₹{{ s.pendingPaymentsAmount | number: '1.2-2' }}</strong>
+        </span>
+      } @else {
+        <span class="pharm-ledger__item pharm-ledger__item--muted">Reading the counter…</span>
+      }
+    </div>
+
+    <main class="pharm-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>
