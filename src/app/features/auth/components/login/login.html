@@ -1,0 +1,46 @@
+<div class="container">
+    <h3>Sign In</h3>
+    <hr>
+
+    <form name="formLogin" autocomplete="off" #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+
+        <!--Username-->
+        <div class="form-group mb-3">
+            <label class="form-label mb-2">Username: </label>
+            <input type="text" name="Username" #Username="ngModel" [(ngModel)]="username"
+                placeholder="Enter Username" required class="form-control"
+                [ngClass]="{'is-invalid': Username.touched && Username.invalid}" />
+            <span class="text-danger" *ngIf="Username.touched && Username.errors?.['required']">Username is
+                required</span>
+        </div>
+
+        <!--Password-->
+        <div class="form-group mb-3">
+            <label class="form-label mb-2">Password: </label>
+            <input type="password" name="Password" #Password="ngModel" [(ngModel)]="password"
+                placeholder="Enter Password" required class="form-control"
+                [ngClass]="{'is-invalid': Password.touched && Password.invalid}" />
+            <span class="text-danger" *ngIf="Password.touched && Password.errors?.['required']">Password is
+                required</span>
+        </div>
+
+        <!--Doctor ID: not verified server-side, see note below-->
+        <div class="form-group mb-3">
+            <label class="form-label mb-2">Doctor ID: </label>
+            <input type="number" name="DoctorId" #DoctorId="ngModel" [(ngModel)]="doctorId"
+                placeholder="Enter your Doctor ID" required class="form-control"
+                [ngClass]="{'is-invalid': DoctorId.touched && DoctorId.invalid}" />
+            <span class="text-danger" *ngIf="DoctorId.touched && DoctorId.errors?.['required']">Doctor ID is
+                required</span>
+            <span class="hint-text">Not verified against your login -- entered as-is.</span>
+        </div>
+
+        <!--Server-side error (bad credentials)-->
+        <div class="alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid || loading">
+            {{ loading ? 'Signing in...' : 'Sign In' }}
+        </button>
+
+    </form>
+</div>

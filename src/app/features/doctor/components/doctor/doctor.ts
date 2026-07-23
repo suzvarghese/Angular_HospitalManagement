@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { DoctorService } from '../../services/doctor-service';
+import { AuthService } from '../../../auth/services/auth';
 
 @Component({
   selector: 'app-doctor',
@@ -9,14 +10,21 @@ import { DoctorService } from '../../services/doctor-service';
   styleUrl: './doctor.scss',
 })
 export class Dashboard implements OnInit {
-  // TODO: once auth is wired up, pull doctorId from the logged-in doctor's
-  // token/session instead of hardcoding it here.
   doctorId: number = 1;
 
-  constructor(public doctorService: DoctorService) {}
+  constructor(
+    public doctorService: DoctorService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.doctorService.getTodayAppointments(this.doctorId);
     this.doctorService.getTomorrowAppointments(this.doctorId);
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
