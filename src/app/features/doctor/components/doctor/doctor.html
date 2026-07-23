@@ -1,13 +1,22 @@
 <div class="container">
-    <h3>Welcome Dr. Suzanne Varghese ! </h3>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Welcome Dr. Suzanne Varghese !</h3>
+
+        <button class="btn btn-primary btn-sm logout-btn" (click)="logout()">
+            Logout
+        </button>
+    </div>
+
     <hr>
-    
+
     <div class="d-flex gap-2">
         <a class="btn btn-primary" [routerLink]="['/doctor', doctorId, 'appointments']">
             My Appointments
         </a>
     </div>
     
+
     <div class="stat-cards">
         <a class="stat-card" [routerLink]="['/doctor', doctorId, 'appointments']">
             <span class="stat-label">Today's Appointments</span>
