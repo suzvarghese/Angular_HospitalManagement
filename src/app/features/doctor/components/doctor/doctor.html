@@ -1,32 +1,24 @@
 <div class="container">
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="mb-0">Welcome Dr. Suzanne Varghese !</h3>
-
-        <button class="btn btn-primary btn-sm logout-btn" (click)="logout()">
-            Logout
-        </button>
+    <div class="header-row">
+        <h3>Doctor Dashboard</h3>
+        <button type="button" class="btn-logout" (click)="logout()">Logout</button>
     </div>
-
     <hr>
 
-    <div class="d-flex gap-2">
-        <a class="btn btn-primary" [routerLink]="['/doctor', doctorId, 'appointments']">
-            My Appointments
-        </a>
-    </div>
-    
-
     <div class="stat-cards">
-        <a class="stat-card" [routerLink]="['/doctor', doctorId, 'appointments']">
+        <a class="stat-card" [routerLink]="['/doctor', authService.entityId(), 'appointments']">
             <span class="stat-label">Today's Appointments</span>
             <span class="stat-value">{{ doctorService.todayAppointments().length }}</span>
         </a>
-        <a class="stat-card" [routerLink]="['/doctor', doctorId, 'appointments']">
+        <a class="stat-card" [routerLink]="['/doctor', authService.entityId(), 'appointments']">
             <span class="stat-label">Tomorrow's Appointments</span>
             <span class="stat-value">{{ doctorService.tomorrowAppointments().length }}</span>
         </a>
     </div>
 
-    
+    <div class="d-flex gap-2">
+        <a class="btn btn-primary" [routerLink]="['/doctor', authService.entityId(), 'appointments']">
+            My Appointments
+        </a>
+    </div>
 </div>
