@@ -1,20 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 :host {
-  // ---- Pharmacy design tokens ----
-  // Deep pine (trust/clinical) + warm ledger amber, kept off the
-  // cream/terracotta and near-black/acid-green admin-template defaults.
-  --pharm-ink: #16241f;
-  --pharm-pine: #1f4d3f;
-  --pharm-pine-light: #2f6e59;
-  --pharm-pine-pale: #e7efe9;
-  --pharm-paper: #eef2ed;
+  /* ---------- Hospital Blue Theme ---------- */
+  --pharm-ink: #0b3d91;
+  --pharm-pine: #1976d2;
+  --pharm-pine-light: #42a5f5;
+  --pharm-pine-pale: #e3f2fd;
+  --pharm-paper: #f4f9ff;
   --pharm-card: #ffffff;
-  --pharm-line: #d8ded4;
-  --pharm-amber: #b8792a;
-  --pharm-amber-pale: #f5e6d0;
-  --pharm-rose: #a8433f;
-  --pharm-rose-pale: #f3dedd;
+  --pharm-line: #d6e6f5;
+
+  --pharm-amber: #2196f3;
+  --pharm-amber-pale: #e3f2fd;
+
+  --pharm-rose: #1565c0;
+  --pharm-rose-pale: #e8f4fd;
 
   --pharm-font-display: 'Fraunces', Georgia, serif;
   --pharm-font-body: 'IBM Plex Sans', -apple-system, sans-serif;
@@ -29,16 +29,16 @@
 .pharm-shell {
   display: flex;
   min-height: 100vh;
-  background: var(--pharm-paper);
+  background: linear-gradient(135deg, #edf6ff, #f8fbff);
 }
 
-// ---------- Sidebar ----------
+/* ---------- Sidebar ---------- */
 
 .pharm-side {
-  width: 220px;
+  width: 250px;
   flex-shrink: 0;
-  background: var(--pharm-pine);
-  color: #f2f6f3;
+  background: linear-gradient(180deg, #1565c0, #42a5f5);
+  color: #fff;
   display: flex;
   flex-direction: column;
   padding: 1.5rem 1rem;
@@ -50,7 +50,7 @@
   gap: 0.65rem;
   padding: 0 0.5rem 1.5rem;
   margin-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255,255,255,.25);
 }
 
 .pharm-side__mark {
@@ -68,28 +68,28 @@
 
 .pharm-side__subtitle {
   margin: 0;
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
+  font-size: .72rem;
+  letter-spacing: .06em;
   text-transform: uppercase;
-  color: rgba(242, 246, 243, 0.65);
+  color: rgba(255,255,255,.8);
 }
 
 .pharm-side__nav {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: .35rem;
 }
 
 .pharm-side__link {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  padding: 0.6rem 0.75rem;
-  border-radius: 8px;
-  color: rgba(242, 246, 243, 0.82);
+  gap: .65rem;
+  padding: .75rem 1rem;
+  border-radius: 10px;
+  color: rgba(255,255,255,.9);
   text-decoration: none;
-  font-size: 0.92rem;
-  transition: background 0.15s ease, color 0.15s ease;
+  font-size: .95rem;
+  transition: .2s;
 }
 
 .pharm-side__icon {
@@ -98,17 +98,17 @@
 }
 
 .pharm-side__link:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255,255,255,.15);
   color: #fff;
 }
 
 .pharm-side__link.is-active {
-  background: var(--pharm-pine-light);
+  background: rgba(255,255,255,.25);
   color: #fff;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-// ---------- Main area ----------
+/* ---------- Main ---------- */
 
 .pharm-main {
   flex: 1;
@@ -117,67 +117,63 @@
   min-width: 0;
 }
 
-// The signature element: a hairline ledger strip of live counter stats,
-// set in mono type like a running tally sheet at the dispensary counter.
 .pharm-ledger {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.85rem;
-  padding: 0.65rem 1.5rem;
-  background: var(--pharm-ink);
-  color: #dfe8e2;
+  gap: .85rem;
+  padding: .7rem 1.5rem;
+  background: linear-gradient(90deg,#1565c0,#42a5f5);
+  color: white;
   font-family: var(--pharm-font-mono);
-  font-size: 0.76rem;
-  letter-spacing: 0.03em;
+  font-size: .78rem;
+  letter-spacing: .03em;
+  box-shadow: 0 2px 10px rgba(25,118,210,.25);
 }
 
 .pharm-ledger__item {
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: .35rem;
+}
 
-  strong {
-    color: #fff;
-    font-weight: 600;
-  }
+.pharm-ledger__item strong {
+  color: #fff;
+  font-weight: 700;
 }
 
 .pharm-ledger__item--muted {
-  color: rgba(223, 232, 226, 0.55);
+  color: rgba(255,255,255,.75);
 }
 
-.pharm-ledger__item--alert strong {
-  color: var(--pharm-amber);
-}
-
+.pharm-ledger__item--alert strong,
 .pharm-ledger__item--critical strong {
-  color: #e28683;
+  color: #fff;
 }
 
 .pharm-ledger__dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--pharm-amber);
+  background: #fff;
   animation: pharm-pulse 1.8s ease-in-out infinite;
 }
 
 @keyframes pharm-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+  0%,100% {opacity:1;}
+  50% {opacity:.35;}
 }
 
 .pharm-ledger__tick {
   width: 1px;
-  height: 0.8rem;
-  background: rgba(223, 232, 226, 0.25);
+  height: .8rem;
+  background: rgba(255,255,255,.35);
 }
 
 .pharm-content {
   flex: 1;
-  padding: 1.75rem 2rem 3rem;
+  padding: 2rem;
   overflow-y: auto;
 }
 
@@ -187,21 +183,24 @@
   }
 }
 
-@media (max-width: 860px) {
+@media (max-width:860px) {
   .pharm-shell {
     flex-direction: column;
   }
+
   .pharm-side {
-    width: 100%;
-    flex-direction: row;
-    align-items: center;
-    gap: 1.5rem;
+    width:100%;
+    flex-direction:row;
+    align-items:center;
+    gap:1.5rem;
   }
+
   .pharm-side__nav {
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction:row;
+    flex-wrap:wrap;
   }
+
   .pharm-content {
-    padding: 1.25rem;
+    padding:1.25rem;
   }
 }
