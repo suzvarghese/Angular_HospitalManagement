@@ -1,0 +1,46 @@
+@use '../../pharmacy-shared' as *;
+
+.pharm-lookup {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+
+  .pharm-field {
+    max-width: 220px;
+  }
+}
+
+.pharm-inline-pay {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  input,
+  select {
+    font-family: var(--pharm-font-body);
+    font-size: 0.82rem;
+    padding: 0.35rem 0.5rem;
+    border: 1px solid var(--pharm-line);
+    border-radius: 6px;
+    max-width: 130px;
+  }
+}
+
+.pharm-invoice {
+  margin-top: 1.25rem;
+  border-top: 1px solid var(--pharm-line);
+  padding-top: 1.25rem;
+}
+
+.pharm-invoice__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.9rem;
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}

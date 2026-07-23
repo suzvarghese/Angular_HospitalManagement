@@ -1,1 +1,87 @@
-<p>dashboard works!</p>
+<header class="pharm-page-head">
+  <h1>Dispensary Overview</h1>
+  <p>Live snapshot of stock, dispensing and payments for today.</p>
+</header>
+
+@if (loadError()) {
+  <div class="pharm-banner pharm-banner--error">
+    <button type="button" class="pharm-link-btn" (click)="load()">retry</button>.
+  </div>
+}
+
+@if (stats(); as s) {
+  <section class="pharm-stat-grid">
+    <div class="pharm-stat-card">
+      <p class="pharm-stat-card__label">Total Medicines</p>
+      <p class="pharm-stat-card__value">{{ s.totalMedicines }}</p>
+    </div>
+    <div class="pharm-stat-card" [class.pharm-stat-card--alert]="s.lowStockCount > 0">
+      <p class="pharm-stat-card__label">Low Stock</p>
+      <p class="pharm-stat-card__value">{{ s.lowStockCount }}</p>
+    </div>
+    <div class="pharm-stat-card" [class.pharm-stat-card--alert]="s.expiringSoonCount > 0">
+      <p class="pharm-stat-card__label">Expiring Soon</p>
+      <p class="pharm-stat-card__value">{{ s.expiringSoonCount }}</p>
+    </div>
+    <div class="pharm-stat-card" [class.pharm-stat-card--critical]="s.expiredCount > 0">
+      <p class="pharm-stat-card__label">Expired</p>
+      <p class="pharm-stat-card__value">{{ s.expiredCount }}</p>
+    </div>
+    <div class="pharm-stat-card">
+      <p class="pharm-stat-card__label">Dispensed Today</p>
+      <p class="pharm-stat-card__value">{{ s.dispensedToday }}</p>
+    </div>
+    <div class="pharm-stat-card">
+      <p class="pharm-stat-card__label">Revenue Today</p>
+      <p class="pharm-stat-card__value">₹{{ s.revenueToday | number: '1.2-2' }}</p>
+    </div>
+    <div class="pharm-stat-card" [class.pharm-stat-card--alert]="s.pendingPaymentsAmount > 0">
+      <p class="pharm-stat-card__label">Pending Payments</p>
+      <p class="pharm-stat-card__value">₹{{ s.pendingPaymentsAmount | number: '1.2-2' }}</p>
+    </div>
+  </section>
+}
+
+<section class="pharm-attention-grid">
+  <div class="pharm-panel">
+    <div class="pharm-panel__head">
+      <h2>Needs Restocking</h2>
+      <a routerLink="/pharmacy/inventory" [queryParams]="{ filter: 'low-stock' }" class="pharm-link">
+        View all
+      </a>
+    </div>
+    @if (lowStock().length === 0) {
+      <p class="pharm-empty">Nothing below reorder level right now.</p>
+    } @else {
+      <ul class="pharm-mini-list">
+        @for (item of lowStock(); track item.inventoryId) {
+          <li>
+            <span>{{ item.medicineName }}</span>
+            <span class="pharm-mono">{{ item.availableQuantity }} left</span>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+
+  <div class="pharm-panel">
+    <div class="pharm-panel__head">
+      <h2>Expiring Within 30 Days</h2>
+      <a routerLink="/pharmacy/inventory" [queryParams]="{ filter: 'expiring-soon' }" class="pharm-link">
+        View all
+      </a>
+    </div>
+    @if (expiringSoon().length === 0) {
+      <p class="pharm-empty">No batches expiring soon.</p>
+    } @else {
+      <ul class="pharm-mini-list">
+        @for (item of expiringSoon(); track item.inventoryId) {
+          <li>
+            <span>{{ item.medicineName }}</span>
+            <span class="pharm-mono">{{ item.expiryDate }}</span>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</section>

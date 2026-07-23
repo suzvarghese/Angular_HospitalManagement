@@ -1,0 +1,31 @@
+@use '../../pharmacy-shared' as *;
+
+.pharm-lookup {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+
+  .pharm-field {
+    max-width: 220px;
+  }
+}
+
+.pharm-dispense-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pharm-dispense-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+
+  .pharm-field {
+    flex: 1;
+  }
+}
+
+.pharm-dispense-row__qty {
+  max-width: 120px;
+}

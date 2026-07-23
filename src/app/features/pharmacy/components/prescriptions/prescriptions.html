@@ -1,0 +1,244 @@
+<header class="pharm-page-head">
+  <h1>Prescriptions &amp; Dispensing</h1>
+  <p>Look up a consultation and dispense what the doctor prescribed.</p>
+</header>
+
+@if (error()) {
+  <div class="pharm-banner pharm-banner--error">{{ error() }}</div>
+}
+@if (successMessage()) {
+  <div class="pharm-banner pharm-banner--success">{{ successMessage() }}</div>
+}
+
+<div class="pharm-card-form">
+  <form (ngSubmit)="loadPrescription()" class="pharm-lookup">
+    <div class="pharm-field">
+      <label>Consultation ID</label>
+      <input
+        type="number"
+        min="1"
+        placeholder="e.g. 42"
+        [ngModel]="consultationIdInput()"
+        (ngModelChange)="consultationIdInput.set($event)"
+        name="consultationId"
+      />
+    </div>
+    <button type="submit" class="pharm-btn pharm-btn--primary">Load Prescription</button>
+  </form>
+</div>
+
+@if (loading()) {
+  <p class="pharm-empty">Loading consultation…</p>
+}
+
+@if (notFound()) {
+  <div class="pharm-banner pharm-banner--error">No consultation found with that ID.</div>
+}
+
+<div class="pharm-table-wrap" style="margin-bottom: 1.75rem;">
+  <div class="pharm-toolbar" style="padding: 0.9rem 1rem 0;">
+    <h2 style="font-family: var(--pharm-font-display); font-size: 1.02rem; margin: 0;">
+      Prescriptions Waiting to be Dispensed
+    </h2>
+    <div class="pharm-filters">
+      <button type="button" class="pharm-filter-chip" [class.is-active]="queuePendingOnly()" (click)="toggleQueueFilter(true)">Pending</button>
+      <button type="button" class="pharm-filter-chip" [class.is-active]="!queuePendingOnly()" (click)="toggleQueueFilter(false)">All Recent</button>
+    </div>
+  </div>
+
+  @if (queueError()) {
+    <div class="pharm-banner pharm-banner--error" style="margin: 0.9rem 1rem 0;">
+      Could not load the prescription list. Confirm the pharmacy API is running.
+    </div>
+  }
+
+  <table class="pharm-table">
+    <thead>
+      <tr>
+        <th>Patient</th>
+        <th>Doctor</th>
+        <th>Prescribed Medicine</th>
+        <th>Visit Date</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (queueLoading()) {
+        <tr><td colspan="6">Loading prescriptions…</td></tr>
+      } @else if (queue().length === 0) {
+        <tr><td colspan="6" class="pharm-empty">Nothing here right now.</td></tr>
+      } @else {
+        @for (item of queue(); track item.consultationId) {
+          <tr>
+            <td>{{ item.patientName }}</td>
+            <td>{{ item.doctorName }}</td>
+            <td>
+              {{ item.prescribedMedicineName || '—' }}
+              @if (item.prescribedDosage) {
+                <span class="pharm-mono" style="display:block; font-size:0.72rem; color:#5b6a61;">{{ item.prescribedDosage }}</span>
+              }
+            </td>
+            <td class="pharm-num">{{ item.visitDate | date: 'mediumDate' }}</td>
+            <td>
+              @if (item.isFulfilled) {
+                <span class="pharm-badge pharm-badge--ok">Dispensed</span>
+              } @else {
+                <span class="pharm-badge pharm-badge--warn">Pending</span>
+              }
+            </td>
+            <td>
+              <button type="button" class="pharm-btn pharm-btn--ghost pharm-btn--sm" (click)="selectFromQueue(item)">
+                Open
+              </button>
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (prescription(); as rx) {
+  <section class="pharm-attention-grid" style="margin-bottom:1.25rem;">
+    <div class="pharm-panel">
+      <div class="pharm-panel__head"><h2>Consultation #{{ rx.consultationId }}</h2></div>
+      <ul class="pharm-mini-list">
+        <li><span>Patient</span><span>{{ rx.patientName }}</span></li>
+        <li><span>Doctor</span><span>{{ rx.doctorName }}</span></li>
+        <li><span>Diagnosis</span><span>{{ rx.diagnosis || '—' }}</span></li>
+        <li><span>Status</span><span>{{ rx.consultationStatus || '—' }}</span></li>
+      </ul>
+    </div>
+    <div class="pharm-panel">
+      <div class="pharm-panel__head"><h2>Doctor's Prescription</h2></div>
+      <ul class="pharm-mini-list">
+        <li><span>Medicine</span><span>{{ rx.prescribedMedicineName || '—' }}</span></li>
+        <li><span>Dosage</span><span>{{ rx.prescribedDosage || '—' }}</span></li>
+        <li><span>Frequency</span><span>{{ rx.prescribedFrequency || '—' }}</span></li>
+        <li><span>Duration</span><span>{{ rx.prescribedDuration || '—' }}</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="pharm-table-wrap" style="margin-bottom:1.5rem;">
+    <table class="pharm-table">
+      <thead>
+        <tr>
+          <th>Medicine</th>
+          <th>Qty Given</th>
+          <th>Unit Price</th>
+          <th>Total</th>
+          <th>Dispensed By</th>
+          <th>Bill Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (rx.dispensedItems.length === 0 && !rx.prescribedMedicineName) {
+          <tr><td colspan="6" class="pharm-empty">Nothing dispensed for this consultation yet.</td></tr>
+        } @else {
+          @if (rx.prescribedMedicineName && !prescribedFulfilled()) {
+            <tr class="pharm-row-prescribed">
+              <td>
+                {{ rx.prescribedMedicineName }}
+                <span class="pharm-mono" style="display:block; font-size:0.72rem; color:#8a7550;">
+                  {{ rx.prescribedDosage }} · {{ rx.prescribedFrequency }} · {{ rx.prescribedDuration }}
+                </span>
+              </td>
+              <td class="pharm-num">—</td>
+              <td class="pharm-num">—</td>
+              <td class="pharm-num">—</td>
+              <td>—</td>
+              <td><span class="pharm-badge pharm-badge--warn">Prescribed · Not Dispensed</span></td>
+            </tr>
+          }
+          @for (d of rx.dispensedItems; track d.pharmacyId) {
+            <tr>
+              <td>{{ d.medicineName }}</td>
+              <td class="pharm-num">{{ d.quantityGiven }}</td>
+              <td class="pharm-num">₹{{ d.unitPrice }}</td>
+              <td class="pharm-num">₹{{ d.totalPrice }}</td>
+              <td>{{ d.pharmacistName }}</td>
+              <td>
+                @if (d.paymentStatus === 'Paid') {
+                  <span class="pharm-badge pharm-badge--ok">Paid</span>
+                } @else {
+                  <span class="pharm-badge pharm-badge--warn">{{ d.paymentStatus || 'Pending' }}</span>
+                }
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+      @if (rx.dispensedItems.length > 0) {
+        <tfoot>
+          <tr>
+            <td colspan="3" style="text-align:right; font-weight:500;">Total dispensed</td>
+            <td class="pharm-num">₹{{ rx.totalDispensedAmount }}</td>
+            <td colspan="2"></td>
+          </tr>
+        </tfoot>
+      }
+    </table>
+  </div>
+
+  <div class="pharm-card-form">
+    <div class="pharm-card-form__head">
+      <h2>Dispense Medicines</h2>
+    </div>
+
+    @if (prescribedNoMatch()) {
+      <div class="pharm-banner pharm-banner--error">
+        Doctor prescribed "{{ rx.prescribedMedicineName }}" but no matching item was found in inventory.
+        Add it to stock, or select the correct medicine manually below.
+      </div>
+    }
+
+    <div class="pharm-form-grid" style="margin-bottom:1rem;">
+      <div class="pharm-field">
+        <label>Pharmacist name</label>
+        <input type="text" [ngModel]="pharmacistName()" (ngModelChange)="pharmacistName.set($event)" name="pharmacistName" />
+      </div>
+      <div class="pharm-field">
+        <label>Pharmacist user ID</label>
+        <input type="number" min="1" [ngModel]="userId()" (ngModelChange)="userId.set($event)" name="userId" />
+      </div>
+    </div>
+
+    <div class="pharm-dispense-rows">
+      @if (!prescribedNoMatch() && !prescribedFulfilled() && rx.prescribedMedicineName) {
+        <p class="pharm-mono" style="margin: 0 0 0.25rem; font-size: 0.78rem; color: var(--pharm-pine);">
+          Pre-filled from the doctor's prescription — check the quantity before dispensing.
+        </p>
+      }
+      @for (line of dispenseItems(); track $index; let i = $index) {
+        <div class="pharm-dispense-row">
+          <div class="pharm-field">
+            <label>Medicine</label>
+            <select [(ngModel)]="dispenseItems()[i].inventoryId" [name]="'invLine' + i">
+              <option [ngValue]="null">Select medicine…</option>
+              @for (opt of inventoryOptions(); track opt.inventoryId) {
+                <option [ngValue]="opt.inventoryId">
+                  {{ opt.medicineName }} ({{ opt.availableQuantity }} available · ₹{{ opt.unitPrice }})
+                </option>
+              }
+            </select>
+          </div>
+          <div class="pharm-field pharm-dispense-row__qty">
+            <label>Quantity</label>
+            <input type="number" min="1" [(ngModel)]="dispenseItems()[i].quantityGiven" [name]="'qtyLine' + i" />
+          </div>
+          <button type="button" class="pharm-btn pharm-btn--ghost pharm-btn--sm" (click)="removeLine(i)" [disabled]="dispenseItems().length === 1">
+            Remove
+          </button>
+        </div>
+      }
+    </div>
+
+    <div class="pharm-form-actions">
+      <button type="button" class="pharm-btn pharm-btn--ghost" (click)="addLine()">+ Add Medicine Line</button>
+      <button type="button" class="pharm-btn pharm-btn--primary" (click)="submitDispense()">Dispense &amp; Bill</button>
+    </div>
+  </div>
+
+}

@@ -1,0 +1,469 @@
+// Shared visual language for every pharmacy page. Imported (not global) so
+// this stays entirely inside the pharmacy feature folder and never touches
+// src/styles.scss - nothing here can conflict with another module's styles.
+
+.pharm-page-head {
+  margin-bottom: 1.5rem;
+
+  h1 {
+    font-family: var(--pharm-font-display);
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--pharm-ink);
+    margin: 0 0 0.25rem;
+  }
+
+  p {
+    margin: 0;
+    color: #5b6a61;
+    font-size: 0.92rem;
+  }
+}
+
+.pharm-banner {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  margin-bottom: 1.25rem;
+}
+
+.pharm-banner--error {
+  background: var(--pharm-rose-pale);
+  color: var(--pharm-rose);
+  border: 1px solid rgba(168, 67, 63, 0.25);
+}
+
+.pharm-banner--success {
+  background: var(--pharm-pine-pale);
+  color: var(--pharm-pine);
+  border: 1px solid rgba(31, 77, 63, 0.2);
+}
+
+.pharm-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+}
+
+.pharm-link {
+  color: var(--pharm-pine);
+  font-size: 0.85rem;
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// ---------- Stat cards ----------
+
+.pharm-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+.pharm-stat-card {
+  background: var(--pharm-card);
+  border: 1px solid var(--pharm-line);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+}
+
+.pharm-stat-card__label {
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #6c7a71;
+}
+
+.pharm-stat-card__value {
+  margin: 0;
+  font-family: var(--pharm-font-mono);
+  font-size: 1.55rem;
+  font-weight: 500;
+  color: var(--pharm-ink);
+}
+
+.pharm-stat-card--alert {
+  border-color: rgba(184, 121, 42, 0.4);
+  background: var(--pharm-amber-pale);
+
+  .pharm-stat-card__value {
+    color: var(--pharm-amber);
+  }
+}
+
+.pharm-stat-card--critical {
+  border-color: rgba(168, 67, 63, 0.4);
+  background: var(--pharm-rose-pale);
+
+  .pharm-stat-card__value {
+    color: var(--pharm-rose);
+  }
+}
+
+// ---------- Panels ----------
+
+.pharm-attention-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.pharm-panel {
+  background: var(--pharm-card);
+  border: 1px solid var(--pharm-line);
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+}
+
+.pharm-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+
+  h2 {
+    font-family: var(--pharm-font-display);
+    font-size: 1.02rem;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+.pharm-empty {
+  color: #8a978e;
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.pharm-mini-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed var(--pharm-line);
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+  }
+}
+
+.pharm-mono {
+  font-family: var(--pharm-font-mono);
+  font-size: 0.82rem;
+  color: #5b6a61;
+}
+
+// ---------- Buttons ----------
+
+.pharm-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: 7px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: var(--pharm-font-body);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: filter 0.15s ease, background 0.15s ease;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.pharm-btn--primary {
+  background: var(--pharm-pine);
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    background: var(--pharm-pine-light);
+  }
+}
+
+.pharm-btn--ghost {
+  background: transparent;
+  border-color: var(--pharm-line);
+  color: var(--pharm-ink);
+
+  &:hover:not(:disabled) {
+    background: var(--pharm-pine-pale);
+  }
+}
+
+.pharm-btn--danger {
+  background: transparent;
+  border-color: rgba(168, 67, 63, 0.35);
+  color: var(--pharm-rose);
+
+  &:hover:not(:disabled) {
+    background: var(--pharm-rose-pale);
+  }
+}
+
+.pharm-btn--sm {
+  padding: 0.32rem 0.65rem;
+  font-size: 0.78rem;
+}
+
+// ---------- Tables ----------
+
+.pharm-table-wrap {
+  background: var(--pharm-card);
+  border: 1px solid var(--pharm-line);
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+.pharm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+
+  th {
+    text-align: left;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #6c7a71;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--pharm-line);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--pharm-line);
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:hover {
+    background: var(--pharm-paper);
+  }
+}
+
+.pharm-row-prescribed {
+  background: var(--pharm-amber-pale);
+
+  &:hover {
+    background: var(--pharm-amber-pale) !important;
+  }
+}
+
+.pharm-num {
+  font-family: var(--pharm-font-mono);
+}
+
+// ---------- Badges ----------
+
+.pharm-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.pharm-badge--ok {
+  background: var(--pharm-pine-pale);
+  color: var(--pharm-pine);
+}
+
+.pharm-badge--warn {
+  background: var(--pharm-amber-pale);
+  color: var(--pharm-amber);
+}
+
+.pharm-badge--danger {
+  background: var(--pharm-rose-pale);
+  color: var(--pharm-rose);
+}
+
+.pharm-badge--neutral {
+  background: #eceeec;
+  color: #5b6a61;
+}
+
+// ---------- Forms ----------
+
+.pharm-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.9rem;
+}
+
+.pharm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+
+  label {
+    font-size: 0.78rem;
+    color: #5b6a61;
+    font-weight: 500;
+  }
+
+  input,
+  select {
+    font-family: var(--pharm-font-body);
+    font-size: 0.88rem;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--pharm-line);
+    border-radius: 7px;
+    background: #fff;
+    color: var(--pharm-ink);
+
+    &:focus-visible {
+      outline: 2px solid var(--pharm-pine-light);
+      outline-offset: 1px;
+    }
+  }
+}
+
+.pharm-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.pharm-filters {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.pharm-filter-chip {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--pharm-line);
+  background: #fff;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: #5b6a61;
+
+  &.is-active {
+    background: var(--pharm-pine);
+    border-color: var(--pharm-pine);
+    color: #fff;
+  }
+}
+
+.pharm-search {
+  padding: 0.5rem 0.8rem;
+  border-radius: 7px;
+  border: 1px solid var(--pharm-line);
+  font-size: 0.85rem;
+  min-width: 220px;
+}
+
+.pharm-card-form {
+  background: var(--pharm-card);
+  border: 1px solid var(--pharm-line);
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.pharm-card-form__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  h2 {
+    font-family: var(--pharm-font-display);
+    font-size: 1.05rem;
+    margin: 0;
+  }
+}
+
+.pharm-form-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.pharm-row-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+// ---------- Printable bill (browser "Save as PDF") ----------
+// Hidden on screen; shown only inside the printed/PDF output as a letterhead.
+.pharm-print-letterhead {
+  display: none;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .pharm-invoice,
+  .pharm-invoice * {
+    visibility: visible;
+  }
+
+  .pharm-invoice {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem;
+  }
+
+  .pharm-no-print {
+    display: none !important;
+  }
+
+  .pharm-print-letterhead {
+    display: block;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #000;
+
+    h1 {
+      font-family: var(--pharm-font-display);
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    p {
+      margin: 0.2rem 0 0;
+      font-size: 0.85rem;
+      color: #333;
+    }
+  }
+}
