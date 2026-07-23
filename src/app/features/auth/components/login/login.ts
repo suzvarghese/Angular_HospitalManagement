@@ -1,8 +1,16 @@
+import { AuthService } from '../../../auth/services/auth';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth';
+
+
+interface RoleOption {
+  value: string;
+  label: string;
+  idLabel: string;
+  route: string;
+}
 
 @Component({
   selector: 'app-login',
@@ -13,11 +21,21 @@ import { AuthService } from '../../services/auth';
 export class Login {
   username: string = '';
   password: string = '';
-  doctorId: number | null = null;
+  selectedRole: string = 'Doctor';
+  entityId: number | null = null;
   errorMessage: string = '';
   loading: boolean = false;
 
+  roleOptions: RoleOption[] = [
+    { value: 'Doctor', label: 'Doctor', idLabel: 'Doctor ID', route: '/doctor' },
+    { value: 'Pharmacist', label: 'Pharmacist', idLabel: 'Pharmacist ID', route: '/pharmacy' },
+  ];
+
   constructor(private authService: AuthService, private router: Router) {}
+
+  get currentIdLabel(): string {
+    return this.roleOptions.find((r) => r.value === this.selectedRole)?.idLabel ?? 'ID';
+  }
 
   onSubmit(form: NgForm) {
     this.errorMessage = '';
@@ -26,15 +44,11 @@ export class Login {
     this.authService.login(this.username, this.password).subscribe({
       next: (response) => {
         this.authService.setSession(response);
-
-        // NOTE: no backend lookup for this -- the login response doesn't
-        // include DoctorId, and per project constraints no backend changes
-        // are being made to add one. This is taken at face value from the
-        // form, not verified server-side against the logged-in user.
-        this.authService.setDoctorId(this.doctorId!);
-
+        this.authService.setRole(this.selectedRole, this.entityId!);
         this.loading = false;
-        this.router.navigate(['/doctor']);
+
+        const target = this.roleOptions.find((r) => r.value === this.selectedRole)?.route ?? '/login';
+        this.router.navigate([target]);
       },
       error: () => {
         this.loading = false;

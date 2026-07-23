@@ -7,7 +7,8 @@ import { LoginResponse } from '../models/auth';
 const TOKEN_KEY = 'auth_token';
 const USER_ID_KEY = 'auth_userId';
 const ROLE_ID_KEY = 'auth_roleId';
-const DOCTOR_ID_KEY = 'auth_doctorId';
+const ROLE_NAME_KEY = 'auth_roleName';
+const ENTITY_ID_KEY = 'auth_entityId';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,16 @@ export class AuthService {
   token = signal<string | null>(localStorage.getItem(TOKEN_KEY));
   userId = signal<number | null>(this.readNumber(USER_ID_KEY));
   roleId = signal<number | null>(this.readNumber(ROLE_ID_KEY));
-  doctorId = signal<number | null>(this.readNumber(DOCTOR_ID_KEY));
+
+  // roleName: what the person picked on the login form (e.g. "Doctor",
+  // "Pharmacist") -- used by authGuard's data.role check.
+  roleName = signal<string | null>(localStorage.getItem(ROLE_NAME_KEY));
+
+  // entityId: the role-specific record id -- DoctorId for a doctor,
+  // PharmacistId for a pharmacist, etc. Generic name since it means a
+  // different thing depending on roleName. Same "not verified server-side"
+  // caveat as before -- taken from the login form as entered.
+  entityId = signal<number | null>(this.readNumber(ENTITY_ID_KEY));
 
   constructor(private httpClient: HttpClient) {}
 
@@ -47,28 +57,33 @@ export class AuthService {
     this.roleId.set(response.roleId);
   }
 
-  // Called after resolving UserId -> DoctorId via GET /doctor/by-user/{userId}
-  setDoctorId(doctorId: number): void {
-    localStorage.setItem(DOCTOR_ID_KEY, doctorId.toString());
-    this.doctorId.set(doctorId);
+  // Called with what was picked/typed on the login form: which role
+  // ("Doctor", "Pharmacist", ...) and their role-specific id.
+  setRole(roleName: string, entityId: number): void {
+    localStorage.setItem(ROLE_NAME_KEY, roleName);
+    localStorage.setItem(ENTITY_ID_KEY, entityId.toString());
+    this.roleName.set(roleName);
+    this.entityId.set(entityId);
   }
 
   isLoggedIn(): boolean {
     return !!this.token();
   }
 
-  isDoctor(): boolean {
-   return this.doctorId() !== null;
+  hasRole(role: string): boolean {
+    return this.roleName() === role && this.entityId() !== null;
   }
 
   logout(): void {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_ID_KEY);
     localStorage.removeItem(ROLE_ID_KEY);
-    localStorage.removeItem(DOCTOR_ID_KEY);
+    localStorage.removeItem(ROLE_NAME_KEY);
+    localStorage.removeItem(ENTITY_ID_KEY);
     this.token.set(null);
     this.userId.set(null);
     this.roleId.set(null);
-    this.doctorId.set(null);
+    this.roleName.set(null);
+    this.entityId.set(null);
   }
 }

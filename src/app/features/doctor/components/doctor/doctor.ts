@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+
 import { DoctorService } from '../../services/doctor-service';
 import { AuthService } from '../../../auth/services/auth';
+import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-doctor',
@@ -9,18 +12,19 @@ import { AuthService } from '../../../auth/services/auth';
   templateUrl: './doctor.html',
   styleUrl: './doctor.scss',
 })
-export class Dashboard implements OnInit {
-  doctorId: number = 1;
-
+export class Doctor implements OnInit {
   constructor(
     public doctorService: DoctorService,
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.doctorService.getTodayAppointments(this.doctorId);
-    this.doctorService.getTomorrowAppointments(this.doctorId);
+    const doctorId = this.authService.entityId();
+    if (doctorId) {
+      this.doctorService.getTodayAppointments(doctorId);
+      this.doctorService.getTomorrowAppointments(doctorId);
+    }
   }
 
   logout(): void {

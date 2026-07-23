@@ -4,6 +4,14 @@
 
     <form name="formLogin" autocomplete="off" #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
 
+        <!--Role-->
+        <div class="form-group mb-3">
+            <label class="form-label mb-2">Role: </label>
+            <select name="Role" #Role="ngModel" [(ngModel)]="selectedRole" class="form-select" required>
+                <option *ngFor="let role of roleOptions" [value]="role.value">{{ role.label }}</option>
+            </select>
+        </div>
+
         <!--Username-->
         <div class="form-group mb-3">
             <label class="form-label mb-2">Username: </label>
@@ -24,14 +32,14 @@
                 required</span>
         </div>
 
-        <!--Doctor ID: not verified server-side, see note below-->
+        <!--Role-specific ID: not verified server-side, see note below-->
         <div class="form-group mb-3">
-            <label class="form-label mb-2">Doctor ID: </label>
-            <input type="number" name="DoctorId" #DoctorId="ngModel" [(ngModel)]="doctorId"
-                placeholder="Enter your Doctor ID" required class="form-control"
-                [ngClass]="{'is-invalid': DoctorId.touched && DoctorId.invalid}" />
-            <span class="text-danger" *ngIf="DoctorId.touched && DoctorId.errors?.['required']">Doctor ID is
-                required</span>
+            <label class="form-label mb-2">{{ currentIdLabel }}: </label>
+            <input type="number" name="EntityId" #EntityId="ngModel" [(ngModel)]="entityId"
+                [placeholder]="'Enter your ' + currentIdLabel" required class="form-control"
+                [ngClass]="{'is-invalid': EntityId.touched && EntityId.invalid}" />
+            <span class="text-danger" *ngIf="EntityId.touched && EntityId.errors?.['required']">{{ currentIdLabel }}
+                is required</span>
             <span class="hint-text">Not verified against your login -- entered as-is.</span>
         </div>
 
