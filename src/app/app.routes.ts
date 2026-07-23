@@ -9,7 +9,6 @@ import { ConsultationAdd } from './features/doctor/components/consultation-add/c
 import { ConsultationDetail } from './features/doctor/components/consultation-detail/consultation-detail';
 import { LabTestOrder } from './features/doctor/components/lab-test-order/lab-test-order';
 
-import { Dashboard as PharmacyDashboard } from './features/pharmacy/components/dashboard/dashboard';
 
 export const routes: Routes = [
   {
@@ -53,11 +52,13 @@ export const routes: Routes = [
     data: { role: 'Doctor' },
   },
   {
-    path: 'pharmacy',
-    component: PharmacyDashboard,
-    canActivate: [authGuard],
-    data: { role: 'Pharmacist' },
-  },
+  path: 'pharmacy',
+  canActivate: [authGuard],
+  data: { role: 'Pharmacist' },
+  loadChildren: () =>
+    import('./features/pharmacy/pharmacy.routes')
+      .then(m => m.PHARMACY_ROUTES),
+},
   {
     path: '',
     redirectTo: 'login',
