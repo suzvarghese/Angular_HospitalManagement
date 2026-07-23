@@ -2,16 +2,21 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { AppointmentQueue } from '../models/appointment-queue';
-import { ConsultationHistoryItem } from '../models/consultation-history-item';
-import { AddConsultationRequest } from '../models/add-consultation-request';
-import { AddConsultationResult } from '../models/add-consultation-result';
-import { ConsultationDetail } from '../models/consultation-detail';
-import { OrderLabTestsRequest } from '../models/order-lab-tests-request';
-import { LabTest } from '../models/lab-test';
-import { DoctorQualification } from '../models/doctor-qualification';
-import { AvailableMedicine } from '../models/available-medicene';
+import {
+  AppointmentQueue,
+  ConsultationHistoryItem,
+  AddConsultationRequest,
+  AddConsultationResult,
+  ConsultationDetail,
+  OrderLabTestsRequest,
+  LabTest,
+  DoctorQualification,
+  AvailableMedicine,
+} from '../models/doctor';
 
+// NOTE: named DoctorService (not Doctor) so it doesn't collide with the
+// Doctor entity class exported from models/doctor.ts when both are
+// imported into the same component.
 @Injectable({
   providedIn: 'root',
 })

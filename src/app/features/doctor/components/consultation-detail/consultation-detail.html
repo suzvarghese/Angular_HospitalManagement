@@ -1,0 +1,72 @@
+<div class="container" *ngIf="consultation() as c">
+    <h3>Consultation #{{ c.consultationId }}</h3>
+    <hr>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <strong>Patient:</strong> {{ c.patientName }} ({{ c.mmrid }})
+        </div>
+        <div class="col-md-6">
+            <strong>Doctor:</strong> {{ c.doctorName }}
+        </div>
+    </div>
+
+    <div class="mb-2"><strong>Visit Date:</strong> {{ c.visitDate | date: 'medium' }}</div>
+    <div class="mb-2"><strong>Status:</strong> {{ c.consultationStatus }}</div>
+    <div class="mb-2"><strong>Symptoms:</strong> {{ c.symptoms }}</div>
+    <div class="mb-2"><strong>Diagnosis:</strong> {{ c.diagnosis }}</div>
+    <div class="mb-3"><strong>Notes:</strong> {{ c.notes }}</div>
+
+    <h5>Prescription</h5>
+    <table class="table table-sm table-bordered mb-4">
+        <tbody>
+            <tr>
+                <th style="width: 20%;">Medicine</th>
+                <td>{{ c.medicineName || '—' }}</td>
+            </tr>
+            <tr>
+                <th>Dosage</th>
+                <td>{{ c.dosage || '—' }}</td>
+            </tr>
+            <tr>
+                <th>Frequency</th>
+                <td>{{ c.frequency || '—' }}</td>
+            </tr>
+            <tr>
+                <th>Duration</th>
+                <td>{{ c.duration || '—' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0">Lab Orders</h5>
+        <a class="btn btn-sm btn-success" [routerLink]="['/doctor/consultations', c.consultationId, 'lab-tests']">
+            Order Lab Test
+        </a>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Order Date</th>
+                <th>Test</th>
+                <th>Department</th>
+                <th>Fee</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let lab of c.labOrders">
+                <td>{{ lab.orderDate | date: 'medium' }}</td>
+                <td>{{ lab.testName }}</td>
+                <td>{{ lab.department }}</td>
+                <td>{{ lab.baseFee | currency }}</td>
+                <td>{{ lab.status }}</td>
+            </tr>
+            <tr *ngIf="c.labOrders.length === 0">
+                <td colspan="5" class="text-center">No lab tests ordered.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,192 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    padding: 20px;
+    background: #EAF4FC;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.container {
+    width: 95%;
+    max-width: 900px;
+    margin: 20px auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.08);
+    padding: 35px 40px;
+}
+
+h3 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1565C0;
+    margin-bottom: 4px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #D6E4F0;
+    margin: 20px 0 30px;
+}
+
+h5 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1976D2;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin: 30px 0 18px;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.form-control,
+.form-select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #111827;
+    background: #ffffff;
+    border: 1px solid #BFD7ED;
+    border-radius: 8px;
+    transition: .2s;
+}
+
+.form-control:focus,
+.form-select:focus {
+    outline: none;
+    border-color: #1976D2;
+    box-shadow: 0 0 0 3px rgba(25,118,210,.15);
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+    background: #fff5f5;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.text-danger {
+    display: block;
+    font-size: 12px;
+    color: #dc3545;
+    margin-top: 4px;
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+/* Buttons */
+
+.btn {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 12px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    transition: .2s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #42A5F5, #1976D2);
+    color: white;
+    box-shadow: 0 4px 10px rgba(25,118,210,.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #1E88E5, #1565C0);
+    transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+    background: #cfd8dc;
+    color: white;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.btn-secondary {
+    background: #ffffff;
+    color: #1976D2;
+    border: 1px solid #1976D2;
+}
+
+.btn-secondary:hover {
+    background: #E3F2FD;
+}
+
+.ms-2 {
+    margin-left: 10px;
+}
+
+.text-muted {
+    font-size: 13px;
+    color: #6B7280;
+}
+
+/* Lab Test List */
+
+.lab-test-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 24px;
+    max-height: 260px;
+    overflow-y: auto;
+    border: 1px solid #BFD7ED;
+    border-radius: 8px;
+    background: #F8FBFF;
+    padding: 10px;
+}
+
+.lab-test-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.lab-test-item:hover {
+    background: #E3F2FD;
+}
+
+.lab-test-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+}
+
+.lab-test-name {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1565C0;
+}
+
+.lab-test-meta {
+    font-size: 12px;
+    color: #6B7280;
+}
