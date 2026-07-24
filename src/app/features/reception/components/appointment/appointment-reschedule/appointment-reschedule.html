@@ -1,0 +1,57 @@
+<div class="container mt-4">
+    <h3>Reschedule Appointment</h3>
+    <hr>
+
+    <div class="alert alert-danger" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+
+    <div class="text-center my-4" *ngIf="isLoading()">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <form *ngIf="!isLoading() && appointment" name="rescheduleForm" #rescheduleForm="ngForm" autocomplete="off"
+        (ngSubmit)="reschedule(rescheduleForm)">
+
+        <div class="mb-3">
+            <label class="form-label">Patient</label>
+            <input class="form-control" [value]="appointment.PatientName" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Doctor</label>
+            <input class="form-control" [value]="appointment.DoctorName" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Appointment Date</label>
+            <div class="btn-group w-100" role="group">
+                <input type="radio" class="btn-check" name="dateChoice" id="rdateToday"
+                    [checked]="appointment.AppointmentDate === today" (change)="onDateChange(today)">
+                <label class="btn btn-outline-primary" for="rdateToday">
+                    Today ({{ today | date: 'EEE dd MMM' }})
+                </label>
+
+                <input type="radio" class="btn-check" name="dateChoice" id="rdateTomorrow"
+                    [checked]="appointment.AppointmentDate === tomorrow" (change)="onDateChange(tomorrow)">
+                <label class="btn btn-outline-primary" for="rdateTomorrow">
+                    Tomorrow ({{ tomorrow | date: 'EEE dd MMM' }})
+                </label>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Time Slot</label>
+            <select class="form-select" name="timeSlot" required [(ngModel)]="appointment.TimeSlot">
+                <option value="" disabled>-- Select Time Slot --</option>
+                <option *ngFor="let slot of availableSlots" [value]="slot">{{ slot }}</option>
+            </select>
+            <small class="text-muted" *ngIf="availableSlots.length === 0">
+                No available slots for this doctor on the selected date.
+            </small>
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="isSaving()">
+            {{ isSaving() ? 'Saving...' : 'Reschedule' }}
+        </button>
+        <a routerLink="/reception/appointments" class="btn btn-secondary">Back</a>
+    </form>
+</div>

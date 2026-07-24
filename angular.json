@@ -27,6 +27,8 @@
               }
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "src/styles.scss"
             ]
           },
@@ -81,14 +83,16 @@
               }
             ],
             "styles": [
-              "src/styles.scss",
-              "hospitalclinic/node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "hospitalclinic/node_modules/font-awesome/css/font-awesome.css"
-
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "src/styles.scss"
             ]
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

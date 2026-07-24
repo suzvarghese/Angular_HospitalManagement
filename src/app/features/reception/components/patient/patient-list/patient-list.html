@@ -1,0 +1,129 @@
+<!-- <div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Patients</h2>
+        <a routerLink="/reception/patients/register" class="btn btn-primary">
+            + Register Patient
+        </a>
+    </div>
+
+    <div class="alert alert-success alert-dismissible fade show" *ngIf="successMessage()">
+        {{ successMessage() }}
+        <button type="button" class="btn-close" (click)="successMessage.set('')"></button>
+    </div>
+
+    <hr>
+
+    <table class="table table-bordered table-hover">
+
+        <thead class="table-dark">
+            <tr>
+                <th>MMR ID</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Address</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr *ngFor="let patient of patients">
+
+                <td>{{ patient.Mmrid }}</td>
+                <td>{{ patient.PatientName }}</td>
+                <td>{{ patient.Phone }}</td>
+                <td>{{ patient.Age }}</td>
+                <td>{{ patient.Gender }}</td>
+                <td>{{ patient.Address }}</td>
+
+            </tr>
+
+            <tr *ngIf="patients.length == 0">
+                <td colspan="6" class="text-center">
+                    No Patients Found
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div> -->
+
+
+
+
+
+
+
+
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-1">All Patients</h2>
+            <p class="text-muted mb-0">View and manage registered patient records</p>
+        </div>
+        
+        <div class="d-flex gap-2">
+            <div class="input-group" style="width: 320px;">
+                <span class="input-group-text bg-white border-end-0">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input 
+                    type="text" 
+                    class="form-control border-start-0" 
+                    placeholder="Search by MMR, name, phone..." 
+                    [(ngModel)]="searchTerm"
+                    (ngModelChange)="filterPatients()">
+            </div>
+            
+            <a routerLink="/reception/patients/register" class="btn btn-primary d-flex align-items-center gap-2">
+                <i class="bi bi-person-plus"></i>
+                + Register Patient
+            </a>
+        </div>
+    </div>
+
+    <div class="alert alert-success" *ngIf="successMessage()">
+        {{ successMessage() }}
+    </div>
+    <div class="alert alert-danger" *ngIf="errorMessage()">
+        {{ errorMessage() }}
+    </div>
+
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>MMR ID</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Phone</th>
+                        <th>Blood Group</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let patient of filteredPatients">
+                        <td>{{ patient.Mmrid }}</td>
+                        <td>{{ patient.PatientName }}</td>
+                        <td>{{ patient.Age }}</td>
+                        <td>{{ patient.Gender }}</td>
+                        <td>{{ patient.Phone }}</td>
+                        <td>{{ patient.BloodGroup }}</td>
+                        <td>
+                            <button (click)="viewPatient(patient.PatientId)" class="btn btn-sm btn-info">View</button>
+                            <a [routerLink]="['/reception/patients/edit', patient.PatientId]" class="btn btn-sm btn-warning">Edit</a>
+                            <button (click)="bookAppointment(patient)" class="btn btn-sm btn-success">Book</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

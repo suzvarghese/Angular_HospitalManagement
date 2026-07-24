@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    apiUrl: 'https://localhost:7145/api/' // ASP.NET CORE API 
-};
+    apiUrl: 'https://localhost:7047/api/'
+  };
