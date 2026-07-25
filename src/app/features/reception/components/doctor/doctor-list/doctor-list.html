@@ -1,0 +1,38 @@
+<div class="container mt-4">
+
+    <h2>Doctors</h2>
+    <hr>
+
+    <table class="table table-bordered table-hover">
+
+        <thead class="table-dark">
+            <tr>
+                <th>Doctor ID</th>
+                <th>Name</th>
+                <th>Specialization</th>
+                <th>Consultation Fee</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr *ngFor="let doctor of doctors">
+
+                <td>{{ doctor.DoctorId }}</td>
+                <td>{{doctor.DoctorName}}</td>
+                <td>{{ doctor.Specialization }}</td>
+                <td>₹ {{ doctor.ConsultationFee }}</td>
+
+            </tr>
+
+            <tr *ngIf="doctors.length === 0">
+                <td colspan="4" class="text-center">
+                    No Doctors Found
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>

@@ -1,1 +1,121 @@
-<p>dashboard works!</p>
+<!-- <div class="container mt-4">
+    <h3>Reception Dashboard</h3>
+    <hr>
+
+    <div class="row g-4 mt-2">
+
+        <div class="col-sm-6 col-md-4">
+            <a routerLink="/reception/patients" class="text-decoration-none text-dark">
+                <div class="card shadow-sm h-100 text-center p-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Patients</h5>
+                        <p class="card-text text-muted">Search and manage patient records</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-6 col-md-4">
+            <a routerLink="/reception/doctors" class="text-decoration-none text-dark">
+                <div class="card shadow-sm h-100 text-center p-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Doctors</h5>
+                        <p class="card-text text-muted">View available doctors</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-6 col-md-4">
+            <a routerLink="/reception/appointments" class="text-decoration-none text-dark">
+                <div class="card shadow-sm h-100 text-center p-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Appointments</h5>
+                        <p class="card-text text-muted">Book and view appointments</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-6 col-md-4">
+            <a routerLink="/reception/bills" class="text-decoration-none text-dark">
+                <div class="card shadow-sm h-100 text-center p-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Appointment Bills</h5>
+                        <p class="card-text text-muted">Generate and view bills</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-6 col-md-4">
+            <a routerLink="/reception/payments" class="text-decoration-none text-dark">
+                <div class="card shadow-sm h-100 text-center p-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Payments</h5>
+                        <p class="card-text text-muted">Collect payments and view history</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-6 col-md-4">
+            <a routerLink="/reception/token-queue" class="text-decoration-none text-dark">
+                <div class="card shadow-sm h-100 text-center p-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Token Queue</h5>
+                        <p class="card-text text-muted">View today's token queue</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+</div> -->
+
+
+
+
+
+
+<div class="container mt-4">
+    <h2 class="mb-4">Receptionist Dashboard</h2>
+  
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card text-center h-100">
+          <div class="card-body">
+            <h5>Total Patients</h5>
+            <h2 class="text-primary">{{ totalPatients() }}</h2>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-md-4">
+        <div class="card text-center h-100">
+          <div class="card-body">
+            <h5>Today's Appointments</h5>
+            <h2 class="text-success">{{ todayAppointments() }}</h2>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-md-4">
+        <div class="card text-center h-100">
+          <div class="card-body">
+            <h5>Today's Queue</h5>
+            <h2 class="text-info">{{ todaysQueue().length }}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="mt-4">
+      <h5>Recent Queue</h5>
+      <ul class="list-group">
+        <li *ngFor="let appt of todaysQueue()" class="list-group-item">
+          Token #{{ appt.TokenNumber }} - {{ appt.PatientName }} ({{ appt.TimeSlot }})
+        </li>
+      </ul>
+    </div>
+  </div>

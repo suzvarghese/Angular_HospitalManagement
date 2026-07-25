@@ -1,0 +1,105 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Today's Queue</h3>
+            <p class="text-muted mb-0">{{ getTodayStr() | date: 'EEEE, MMMM dd yyyy' }}</p>
+        </div>
+        
+        <div class="d-flex gap-2">
+            <button (click)="refreshQueue()" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-clockwise"></i> Refresh Queue
+            </button>
+            <button (click)="goToBookAppointment()" class="btn btn-primary">
+                <i class="bi bi-journal-plus"></i> Book Appointment
+            </button>
+        </div>
+    </div>
+
+    <div class="alert alert-success" *ngIf="successMessage()">{{ successMessage() }}</div>
+    <div class="alert alert-danger" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+
+    <div class="text-center my-4" *ngIf="isLoading()">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p>Loading queue...</p>
+    </div>
+
+    <ng-container *ngIf="!isLoading()">
+        <div class="alert alert-info" *ngIf="appointments().length === 0">
+            No appointments scheduled for today.
+        </div>
+
+        <ng-container *ngIf="appointments().length > 0">
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="queue-card queue-total">
+                        <div class="queue-number">{{ totalCount }}</div>
+                        <div class="queue-label">Total Today</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="queue-card queue-scheduled">
+                        <div class="queue-number">{{ scheduledCount }}</div>
+                        <div class="queue-label">Scheduled</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="queue-card queue-completed">
+                        <div class="queue-number">{{ completedCount }}</div>
+                        <div class="queue-label">Completed</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="queue-card queue-cancelled">
+                        <div class="queue-number">{{ cancelledCount }}</div>
+                        <div class="queue-label">Cancelled</div>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-bordered table-hover custom-table">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Token #</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Time Slot</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let appt of appointments()"
+                        [ngClass]="{'table-danger': appt.Status === 'Cancelled', 'table-success': appt.Status === 'Completed'}">
+                        <td><span class="badge bg-primary fs-6">{{ appt.TokenNumber }}</span></td>
+                        <td><strong>{{ appt.PatientName }}</strong></td>
+                        <td>{{ appt.DoctorName }}</td>
+                        <td>{{ appt.TimeSlot }}</td>
+                        <td>
+                            <span class="badge"
+                                [ngClass]="{
+                                    'bg-info text-dark': appt.Status === 'Scheduled',
+                                    'bg-danger': appt.Status === 'Cancelled',
+                                    'bg-success': appt.Status === 'Completed'
+                                }">
+                                {{ appt.Status }}
+                            </span>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="appt.Status !== 'Cancelled'">
+                                <button type="button" class="btn btn-warning btn-sm me-1" (click)="reschedule(appt.AppointmentId)">
+                                    Reschedule
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm me-1" (click)="cancelAppointment(appt)">
+                                    Cancel
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-sm" (click)="generateBill(appt.AppointmentId)">
+                                    🧾 Bill
+                                </button>
+                            </ng-container>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+    </ng-container>
+</div>

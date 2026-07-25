@@ -1,0 +1,26 @@
+.form-control.is-invalid {
+    border-color: #dc3545;
+    background-image: none;
+}
+
+.invalid-feedback {
+    display: block;
+    font-size: 0.85rem;
+}
+
+button[disabled] {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.alert-success {
+    border-left: 4px solid #198754;
+}
+
+.alert-danger {
+    border-left: 4px solid #dc3545;
+}
+
+.alert-warning {
+    border-left: 4px solid #ffc107;
+}
