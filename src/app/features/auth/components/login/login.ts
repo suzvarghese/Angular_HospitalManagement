@@ -26,10 +26,11 @@ export class Login {
   errorMessage: string = '';
   loading: boolean = false;
 
-  roleOptions: RoleOption[] = [
-    { value: 'Doctor', label: 'Doctor', idLabel: 'Doctor ID', route: '/doctor' },
-    { value: 'Pharmacist', label: 'Pharmacist', idLabel: 'Pharmacist ID', route: '/pharmacy' },
-  ];
+ roleOptions: RoleOption[] = [
+  { value: 'Doctor', label: 'Doctor', idLabel: 'Doctor ID', route: '/doctor' },
+  { value: 'Pharmacist', label: 'Pharmacist', idLabel: 'Pharmacist ID', route: '/pharmacy' },
+  { value: 'Receptionist', label: 'Receptionist', idLabel: 'Receptionist ID', route: '/reception' },
+];
 
   constructor(private authService: AuthService, private router: Router) {}
 
