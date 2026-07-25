@@ -1,0 +1,107 @@
+<div class="lab-layout">
+
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <h2>Syntax Lab</h2>
+        <span>LAB MANAGEMENT</span>
+
+        <hr>
+
+
+        <ul>
+
+            <li
+                routerLink="/lab/dashboard"
+                routerLinkActive="active">
+
+                ▣ Dashboard
+
+            </li>
+
+            <li
+                routerLink="/lab/manage-tests"
+                routerLinkActive="active">
+
+                ☷ Lab Tests
+
+            </li>
+
+            <li
+                routerLink="/lab/orders"
+                routerLinkActive="active">
+
+                ☑ Lab Orders
+
+            </li>
+
+            <li
+                routerLink="/lab/reports"
+                routerLinkActive="active">
+
+                ✎ Lab Reports
+
+            </li>
+
+            <li
+                routerLink="/lab/billing"
+                routerLinkActive="active">
+
+                ₹ Billing
+
+            </li>
+
+        </ul>
+
+
+        <div class="sidebar-footer">
+            <button class="logout-btn" (click)="logout()">
+                ⏻ Logout
+            </button>
+        </div>
+
+    </aside>
+
+
+
+    <!-- Main Content -->
+    <section class="content">
+
+
+        <!-- Top Bar -->
+        <div class="topbar">
+
+            <button class="back-btn" (click)="goBack()">
+                ← Back
+            </button>
+
+            <span>TESTS {{totalTests()}}</span>
+
+            <span class="warning">
+                ● PENDING {{pendingOrders()}}
+            </span>
+
+            <span>
+                COMPLETED {{completedOrders()}}
+            </span>
+
+            <span>
+                REPORTS {{reportsReady()}}
+            </span>
+
+            <span>
+                REVENUE ₹{{revenueTotal()}}
+            </span>
+
+        </div>
+
+
+        <!-- Page content swaps here -->
+        <router-outlet></router-outlet>
+
+
+    </section>
+
+
+</div>

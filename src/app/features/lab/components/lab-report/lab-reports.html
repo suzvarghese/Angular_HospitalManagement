@@ -1,0 +1,103 @@
+<div class="container mt-4">
+
+<h2>Lab Reports</h2>
+
+<p class="text-muted mb-4">Completed lab orders — view results, generate bills, and download PDFs, all from here.</p>
+
+<div class="table-responsive">
+
+<table class="table table-bordered table-striped">
+
+<thead class="table-dark">
+<tr>
+<th>Order ID</th>
+<th>Consultation ID</th>
+<th>Order Date</th>
+<th>Tests</th>
+<th>Bill Status</th>
+<th>Amount</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr *ngFor="let order of completedOrders()">
+
+<td>{{order.labOrderId}}</td>
+<td>{{order.consultationId}}</td>
+<td>{{order.orderDate}}</td>
+<td>{{ order.labOrderDetails.length || 0 }}</td>
+
+<td>
+    <span *ngIf="!hasBill(order)" class="status-badge status-nobill">No Bill</span>
+
+    <span
+        *ngIf="hasBill(order)"
+        class="status-badge"
+        [ngClass]="{
+            'status-pending': getBill(order).paymentStatus === 'Pending',
+            'status-paid': getBill(order).paymentStatus === 'Paid'
+        }">
+        {{getBill(order).paymentStatus}}
+    </span>
+</td>
+
+<td>
+    <span *ngIf="hasBill(order)">₹{{getBill(order).netAmount}}</span>
+    <span *ngIf="!hasBill(order)">—</span>
+</td>
+
+<td class="actions-cell">
+
+    <button
+        class="btn btn-outline-primary btn-sm"
+        [disabled]="downloadingReportFor() === order.labOrderId"
+        (click)="downloadReportPdf(order)">
+        {{ downloadingReportFor() === order.labOrderId ? 'Downloading...' : 'Report PDF' }}
+    </button>
+
+    <button
+        *ngIf="!hasBill(order)"
+        class="btn btn-primary btn-sm"
+        [disabled]="generatingFor() === order.labOrderId"
+        (click)="generateBill(order)">
+        {{ generatingFor() === order.labOrderId ? 'Generating...' : 'Generate Bill' }}
+    </button>
+
+    <button
+        *ngIf="hasBill(order)"
+        class="btn btn-outline-secondary btn-sm"
+        (click)="downloadBillPdf(order)">
+        Bill PDF
+    </button>
+
+    <button
+        *ngIf="hasBill(order) && getBill(order).paymentStatus === 'Pending'"
+        class="btn btn-success btn-sm"
+        [disabled]="markingPaidFor() === order.labOrderId"
+        (click)="markPaid(order)">
+        {{ markingPaidFor() === order.labOrderId ? 'Updating...' : 'Mark Paid' }}
+    </button>
+
+    <button
+        class="btn btn-outline-dark btn-sm"
+        [routerLink]="['/lab/order-details', order.labOrderId]">
+        Full Details
+    </button>
+
+</td>
+
+</tr>
+
+<tr *ngIf="completedOrders().length === 0">
+    <td colspan="7" class="text-center text-muted py-4">No completed reports yet.</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>

@@ -1,0 +1,272 @@
+<div class="container mt-4">
+
+<h2>Lab Orders</h2>
+
+<input
+    type="search"
+    class="form-control search-box mb-3"
+    placeholder="Search by order ID, MMR ID, phone, consultation ID, status, or test name..."    [ngModel]="searchTerm()"
+    (ngModelChange)="searchTerm.set($event)">
+
+<div class="filter-tabs mb-3">
+
+    <button
+        class="btn btn-tab"
+        [class.active]="activeFilter() === 'All'"
+        (click)="setFilter('All')">
+        All
+    </button>
+
+    <button
+        *ngFor="let s of statuses"
+        class="btn btn-tab"
+        [class.active]="activeFilter() === s"
+        (click)="setFilter(s)">
+        {{s}}
+    </button>
+
+</div>
+
+
+<div class="table-responsive">
+
+<table class="table table-bordered table-striped">
+
+
+<thead class="table-dark">
+
+<tr>
+<th>Order ID</th>
+<th>Patient</th>
+<th>MMR ID</th>
+<th>Phone</th>
+<th>Consultation ID</th>
+<th>Order Date</th>
+<th>Sample Collected</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+
+<tbody>
+
+<tr *ngFor="let order of filteredOrders()">
+
+<td>{{order.labOrderId}}</td>
+
+<td>
+    <div class="patient-cell">
+
+        <strong>
+            {{order.patientName || '—'}}
+        </strong>
+
+        <span *ngIf="order.age || order.gender" class="patient-sub">
+            {{order.age}} / {{order.gender}}
+        </span>
+
+    </div>
+</td>
+
+<td>
+    {{order.mmrid || '—'}}
+</td>
+
+<td>
+    {{order.phone || '—'}}
+</td>
+<td>
+    {{order.consultationId}}
+</td>
+
+<td>
+    {{order.orderDate}}
+</td>
+
+<td>
+    <span *ngIf="order.sampleCollected" class="active-status">
+        Yes
+    </span>
+
+    <span *ngIf="!order.sampleCollected" class="inactive-status">
+        No
+    </span>
+</td>
+<td>
+
+<span
+    class="status-badge"
+    [ngClass]="{
+        'status-ordered': order.status === 'Ordered',
+        'status-billgenerated': order.status === 'BillGenerated',
+        'status-paid': order.status === 'Paid',
+        'status-samplecollected': order.status === 'SampleCollected',
+        'status-processing': order.status === 'Processing',
+        'status-completed': order.status === 'Completed'
+    }">
+    {{order.status}}
+</span>
+
+</td>
+
+<td class="actions-cell">
+
+<button
+    *ngIf="!order.sampleCollected"
+    class="btn btn-warning btn-sm"
+    (click)="markSampleCollected(order)">
+Mark Collected
+</button>
+
+<button
+    class="btn btn-primary btn-sm"
+    [routerLink]="['/lab/order-details', order.labOrderId]">
+View / Enter Result
+</button>
+
+<button
+    *ngIf="order.status === 'Completed'"
+    class="btn btn-outline-success btn-sm"
+    (click)="openBillModal(order)">
+Generate
+</button>
+
+</td>
+
+</tr>
+
+<tr *ngIf="filteredOrders().length === 0">
+    <td colspan="9" class="text-center text-muted py-4">
+        No orders found.
+    </td>
+</tr>
+
+</tbody>
+
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- ================= Generate / View Bill Modal ================= -->
+
+<div class="modal-backdrop-custom" *ngIf="billModalOrder() as order" (click)="closeBillModal()">
+
+    <div class="modal-box" (click)="$event.stopPropagation()">
+
+        <div class="modal-header-custom">
+            <h3>Order #{{order.labOrderId}} — Billing</h3>
+            <button class="close-btn" (click)="closeBillModal()">✕</button>
+        </div>
+
+        <div class="modal-body-custom">
+
+            <!-- No bill yet: show generate form -->
+            <div *ngIf="!hasBill(order)">
+
+                <p class="text-muted">No bill generated for this order yet.</p>
+
+                <label class="form-label">Discount (₹)</label>
+                <input
+                    type="number"
+                    class="form-control mb-3"
+                    min="0"
+                    [ngModel]="discountInput()"
+                    (ngModelChange)="discountInput.set($event)">
+
+                <button
+                    class="btn btn-primary"
+                    [disabled]="generatingBill()"
+                    (click)="generateBill()">
+                    {{ generatingBill() ? 'Generating...' : 'Generate Bill' }}
+                </button>
+
+            </div>
+
+            <!-- Bill exists: show full bill view -->
+            <div *ngIf="hasBill(order)">
+
+                <table class="table table-sm">
+                    <tbody>
+                        <tr>
+                            <th>Bill No</th>
+                            <td>{{getBill(order).labBillId}}</td>
+                        </tr>
+                        <tr>
+                            <th>Payment Status</th>
+                            <td>
+                                <span
+                                    class="status-badge"
+                                    [ngClass]="{
+                                        'status-samplecollected': getBill(order).paymentStatus === 'Pending',
+                                        'status-completed': getBill(order).paymentStatus === 'Paid'
+                                    }">
+                                    {{getBill(order).paymentStatus}}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total Amount</th>
+                            <td>₹{{getBill(order).totalAmount}}</td>
+                        </tr>
+                        <tr>
+                            <th>Discount</th>
+                            <td>₹{{getBill(order).discount}}</td>
+                        </tr>
+                        <tr>
+                            <th>Net Amount</th>
+                            <td><strong>₹{{getBill(order).netAmount}}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr><th>Test</th><th>Amount</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of getBill(order).labBillDetails">
+                            <td>{{item.test.testName}}</td>
+                            <td>₹{{item.amount}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="modal-actions">
+
+                    <button
+                        *ngIf="getBill(order).paymentStatus === 'Pending'"
+                        class="btn btn-success btn-sm"
+                        [disabled]="markingPaid()"
+                        (click)="markPaid()">
+                        {{ markingPaid() ? 'Updating...' : 'Mark as Paid' }}
+                    </button>
+
+                    <button
+                        class="btn btn-outline-secondary btn-sm"
+                        [disabled]="downloadingBill()"
+                        (click)="downloadBillPdf()">
+                        {{ downloadingBill() ? 'Downloading...' : 'Download Bill PDF' }}
+                    </button>
+
+                    <button
+                        class="btn btn-outline-primary btn-sm"
+                        [disabled]="downloadingReport()"
+                        (click)="downloadReportPdf()">
+                        {{ downloadingReport() ? 'Downloading...' : 'Download Report PDF' }}
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,200 @@
+<div class="container mt-4">
+
+
+  <div class="card">
+
+
+    <div class="card-header">
+      Edit Lab Test
+    </div>
+
+
+
+    <div class="card-body">
+
+
+      <form (ngSubmit)="updateLabTest()">
+
+
+
+        <div class="row">
+
+
+
+          <!-- Test Code -->
+
+          <div class="col-md-6 mb-3">
+
+            <label class="form-label">
+              Test Code
+            </label>
+
+            <input type="text"
+                   class="form-control"
+                   [(ngModel)]="labTest.testCode"
+                   name="testCode"
+                   readonly>
+
+          </div>
+
+
+
+          <!-- Test Name -->
+
+          <div class="col-md-6 mb-3">
+
+            <label class="form-label">
+              Test Name
+            </label>
+
+            <input type="text"
+                   class="form-control"
+                   [(ngModel)]="labTest.testName"
+                   name="testName"
+                   required>
+
+          </div>
+
+
+
+          <!-- Department -->
+
+          <div class="col-md-6 mb-3">
+
+            <label class="form-label">
+              Department
+            </label>
+
+            <input type="text"
+                   class="form-control"
+                   [(ngModel)]="labTest.department"
+                   name="department">
+
+          </div>
+
+
+
+
+          <!-- Category -->
+
+          <div class="col-md-6 mb-3">
+
+            <label class="form-label">
+              Category
+            </label>
+
+            <input type="text"
+                   class="form-control"
+                   [(ngModel)]="labTest.category"
+                   name="category">
+
+          </div>
+
+
+
+
+          <!-- Sample Type -->
+
+          <div class="col-md-6 mb-3">
+
+            <label class="form-label">
+              Sample Type
+            </label>
+
+            <input type="text"
+                   class="form-control"
+                   [(ngModel)]="labTest.sampleType"
+                   name="sampleType">
+
+          </div>
+
+
+
+
+          <!-- Base Fee -->
+
+          <div class="col-md-6 mb-3">
+
+            <label class="form-label">
+              Base Fee
+            </label>
+
+            <input type="number"
+                   class="form-control"
+                   [(ngModel)]="labTest.baseFee"
+                   name="baseFee">
+
+          </div>
+
+
+
+
+          <!-- Report Duration -->
+
+          <div class="col-md-6 mb-3">
+
+            <label class="form-label">
+              Report Duration (Hours)
+            </label>
+
+            <input type="number"
+                   class="form-control"
+                   [(ngModel)]="labTest.reportDurationHours"
+                   name="reportDurationHours">
+
+          </div>
+
+
+
+
+          <!-- Description -->
+
+          <div class="col-md-12 mb-3">
+
+            <label class="form-label">
+              Description
+            </label>
+
+            <textarea class="form-control"
+                      rows="3"
+                      [(ngModel)]="labTest.description"
+                      name="description">
+            </textarea>
+
+          </div>
+
+
+
+        </div>
+
+
+
+
+        <button type="submit"
+                class="btn btn-success">
+
+          Update Lab Test
+
+        </button>
+
+
+
+        <button type="button"
+                class="btn btn-secondary ms-2"
+                (click)="cancel()">
+
+            Cancel
+
+        </button>
+
+
+      </form>
+
+
+    </div>
+
+
+  </div>
+
+
+</div>
