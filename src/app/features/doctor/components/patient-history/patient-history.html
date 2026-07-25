@@ -1,0 +1,34 @@
+<div class="container">
+    <h3>Patient Consultation History</h3>
+    <hr>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Visit Date</th>
+                <th>Doctor</th>
+                <th>Diagnosis</th>
+                <th>Medicine</th>
+                <th>Status</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of doctorService.patientHistory()">
+                <td>{{ item.visitDate | date: 'medium' }}</td>
+                <td>{{ item.doctorName }}</td>
+                <td>{{ item.diagnosis }}</td>
+                <td>{{ item.medicineName }}</td>
+                <td>{{ item.consultationStatus }}</td>
+                <td>
+                    <a class="btn btn-sm btn-secondary" [routerLink]="['/doctor/consultations', item.consultationId]">
+                        View
+                    </a>
+                </td>
+            </tr>
+            <tr *ngIf="doctorService.patientHistory().length === 0">
+                <td colspan="6" class="text-center">No previous consultations found.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

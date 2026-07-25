@@ -27,9 +27,12 @@
               }
             ],
             "styles": [
+            
+            //  "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+            
+              "src/styles.scss",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "src/styles.scss"
+              "node_modules/font-awesome/css/font-awesome.css"
             ]
           },
           "configurations": {
@@ -83,9 +86,13 @@
               }
             ],
             "styles": [
+             
+             // "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+            
+              "src/styles.scss",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "src/styles.scss"
+              "node_modules/font-awesome/css/font-awesome.css"
+
             ]
           }
         }

@@ -1,0 +1,108 @@
+<div class="container">
+    <h3>Appointments</h3>
+    <hr>
+
+    <div class="btn-group mb-3" role="group">
+        <button
+            type="button"
+            class="btn"
+            [ngClass]="activeTab === 'today' ? 'btn-primary' : 'btn-outline-primary'"
+            (click)="loadToday()">
+            Today
+        </button>
+
+        <button
+            type="button"
+            class="btn"
+            [ngClass]="activeTab === 'tomorrow' ? 'btn-primary' : 'btn-outline-primary'"
+            (click)="loadTomorrow()">
+            Tomorrow
+        </button>
+    </div>
+
+    <!-- Today's Appointments -->
+    <table class="table table-bordered table-hover" *ngIf="activeTab === 'today'">
+        <thead>
+            <tr>
+                <th>Token</th>
+                <th>Patient</th>
+                <th>MMRID</th>
+                <th>Age / Gender</th>
+                <th>Phone</th>
+                <th>Time Slot</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let appt of doctorService.todayAppointments()">
+                <td>{{ appt.tokenNumber }}</td>
+                <td>{{ appt.patientName }}</td>
+                <td>{{ appt.mmrid }}</td>
+                <td>{{ appt.age }} / {{ appt.gender }}</td>
+                <td>{{ appt.phone }}</td>
+                <td>{{ appt.timeSlot }}</td>
+                <td>{{ appt.status }}</td>
+
+                <td>
+                    <a
+                        class="btn btn-sm btn-success me-1"
+                        [routerLink]="['/doctor/consultations/add']"
+                        [queryParams]="{
+                            appointmentId: appt.appointmentId,
+                            doctorId: doctorId,
+                            patientId: appt.patientId
+                        }">
+                        Add Consultation
+                    </a>
+
+                    <a
+                        class="btn btn-sm btn-secondary"
+                        [routerLink]="['/doctor/patients', appt.patientId, 'history']">
+                        History
+                    </a>
+                </td>
+            </tr>
+
+            <tr *ngIf="doctorService.todayAppointments().length === 0">
+                <td colspan="8" class="text-center">
+                    No appointments today.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Tomorrow's Appointments -->
+    <table class="table table-bordered table-hover" *ngIf="activeTab === 'tomorrow'">
+        <thead>
+            <tr>
+                <th>Token</th>
+                <th>Patient</th>
+                <th>MMRID</th>
+                <th>Age / Gender</th>
+                <th>Phone</th>
+                <th>Time Slot</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let appt of doctorService.tomorrowAppointments()">
+                <td>{{ appt.tokenNumber }}</td>
+                <td>{{ appt.patientName }}</td>
+                <td>{{ appt.mmrid }}</td>
+                <td>{{ appt.age }} / {{ appt.gender }}</td>
+                <td>{{ appt.phone }}</td>
+                <td>{{ appt.timeSlot }}</td>
+                <td>{{ appt.status }}</td>
+            </tr>
+
+            <tr *ngIf="doctorService.tomorrowAppointments().length === 0">
+                <td colspan="7" class="text-center">
+                    No appointments scheduled for tomorrow.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

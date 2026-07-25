@@ -1,0 +1,184 @@
+<header class="pharm-page-head">
+  <h1>Billing</h1>
+  <p>Pharmacy bills generated from dispensing, and payment collection.</p>
+</header>
+
+@if (error()) {
+  <div class="pharm-banner pharm-banner--error">{{ error() }}</div>
+}
+@if (successMessage()) {
+  <div class="pharm-banner pharm-banner--success">{{ successMessage() }}</div>
+}
+
+<div class="pharm-toolbar">
+  <div class="pharm-filters">
+    <button type="button" class="pharm-filter-chip" [class.is-active]="statusFilter() === 'all'" (click)="setStatusFilter('all')">All</button>
+    <button type="button" class="pharm-filter-chip" [class.is-active]="statusFilter() === 'Pending'" (click)="setStatusFilter('Pending')">Pending</button>
+    <button type="button" class="pharm-filter-chip" [class.is-active]="statusFilter() === 'Paid'" (click)="setStatusFilter('Paid')">Paid</button>
+  </div>
+</div>
+
+<div class="pharm-table-wrap" style="margin-bottom: 2rem;">
+  <table class="pharm-table">
+    <thead>
+      <tr>
+        <th>Bill #</th>
+        <th>Medicine</th>
+        <th>Qty</th>
+        <th>Amount</th>
+        <th>Bill Date</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (loading()) {
+        <tr><td colspan="7">Loading bills…</td></tr>
+      } @else if (bills().length === 0) {
+        <tr><td colspan="7" class="pharm-empty">No bills in this view.</td></tr>
+      } @else {
+        @for (bill of bills(); track bill.pharmacyBillId) {
+          <tr>
+            <td class="pharm-num">#{{ bill.pharmacyBillId }}</td>
+            <td>{{ bill.medicineName }}</td>
+            <td class="pharm-num">{{ bill.quantityGiven }}</td>
+            <td class="pharm-num">₹{{ bill.totalAmount }}</td>
+            <td class="pharm-num">{{ bill.billDate }}</td>
+            <td>
+              @if (bill.paymentStatus === 'Paid') {
+                <span class="pharm-badge pharm-badge--ok">Paid</span>
+              } @else {
+                <span class="pharm-badge pharm-badge--warn">{{ bill.paymentStatus || 'Pending' }}</span>
+              }
+            </td>
+            <td>
+              @if (bill.paymentStatus !== 'Paid') {
+                @if (payingBillId() === bill.pharmacyBillId) {
+                  <form (ngSubmit)="submitPay(bill)" class="pharm-inline-pay">
+                    <input type="number" min="1" placeholder="Receptionist ID" [(ngModel)]="payForm().receptionistId" name="recId" />
+                    <select [(ngModel)]="payForm().paymentMethod" name="method">
+                      <option value="Cash">Cash</option>
+                      <option value="Card">Card</option>
+                      <option value="UPI">UPI</option>
+                      <option value="Insurance">Insurance</option>
+                    </select>
+                    <button type="submit" class="pharm-btn pharm-btn--primary pharm-btn--sm">Confirm</button>
+                    <button type="button" class="pharm-btn pharm-btn--ghost pharm-btn--sm" (click)="cancelPay()">Cancel</button>
+                  </form>
+                } @else {
+                  <button type="button" class="pharm-btn pharm-btn--ghost pharm-btn--sm" (click)="openPay(bill)">Pay</button>
+                }
+              }
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
+
+<div class="pharm-card-form">
+  <div class="pharm-card-form__head">
+    <h2>Consultation Invoice</h2>
+  </div>
+  <p style="margin: 0 0 1rem; color:#5b6a61; font-size:0.85rem;">
+    Look up every pharmacy bill for one consultation and settle it in a single payment.
+  </p>
+
+  <form (ngSubmit)="loadInvoice()" class="pharm-lookup">
+    <div class="pharm-field">
+      <label>Consultation ID</label>
+      <input
+        type="number"
+        min="1"
+        [ngModel]="invoiceConsultationId()"
+        (ngModelChange)="invoiceConsultationId.set($event)"
+        name="invConsultationId"
+      />
+    </div>
+    <button type="submit" class="pharm-btn pharm-btn--primary">Load Invoice</button>
+  </form>
+
+  @if (invoiceError()) {
+    <div class="pharm-banner pharm-banner--error" style="margin-top:1rem;">{{ invoiceError() }}</div>
+  }
+
+  @if (invoiceLoading()) {
+    <p class="pharm-empty" style="margin-top:1rem;">Loading invoice…</p>
+  }
+
+  @if (invoice(); as inv) {
+    <div class="pharm-invoice">
+      <div class="pharm-print-letterhead">
+        <h1>Syntax Pharmacy</h1>
+        <p>Dispensary Bill</p>
+        <p class="pharm-mono">Printed {{ printedAt() }}</p>
+      </div>
+
+      <div class="pharm-invoice__head">
+        <div>
+          <p><strong>{{ inv.patientName }}</strong> · seen by {{ inv.doctorName }}</p>
+          <p class="pharm-mono">Consultation #{{ inv.consultationId }}</p>
+        </div>
+        @if (inv.fullyPaid) {
+          <span class="pharm-badge pharm-badge--ok">Fully Paid</span>
+        } @else {
+          <span class="pharm-badge pharm-badge--warn">Balance Due</span>
+        }
+      </div>
+
+      <table class="pharm-table">
+        <thead>
+          <tr><th>Medicine</th><th>Qty</th><th>Amount</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          @for (line of inv.items; track line.pharmacyBillId) {
+            <tr>
+              <td>{{ line.medicineName }}</td>
+              <td class="pharm-num">{{ line.quantityGiven }}</td>
+              <td class="pharm-num">₹{{ line.totalAmount }}</td>
+              <td>
+                @if (line.paymentStatus === 'Paid') {
+                  <span class="pharm-badge pharm-badge--ok">Paid</span>
+                } @else {
+                  <span class="pharm-badge pharm-badge--warn">{{ line.paymentStatus || 'Pending' }}</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2" style="text-align:right; font-weight:500;">Grand total</td>
+            <td class="pharm-num">₹{{ inv.grandTotal }}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+
+      @if (!inv.fullyPaid) {
+        @if (showPayAll()) {
+          <form (ngSubmit)="submitPayAll()" class="pharm-inline-pay pharm-no-print" style="margin-top:1rem;">
+            <input type="number" min="1" placeholder="Receptionist ID" [(ngModel)]="payAllForm().receptionistId" name="allRecId" />
+            <select [(ngModel)]="payAllForm().paymentMethod" name="allMethod">
+              <option value="Cash">Cash</option>
+              <option value="Card">Card</option>
+              <option value="UPI">UPI</option>
+              <option value="Insurance">Insurance</option>
+            </select>
+            <button type="submit" class="pharm-btn pharm-btn--primary pharm-btn--sm">Confirm Payment</button>
+            <button type="button" class="pharm-btn pharm-btn--ghost pharm-btn--sm" (click)="showPayAll.set(false)">Cancel</button>
+          </form>
+        } @else {
+          <button type="button" class="pharm-btn pharm-btn--primary pharm-no-print" style="margin-top:1rem;" (click)="openPayAll()">
+            Pay All Pending Bills
+          </button>
+        }
+      }
+
+      <button type="button" class="pharm-btn pharm-btn--ghost pharm-no-print" style="margin-top:1rem; margin-left:0.6rem;" (click)="printInvoice()">
+        ⬇ Download / Print as PDF
+      </button>
+    </div>
+  }
+</div>

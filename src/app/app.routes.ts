@@ -43,4 +43,69 @@ export const routes: Routes = [
             { path: 'token-queue', component: TodayQueue },
         ]
     },
+import { authGuard } from './features/auth/guards/auth-guard';
+import { Login } from './features/auth/components/login/login';
+
+import { Doctor as DoctorDashboard } from './features/doctor/components/doctor/doctor';
+import { AppointmentList } from './features/doctor/components/appointment-list/appointment-list';
+import { PatientHistory } from './features/doctor/components/patient-history/patient-history';
+import { ConsultationAdd } from './features/doctor/components/consultation-add/consultation-add';
+import { ConsultationDetail } from './features/doctor/components/consultation-detail/consultation-detail';
+import { LabTestOrder } from './features/doctor/components/lab-test-order/lab-test-order';
+
+
+export const routes: Routes = [
+  {
+    path: 'login',
+    component: Login,
+  },
+  {
+    path: 'doctor',
+    component: DoctorDashboard,
+    canActivate: [authGuard],
+    data: { role: 'Doctor' },
+  },
+  {
+    path: 'doctor/:doctorId/appointments',
+    component: AppointmentList,
+    canActivate: [authGuard],
+    data: { role: 'Doctor' },
+  },
+  {
+    path: 'doctor/patients/:patientId/history',
+    component: PatientHistory,
+    canActivate: [authGuard],
+    data: { role: 'Doctor' },
+  },
+  {
+    path: 'doctor/consultations/add',
+    component: ConsultationAdd,
+    canActivate: [authGuard],
+    data: { role: 'Doctor' },
+  },
+  {
+    path: 'doctor/consultations/:consultationId',
+    component: ConsultationDetail,
+    canActivate: [authGuard],
+    data: { role: 'Doctor' },
+  },
+  {
+    path: 'doctor/consultations/:consultationId/lab-tests',
+    component: LabTestOrder,
+    canActivate: [authGuard],
+    data: { role: 'Doctor' },
+  },
+  {
+  path: 'pharmacy',
+  canActivate: [authGuard],
+  data: { role: 'Pharmacist' },
+  loadChildren: () =>
+    import('./features/pharmacy/pharmacy.routes')
+      .then(m => m.PHARMACY_ROUTES),
+},
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full',
+  },
 ];
