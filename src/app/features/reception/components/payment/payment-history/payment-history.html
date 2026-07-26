@@ -1,0 +1,68 @@
+<div class="container mt-4">
+    <h3>Payment History</h3>
+    <hr>
+
+    <!-- Search -->
+    <div class="row mt-3 mb-3">
+        <div class="col-sm-6">
+            <input type="search" class="form-control" placeholder="Search by Payment ID..."
+                [(ngModel)]="paymentIdSearch">
+        </div>
+        <div class="col-sm-6">
+            <input type="search" class="form-control" placeholder="Search by Appointment Bill ID..."
+                [(ngModel)]="billIdSearch">
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    <div class="alert alert-danger" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+
+    <!-- Loading Indicator -->
+    <div class="text-center my-4" *ngIf="isLoading()">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Loading payments...</p>
+    </div>
+
+    <!-- Table -->
+    <div class="table-responsive" *ngIf="!isLoading() && !errorMessage()">
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Payment ID</th>
+                    <th scope="col">Appointment Bill ID</th>
+                    <th scope="col">Paid Amount</th>
+                    <th scope="col">Payment Method</th>
+                    <th scope="col">Paid Date</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let pay of payments() | filter : paymentIdSearch : 'PaymentId' | filter : billIdSearch : 'AppointmentBillId'">
+                    <td>{{ pay.PaymentId }}</td>
+                    <td>{{ pay.AppointmentBillId }}</td>
+                    <td>{{ pay.PaidAmount | number: '1.2-2' }}</td>
+                    <td>{{ pay.PaymentMethod }}</td>
+                    <td>{{ pay.PaidAt | date: 'dd-MM-yyyy' }}</td>
+                    <td>
+                        <span class="badge"
+                            [ngClass]="{
+                                'bg-success': pay.Status === 'Paid',
+                                'bg-warning text-dark': pay.Status === 'Pending',
+                                'bg-danger': pay.Status === 'Failed'
+                            }">
+                            {{ pay.Status }}
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- No Payments Found Message -->
+        <div class="text-center text-muted py-4"
+            *ngIf="(payments() | filter : paymentIdSearch : 'PaymentId' | filter : billIdSearch : 'AppointmentBillId').length === 0">
+            No payments found.
+        </div>
+    </div>
+</div>

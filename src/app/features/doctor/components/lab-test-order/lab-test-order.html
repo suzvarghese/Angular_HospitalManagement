@@ -1,0 +1,36 @@
+<div class="container">
+    <h3>Order Lab Tests</h3>
+    <hr>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width: 5%;"></th>
+                <th>Test Name</th>
+                <th>Department</th>
+                <th>Sample Type</th>
+                <th>Fee</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let test of doctorService.labTests()">
+                <td>
+                    <input type="checkbox" class="form-check-input" [checked]="isSelected(test.testId)"
+                        (change)="toggleTest(test.testId, $any($event.target).checked)" />
+                </td>
+                <td>{{ test.testName }}</td>
+                <td>{{ test.department }}</td>
+                <td>{{ test.sampleType }}</td>
+                <td>{{ test.baseFee | currency }}</td>
+            </tr>
+            <tr *ngIf="doctorService.labTests().length === 0">
+                <td colspan="5" class="text-center">No tests available.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-primary" [disabled]="selectedTestIds.length === 0"
+        (click)="submitOrder()">
+        Order Selected Tests ({{ selectedTestIds.length }})
+    </button>
+</div>

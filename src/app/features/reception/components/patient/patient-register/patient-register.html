@@ -1,0 +1,111 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h3 class="fw-bold mb-0">Patient Registration</h3>
+            <small class="text-muted">Register a new patient</small>
+        </div>
+        <a routerLink="/reception/patients" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
+    </div>
+
+    <!-- Success / Error Messages -->
+    <div class="alert alert-danger" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+
+    <div class="card shadow-sm" style="max-width: 700px;">
+        <div class="card-body">
+
+            <form #registerForm="ngForm" (ngSubmit)="registerPatient(registerForm)" novalidate>
+
+                <div class="mb-3">
+                    <label class="form-label">MMR ID</label>
+                    <input type="text" class="form-control" [(ngModel)]="patient.Mmrid" name="Mmrid" readonly />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Patient Name</label>
+                    <input type="text" class="form-control" [(ngModel)]="patient.PatientName" name="PatientName"
+                        #patientName="ngModel" required maxlength="100" />
+                    <div class="text-danger small" *ngIf="patientName.invalid && patientName.touched">
+                        Patient Name is required.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Date Of Birth</label>
+                    <input type="date" class="form-control" [(ngModel)]="patient.DateOfBirth" name="DateOfBirth"
+                        [max]="today" (ngModelChange)="onDateOfBirthChange()" #dob="ngModel" required />
+                    <div class="text-danger small" *ngIf="dob.invalid && dob.touched">
+                        Date Of Birth is required.
+                    </div>
+                    <div class="form-text" *ngIf="patient.DateOfBirth">
+                        Age: {{ patient.Age }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Gender</label>
+                    <select class="form-select" [(ngModel)]="patient.Gender" name="Gender" #gender="ngModel"
+                        required>
+                        <option value="">Select Gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                    </select>
+                    <div class="text-danger small" *ngIf="gender.invalid && gender.touched">
+                        Gender is required.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Phone</label>
+                    <input type="text" class="form-control" [(ngModel)]="patient.Phone" name="Phone" #phone="ngModel"
+                        required maxlength="15" />
+                    <div class="text-danger small" *ngIf="phone.invalid && phone.touched">
+                        Phone is required.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Address</label>
+                    <textarea class="form-control" [(ngModel)]="patient.Address" name="Address" rows="3"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Blood Group</label>
+                    <select class="form-select" [(ngModel)]="patient.BloodGroup" name="BloodGroup"
+                        #bloodGroup="ngModel" required>
+                        <option value="">Select Blood Group</option>
+                        <option>A+</option>
+                        <option>A-</option>
+                        <option>B+</option>
+                        <option>B-</option>
+                        <option>AB+</option>
+                        <option>AB-</option>
+                        <option>O+</option>
+                        <option>O-</option>
+                    </select>
+                    <div class="text-danger small" *ngIf="bloodGroup.invalid && bloodGroup.touched">
+                        Blood Group is required.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Emergency Contact</label>
+                    <input type="text" class="form-control" [(ngModel)]="patient.EmergencyContact"
+                        name="EmergencyContact" maxlength="15" />
+                </div>
+
+                <button type="submit" class="btn btn-success" [disabled]="isSaving() || isLoading()">
+                    {{ isSaving() ? 'Saving...' : 'Save' }}
+                </button>
+
+                <a routerLink="/reception/patients" class="btn btn-secondary">
+                    Back
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+</div>

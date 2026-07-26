@@ -1,0 +1,97 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h3 class="fw-bold mb-1">All Appointments</h3>
+            <p class="text-muted mb-0">View and manage all appointment records</p>
+        </div>
+        <a routerLink="/reception/appointments/book" class="btn btn-primary">
+            <i class="bi bi-journal-plus"></i> Book Appointment
+        </a>
+    </div>
+
+    <!-- Search -->
+    <div class="row mt-3 mb-3">
+        <div class="col-sm-6">
+            <input type="search" class="form-control" placeholder="Search by patient name..."
+                [(ngModel)]="searchTerm">
+        </div>
+    </div>
+
+    <!-- Success / Error -->
+    <div class="alert alert-success" *ngIf="successMessage()">{{ successMessage() }}</div>
+    <div class="alert alert-danger" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+
+    <!-- Loading Indicator -->
+    <div class="text-center my-4" *ngIf="isLoading()">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Loading appointments...</p>
+    </div>
+
+    <!-- Table -->
+    <div class="card shadow-sm border-0" *ngIf="!isLoading()">
+        <div class="card-body p-0">
+            <table class="table table-bordered table-hover table-sm mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time Slot</th>
+                        <th>Token #</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let appt of appointments() | filter : searchTerm : 'PatientName'"
+                        [ngClass]="{'table-danger': appt.Status === 'Cancelled'}">
+                        <td>{{ appt.AppointmentId }}</td>
+                        <td><strong>{{ appt.PatientName }}</strong></td>
+                        <td>{{ appt.DoctorName }}</td>
+                        <td>{{ appt.AppointmentDate | date: 'dd-MM-yyyy' }}</td>
+                        <td>{{ appt.TimeSlot }}</td>
+                        <td><span class="badge bg-primary">{{ appt.TokenNumber }}</span></td>
+                        <td>
+                            <span class="badge"
+                                [ngClass]="{
+                                    'bg-info text-dark': appt.Status === 'Scheduled',
+                                    'bg-danger': appt.Status === 'Cancelled',
+                                    'bg-success': appt.Status === 'Completed',
+                                    'bg-secondary': appt.Status !== 'Scheduled' && appt.Status !== 'Cancelled' && appt.Status !== 'Completed'
+                                }">
+                                {{ appt.Status }}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <ng-container *ngIf="appt.Status !== 'Cancelled'; else noActions">
+                                <button type="button" class="btn btn-warning btn-sm"
+                                    (click)="reschedule(appt.AppointmentId)">
+                                    Reschedule
+                                </button>
+                                <button type="button" class="btn btn-danger btn-sm"
+                                    (click)="cancelAppointment(appt)">
+                                    Cancel
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    (click)="generateBill(appt.AppointmentId)">
+                                    <i class="bi bi-receipt"></i> Bill
+                                </button>
+                            </ng-container>
+                            <ng-template #noActions>
+                                <span class="text-muted small">—</span>
+                            </ng-template>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="text-center text-muted py-4"
+                *ngIf="(appointments() | filter : searchTerm : 'PatientName').length === 0">
+                No appointments found.
+            </div>
+        </div>
+    </div>
+</div>

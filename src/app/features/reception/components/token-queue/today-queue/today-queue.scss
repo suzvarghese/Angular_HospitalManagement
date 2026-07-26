@@ -1,0 +1,31 @@
+.queue-card {
+    border: 1px solid #E5E7EB;
+    border-radius: 16px;
+    background: #FFFFFF;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+
+.queue-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0F172A;
+}
+
+.queue-label {
+    color: #64748B;
+    font-size: .9rem;
+}
+
+.queue-total { border-top: 4px solid #3B82F6; }
+.queue-scheduled { border-top: 4px solid #F59E0B; }
+.queue-completed { border-top: 4px solid #10B981; }
+.queue-cancelled { border-top: 4px solid #EF4444; }
+
+.custom-table {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
