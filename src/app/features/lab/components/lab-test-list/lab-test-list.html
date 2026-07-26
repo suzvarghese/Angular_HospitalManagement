@@ -1,0 +1,215 @@
+<div class="container mt-4">
+
+  <!-- Header -->
+  <div class="row mb-3">
+
+    <div class="col-sm-8">
+      <!-- the search input -->
+     <input type="search"
+       class="form-control"
+       placeholder="Search by test name, code, or department..."
+       [ngModel]="searchTerm()"
+       (ngModelChange)="searchTerm.set($event)"
+       name="searchTerm">
+    </div>
+
+
+    <div class="col-sm-4 text-end">
+      <a [routerLink]="['/lab/add-test']"
+   class="btn btn-primary">
+
+   <i class="fa fa-plus"></i>
+   Add Lab Test
+
+</a>
+    </div>
+
+  </div>
+
+
+
+  <!-- Message -->
+  <div *ngIf="message()"
+       class="alert"
+       [ngClass]="messageType() === 'success'
+       ? 'alert-success'
+       : 'alert-danger'">
+
+    {{ message() }}
+
+  </div>
+
+
+
+  <!-- Loading -->
+  <div *ngIf="isLoading()"
+       class="text-center">
+
+    Loading lab tests...
+
+  </div>
+
+
+
+  
+  <!-- Lab Test Table -->
+<div class="table-responsive" *ngIf="!isLoading()">
+
+<table class="table table-bordered table-striped align-middle lab-table">
+
+    <thead class="table-light">
+
+      <tr>
+
+        <th>Code</th>
+
+        <th>Test Name</th>
+
+        <th>Department</th>
+
+        <th>Category</th>
+
+        <th>Sample Type</th>
+
+        <th>Price</th>
+
+        <th>Report Time (hrs)</th>
+
+        <th>Status</th>
+
+        <th width="120">Action</th>
+
+      </tr>
+
+    </thead>
+
+
+
+    <tbody>
+
+
+      <!-- the table loop -->
+      <tr *ngFor="let test of filteredTests()">
+
+
+        <td>
+          {{ test.testCode }}
+        </td>
+
+
+        <td>
+          {{ test.testName }}
+        </td>
+
+
+        <td>
+          {{ test.department || '-' }}
+        </td>
+
+
+        <td>
+          {{ test.category || '-' }}
+        </td>
+
+
+        <td>
+          {{ test.sampleType || '-' }}
+        </td>
+
+
+        
+        <td>
+             {{ test.baseFee | number:'1.2-2' }}
+       </td>
+
+
+        <td>
+          {{ test.reportDurationHours }}
+        </td>
+
+
+        <td>
+
+          <span class="badge"
+                [ngClass]="test.isActive
+                ? 'bg-success'
+                : 'bg-secondary'">
+
+            {{ test.isActive ? 'Active' : 'Inactive' }}
+
+          </span>
+
+        </td>
+
+
+
+        <td>
+
+
+          <!-- Edit -->
+
+        <a [routerLink]="['/lab/edit-test', test.testId]"
+             class="btn btn-sm btn-outline-info">
+
+          <i class="fa fa-edit"></i>
+
+        </a>
+
+          &nbsp;
+
+
+          <!-- Delete -->
+
+          <button class="btn btn-sm btn-outline-danger"
+                  (click)="deleteTest(test)"
+                  [disabled]="!test.isActive">
+
+            <i class="fa fa-trash"></i>
+
+          </button>
+
+
+        </td>
+
+
+      </tr>
+
+
+
+      <!-- No Data -->
+
+      <!-- the empty-state row -->
+     <tr *ngIf="filteredTests().length === 0">
+
+        <td colspan="9"
+            class="text-center text-muted">
+
+          No lab tests found.
+
+        </td>
+
+      </tr>
+
+
+    </tbody>
+
+
+  </table>
+
+</div>
+
+<!-- Total Count -->
+
+  <h6 *ngIf="!isLoading()">
+
+    Total:
+    <span class="text-primary">
+      <!-- the total count -->
+{{ filteredTests().length }}
+    </span>
+    test(s)
+
+  </h6>
+
+
+</div>

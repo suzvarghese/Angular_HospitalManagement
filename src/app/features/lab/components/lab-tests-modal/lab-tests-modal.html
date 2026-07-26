@@ -1,0 +1,140 @@
+<div class="modal-backdrop-custom" (click)="closeModal()">
+
+    <div class="modal-box" (click)="$event.stopPropagation()">
+
+        <div class="modal-header-custom">
+            <h3>{{ view() === 'list' ? 'Lab Tests' : (editingId() ? 'Edit Test' : 'Add Test') }}</h3>
+            <button class="close-btn" (click)="closeModal()">✕</button>
+        </div>
+
+        <div class="modal-body-custom">
+
+            <div *ngIf="message()" class="alert-msg" [ngClass]="messageType()">
+                {{ message() }}
+            </div>
+
+            <!-- ================= LIST VIEW ================= -->
+            <div *ngIf="view() === 'list'">
+
+                <div class="list-toolbar">
+
+                    <input
+                        type="search"
+                        class="form-control"
+                        placeholder="Search by name, code, or department..."
+                        [ngModel]="searchTerm()"
+                        (ngModelChange)="searchTerm.set($event)">
+
+                    <button class="btn btn-success btn-sm" (click)="openAddForm()">
+                        + Add Test
+                    </button>
+
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Fee</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let test of filteredTests()">
+                                <td>{{test.testCode}}</td>
+                                <td>{{test.testName}}</td>
+                                <td>{{test.department}}</td>
+                                <td>₹{{test.baseFee}}</td>
+                                <td class="actions-cell">
+                                    <button class="btn btn-outline-primary btn-xs" (click)="openEditForm(test)">Edit</button>
+                                    <button class="btn btn-outline-danger btn-xs" (click)="deleteTest(test)">Delete</button>
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="filteredTests().length === 0">
+                                <td colspan="5" class="text-center text-muted py-3">
+                                    {{ isLoading() ? 'Loading...' : 'No tests found.' }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <!-- ================= ADD / EDIT FORM VIEW ================= -->
+            <div *ngIf="view() === 'form'">
+
+                <button class="btn btn-link back-link" (click)="backToList()">← Back to list</button>
+
+                <div class="form-grid">
+
+                    <div>
+                        <label>Test Code *</label>
+                        <input class="form-control" [ngModel]="form().testCode" (ngModelChange)="updateField('testCode', $event)">
+                    </div>
+
+                    <div>
+                        <label>Test Name *</label>
+                        <input class="form-control" [ngModel]="form().testName" (ngModelChange)="updateField('testName', $event)">
+                    </div>
+
+                    <div>
+                        <label>Department</label>
+                        <input class="form-control" [ngModel]="form().department" (ngModelChange)="updateField('department', $event)">
+                    </div>
+
+                    <div>
+                        <label>Category</label>
+                        <input class="form-control" [ngModel]="form().category" (ngModelChange)="updateField('category', $event)">
+                    </div>
+
+                    <div>
+                        <label>Sample Type</label>
+                        <input class="form-control" [ngModel]="form().sampleType" (ngModelChange)="updateField('sampleType', $event)">
+                    </div>
+
+                    <div>
+                        <label>Unit</label>
+                        <input class="form-control" [ngModel]="form().unit" (ngModelChange)="updateField('unit', $event)">
+                    </div>
+
+                    <div>
+                        <label>Normal Range</label>
+                        <input class="form-control" [ngModel]="form().normalRange" (ngModelChange)="updateField('normalRange', $event)">
+                    </div>
+
+                    <div>
+                        <label>Base Fee (₹)</label>
+                        <input type="number" class="form-control" [ngModel]="form().baseFee" (ngModelChange)="updateField('baseFee', $event)">
+                    </div>
+
+                    <div>
+                        <label>Report Duration (hrs)</label>
+                        <input type="number" class="form-control" [ngModel]="form().reportDurationHours" (ngModelChange)="updateField('reportDurationHours', $event)">
+                    </div>
+
+                    <div class="full-width">
+                        <label>Description</label>
+                        <input class="form-control" [ngModel]="form().description" (ngModelChange)="updateField('description', $event)">
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-primary" (click)="saveTest()">
+                        {{ editingId() ? 'Update Test' : 'Save Test' }}
+                    </button>
+                    <button class="btn btn-outline-secondary" (click)="backToList()">Cancel</button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

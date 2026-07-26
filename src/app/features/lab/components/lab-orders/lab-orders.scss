@@ -1,0 +1,172 @@
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+h2 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #145447;
+    margin-bottom: 25px;
+}
+
+/* Filter tabs */
+
+.filter-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-tab {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-weight: 600;
+    color: #145447;
+}
+
+.btn-tab.active {
+    background: #145447;
+    border-color: #145447;
+    color: #fff;
+}
+
+.table {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.table thead {
+    background-color: #145447;
+    color: #fff;
+}
+
+.table thead th {
+    text-align: center;
+    padding: 14px;
+    font-size: 15px;
+    vertical-align: middle;
+}
+
+.table tbody td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 14px;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+    transition: 0.3s;
+}
+
+.active-status {
+    color: #198754;
+    font-weight: bold;
+}
+
+.inactive-status {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Status badges — one color per stage of the lab order lifecycle */
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-ordered {
+    background: #e2e3e5;
+    color: #495057;
+}
+
+.status-billgenerated {
+    background: #cfe2ff;
+    color: #0d6efd;
+}
+
+.status-paid {
+    background: #d0f0ea;
+    color: #0f9d8c;
+}
+
+.status-samplecollected {
+    background: #f6e8cc;
+    color: #b8860b;
+}
+
+.status-processing {
+    background: #e2d6f5;
+    color: #6f42c1;
+}
+
+.status-completed {
+    background: #d4edda;
+    color: #198754;
+}
+
+.btn-warning {
+    background-color: #e8a33d;
+    border-color: #e8a33d;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 6px 14px;
+}
+
+.btn-warning:hover {
+    background-color: #d4922e;
+    border-color: #d4922e;
+}
+
+.btn-primary {
+    background-color: #317b67;
+    border-color: #317b67;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background-color: #145447;
+    border-color: #145447;
+}
+
+.table td:last-child {
+    white-space: nowrap;
+}
+
+@media (max-width: 992px) {
+    .table {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .container {
+        margin: 15px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    h2 {
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .filter-tabs {
+        flex-wrap: wrap;
+    }
+}

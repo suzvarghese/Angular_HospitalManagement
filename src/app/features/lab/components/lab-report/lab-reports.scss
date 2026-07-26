@@ -1,0 +1,94 @@
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+h2 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #145447;
+    margin-bottom: 10px;
+}
+
+.table {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.table thead {
+    background-color: #145447;
+    color: #fff;
+}
+
+.table thead th {
+    text-align: center;
+    padding: 14px;
+    font-size: 15px;
+    vertical-align: middle;
+}
+
+.table tbody td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 14px;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+    transition: 0.3s;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-nobill {
+    background: #e2e3e5;
+    color: #495057;
+}
+
+.status-pending {
+    background: #f6e8cc;
+    color: #b8860b;
+}
+
+.status-paid {
+    background: #d4edda;
+    color: #198754;
+}
+
+.actions-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+}
+
+.btn-primary {
+    background-color: #317b67;
+    border-color: #317b67;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background-color: #145447;
+    border-color: #145447;
+}
+
+@media (max-width: 992px) {
+    .table { font-size: 14px; }
+}
+
+@media (max-width: 768px) {
+    .container { margin: 15px; }
+    .table-responsive { overflow-x: auto; }
+    h2 { font-size: 24px; text-align: center; }
+}

@@ -1,0 +1,69 @@
+.page-wrapper {
+    padding: 1.5rem;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.form-card {
+    border: none;
+    border-radius: 0.75rem;
+    overflow: hidden;
+
+    .card-header {
+        background-color: #198754; // matches btn-success accent; change to your theme color
+        color: #fff;
+        padding: 0.9rem 1.5rem;
+
+        h5 {
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+}
+
+// Explicit spacing fallback — don't rely solely on Bootstrap's .g-4 gutter class,
+// in case a global reset or older Bootstrap version cancels it out.
+.row > [class*="col-"] {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+    color: #333;
+}
+
+.form-control,
+.input-group-text {
+    border-radius: 0.4rem;
+    font-size: 0.95rem;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.15rem rgba(25, 135, 84, 0.15);
+    border-color: #86c9a5;
+}
+
+textarea.form-control {
+    resize: vertical;
+}
+
+small.text-danger {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+}
+
+.form-check.form-switch {
+    padding-top: 0.25rem;
+}
+
+.actions {
+    padding-top: 0.5rem;
+}
