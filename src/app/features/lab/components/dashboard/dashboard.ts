@@ -1,10 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { LabService } from '../../services/lab-service';
 import { LabOrder } from '../../models/lab-order';
 import { LabTest } from '../../models/lab-test';
 import { LabTestsModalComponent } from '../lab-tests-modal/lab-tests-modal';
+import { AuthService } from '../../../auth/services/auth';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,7 +29,11 @@ export class DashboardComponent implements OnInit {
 
   loading = signal(false);
 
-  constructor(private labService: LabService) {}
+  constructor(
+    private labService: LabService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   openTestsModal(): void {
     this.showTestsModal.set(true);
@@ -57,8 +62,6 @@ export class DashboardComponent implements OnInit {
 
       next: (orders: LabOrder[]) => {
 
-        // no 'Pending' status exists on LabOrder — pending means
-        // anything still in progress (not yet Completed)
         this.pendingOrders.set(
           orders.filter(o => o.status !== 'Completed').length
         );
@@ -66,12 +69,8 @@ export class DashboardComponent implements OnInit {
         const completed = orders.filter(o => o.status === 'Completed');
         this.completedOrders.set(completed.length);
 
-        // "Reports ready" = same set the Lab Reports page shows
         this.reportsReady.set(completed.length);
 
-        // Revenue = sum of paid bills attached to orders.
-        // Note: LabOrder/labBills has no date field, so this is
-        // total revenue from paid bills, not strictly "today".
         const revenue = orders
           .flatMap(o => o.labBills ?? [])
           .filter((b: any) => b.paymentStatus === 'Paid')
@@ -98,6 +97,11 @@ export class DashboardComponent implements OnInit {
 
     });
 
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
 }

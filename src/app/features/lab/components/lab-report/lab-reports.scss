@@ -6,7 +6,7 @@
 h2 {
     font-size: 30px;
     font-weight: 700;
-    color: #145447;
+    color: #1565C0;
     margin-bottom: 10px;
 }
 
@@ -14,11 +14,11 @@ h2 {
     background: #fff;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(21, 101, 192, 0.12);
 }
 
 .table thead {
-    background-color: #145447;
+    background: linear-gradient(135deg, #42A5F5, #1976D2);
     color: #fff;
 }
 
@@ -36,7 +36,7 @@ h2 {
 }
 
 .table tbody tr:hover {
-    background-color: #f8f9fa;
+    background-color: #F3F8FF;
     transition: 0.3s;
 }
 
@@ -49,17 +49,17 @@ h2 {
 }
 
 .status-nobill {
-    background: #e2e3e5;
-    color: #495057;
+    background: #ECEFF1;
+    color: #546E7A;
 }
 
 .status-pending {
-    background: #f6e8cc;
-    color: #b8860b;
+    background: #FFF3CD;
+    color: #B8860B;
 }
 
 .status-paid {
-    background: #d4edda;
+    background: #D4EDDA;
     color: #198754;
 }
 
@@ -71,24 +71,35 @@ h2 {
 }
 
 .btn-primary {
-    background-color: #317b67;
-    border-color: #317b67;
+    background: linear-gradient(135deg, #42A5F5, #1976D2);
+    border: none;
     border-radius: 6px;
     padding: 6px 14px;
     font-weight: 600;
+    color: #fff;
 }
 
 .btn-primary:hover {
-    background-color: #145447;
-    border-color: #145447;
+    background: linear-gradient(135deg, #1E88E5, #1565C0);
 }
 
 @media (max-width: 992px) {
-    .table { font-size: 14px; }
+    .table {
+        font-size: 14px;
+    }
 }
 
 @media (max-width: 768px) {
-    .container { margin: 15px; }
-    .table-responsive { overflow-x: auto; }
-    h2 { font-size: 24px; text-align: center; }
+    .container {
+        margin: 15px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    h2 {
+        font-size: 24px;
+        text-align: center;
+    }
 }

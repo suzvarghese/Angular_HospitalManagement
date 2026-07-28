@@ -1,154 +1,123 @@
 .lab-layout {
-
-    display:flex;
-    min-height:100vh;
-    background:#eef3ee;
-
+    display: flex;
+    min-height: 100vh;
+    background: #EAF4FC;
 }
 
-
-
-/* Sidebar */
+/* ================= Sidebar ================= */
 
 .sidebar {
-
-    width:260px;
-    background:#145447;
-    color:white;
-    padding:30px 20px;
-
+    width: 260px;
+    background: linear-gradient(180deg, #1565C0, #42A5F5);
+    color: white;
+    padding: 30px 20px;
     display: flex;
     flex-direction: column;
-
 }
-
 
 .sidebar h2 {
-
-    font-family:Georgia;
-    margin-bottom:5px;
-
+    font-family: Georgia;
+    margin-bottom: 5px;
+    color: white;
 }
-
 
 .sidebar span {
-
-    font-size:12px;
-    color:#b8d3cc;
-
+    font-size: 12px;
+    color: rgba(255,255,255,.8);
 }
-
-
 
 .sidebar hr {
-
-    border-color:#47786c;
-    margin:25px 0;
-
+    border-color: rgba(255,255,255,.25);
+    margin: 25px 0;
 }
-
-
 
 .sidebar ul {
-
-    list-style:none;
-    padding:0;
+    list-style: none;
+    padding: 0;
     flex: 1;
-
 }
-
 
 .sidebar li {
-
-    padding:14px;
-    margin-bottom:8px;
-    cursor:pointer;
-    font-size:15px;
-
+    padding: 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 8px;
+    transition: .2s;
 }
 
+.sidebar li:hover {
+    background: rgba(255,255,255,.15);
+}
 
 .sidebar li.active {
-
-    background:#317b67;
-    border-radius:6px;
-
+    background: rgba(255,255,255,.25);
+    font-weight: 600;
 }
 
+/* ================= Logout ================= */
 
 .sidebar-footer {
-    border-top: 1px solid #47786c;
-    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,.25);
+    padding-top: 18px;
 }
 
 .logout-btn {
     width: 100%;
-    background: transparent;
-    border: 1px solid #47786c;
-    color: #DCE7E3;
-    padding: 10px;
-    border-radius: 6px;
-    cursor: pointer;
+    background: white;
+    color: #1565C0;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
     font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
 }
 
 .logout-btn:hover {
-    background: #b23b3b;
-    border-color: #b23b3b;
-    color: white;
+    background: #E3F2FD;
 }
 
-
-
-
-/* Main */
-
+/* ================= Main ================= */
 
 .content {
-
-    flex:1;
-
+    flex: 1;
+    background: #F8FBFF;
 }
 
-
+/* ================= Top Bar ================= */
 
 .topbar {
-
-    height:38px;
-    background:#102c27;
-    color:white;
-
-    display:flex;
-    align-items:center;
-
-    gap:25px;
-
-    padding:0 25px;
-
-    font-size:13px;
-
+    height: 50px;
+    background: linear-gradient(90deg, #1565C0, #42A5F5);
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    padding: 0 25px;
+    font-size: 13px;
+    box-shadow: 0 2px 10px rgba(21,101,192,.25);
 }
-
-
 
 .warning {
-
-    color:#e5b04a;
-
+    color: #FFF59D;
 }
 
+/* ================= Back Button ================= */
 
 .back-btn {
-    background: transparent;
-    border: 1px solid #2f5a53;
-    color: white;
-    padding: 4px 12px;
-    border-radius: 5px;
+    background: white;
+    color: #1565C0;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 12px;
-    margin-right: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: .2s;
 }
 
 .back-btn:hover {
-    background: #1c3d38;
+    background: #E3F2FD;
 }
