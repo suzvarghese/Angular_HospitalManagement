@@ -1,0 +1,129 @@
+<div class="container mt-4">
+
+<button class="btn btn-outline-secondary btn-sm mb-3" routerLink="/lab/dashboard">
+    ← Back to Dashboard
+</button>
+
+<h2>Lab Billing</h2>
+
+<p class="text-muted mb-4">
+    Completed lab orders awaiting billing, and previously generated bills.
+</p>
+
+<div class="table-responsive">
+
+<table class="table table-bordered table-striped">
+
+
+<thead class="table-dark">
+
+<tr>
+<th>Order ID</th>
+<th>Consultation ID</th>
+<th>Order Date</th>
+<th>Bill Status</th>
+<th>Net Amount</th>
+<th>Discount</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+
+<tbody>
+
+<tr *ngFor="let order of completedOrders()">
+
+<td>{{order.labOrderId}}</td>
+
+<td>{{order.consultationId}}</td>
+
+<td>{{order.orderDate}}</td>
+
+<td>
+
+<span *ngIf="!hasBill(order)" class="status-badge status-nobill">
+No Bill
+</span>
+
+<span
+    *ngIf="hasBill(order)"
+    class="status-badge"
+    [ngClass]="{
+        'status-pending': getBill(order).paymentStatus === 'Pending',
+        'status-paid': getBill(order).paymentStatus === 'Paid'
+    }">
+    {{getBill(order).paymentStatus}}
+</span>
+
+</td>
+
+<td>
+    <span *ngIf="hasBill(order)">
+        ₹{{getBill(order).netAmount}}
+    </span>
+    <span *ngIf="!hasBill(order)">—</span>
+</td>
+
+<td>
+
+<input
+    *ngIf="!hasBill(order)"
+    type="number"
+    class="form-control form-control-sm discount-input"
+    min="0"
+    placeholder="0"
+    [ngModel]="getDiscount(order.labOrderId)"
+    (ngModelChange)="setDiscount(order.labOrderId, $event)">
+
+<span *ngIf="hasBill(order)">
+    ₹{{getBill(order).discount}}
+</span>
+
+</td>
+
+<td>
+
+<button
+    *ngIf="!hasBill(order)"
+    class="btn btn-primary btn-sm"
+    [disabled]="generatingFor() === order.labOrderId"
+    (click)="generateBill(order)">
+    {{ generatingFor() === order.labOrderId ? 'Generating...' : 'Generate Bill' }}
+</button>
+
+<button
+    *ngIf="hasBill(order)"
+    class="btn btn-outline-secondary btn-sm"
+    (click)="downloadBill(order)">
+    Download PDF
+</button>
+
+&nbsp;
+
+<button
+    *ngIf="hasBill(order) && getBill(order).paymentStatus === 'Pending'"
+    class="btn btn-success btn-sm"
+    [disabled]="markingPaidFor() === order.labOrderId"
+    (click)="markPaid(order)">
+    {{ markingPaidFor() === order.labOrderId ? 'Updating...' : 'Mark as Paid' }}
+</button>
+
+</td>
+
+</tr>
+
+<tr *ngIf="completedOrders().length === 0">
+    <td colspan="7" class="text-center text-muted py-4">
+        No completed orders yet.
+    </td>
+</tr>
+
+</tbody>
+
+
+</table>
+
+</div>
+
+</div>

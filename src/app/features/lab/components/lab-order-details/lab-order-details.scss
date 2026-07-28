@@ -1,0 +1,105 @@
+.container {
+    max-width: 1100px;
+    margin: 40px auto;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #145447;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+.order-info label {
+    font-size: 12px;
+    color: #777;
+    display: block;
+}
+
+.order-info p {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 4px 0 0;
+}
+
+.result-row .test-name {
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.form-label {
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: #333;
+    margin-bottom: 0.3rem;
+}
+
+.form-control {
+    border-radius: 0.4rem;
+}
+
+.active-status {
+    color: #198754;
+    font-weight: bold;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-pending {
+    background: #f6e8cc;
+    color: #b8860b;
+}
+
+.status-completed {
+    background: #d4edda;
+    color: #198754;
+}
+
+.btn-warning {
+    background-color: #e8a33d;
+    border-color: #e8a33d;
+    color: #fff;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background-color: #317b67;
+    border-color: #317b67;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background-color: #145447;
+    border-color: #145447;
+}
+
+.btn-success {
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+
+    .container {
+        margin: 15px;
+    }
+
+    .result-row .col-md-2,
+    .result-row .col-md-3,
+    .result-row .col-md-4 {
+        margin-bottom: 10px;
+    }
+}

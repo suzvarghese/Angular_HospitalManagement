@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.lab-table {
+  min-width: 1200px;
+}
+
+.lab-table th,
+.lab-table td {
+  padding: 12px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.lab-table td:nth-child(2),
+.lab-table th:nth-child(2) {
+  min-width: 250px;
+  text-align: left;
+}

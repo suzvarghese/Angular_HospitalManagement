@@ -1,0 +1,194 @@
+<div class="container">
+    <h3>New Consultation</h3>
+    <hr>
+
+    <form name="formConsultation"
+          autocomplete="off"
+          #consultationForm="ngForm"
+          (ngSubmit)="onSubmit(consultationForm)">
+
+        <!-- Hidden Fields -->
+        <input type="hidden" name="appointmentId" [(ngModel)]="consultation.appointmentId" />
+        <input type="hidden" name="doctorId" [(ngModel)]="consultation.doctorId" />
+        <input type="hidden" name="patientId" [(ngModel)]="consultation.patientId" />
+
+        <!-- Diagnosis -->
+        <div class="form-group mb-3">
+            <label class="form-label mb-2">Diagnosis:</label>
+
+            <input
+                type="text"
+                name="diagnosis"
+                #diagnosis="ngModel"
+                [(ngModel)]="consultation.diagnosis"
+                placeholder="Enter Diagnosis"
+                minlength="3"
+                maxlength="500"
+                required
+                class="form-control fw-bold"
+                [ngClass]="{'is-invalid': diagnosis.touched && diagnosis.invalid}" />
+
+            <span class="text-danger"
+                  *ngIf="diagnosis.touched && diagnosis.errors?.['required']">
+                Diagnosis is required
+            </span>
+
+            <span class="text-danger"
+                  *ngIf="diagnosis.touched && diagnosis.errors?.['minlength']">
+                Diagnosis must be at least 3 characters
+            </span>
+        </div>
+
+        <!-- Symptoms -->
+        <div class="form-group mb-3">
+            <label class="form-label mb-2">Symptoms:</label>
+
+            <textarea
+                name="symptoms"
+                [(ngModel)]="consultation.symptoms"
+                placeholder="Enter reported symptoms"
+                class="form-control"
+                rows="2"></textarea>
+        </div>
+
+        <!-- Notes -->
+        <div class="form-group mb-3">
+            <label class="form-label mb-2">Notes:</label>
+
+            <textarea
+                name="notes"
+                [(ngModel)]="consultation.notes"
+                placeholder="Additional notes"
+                class="form-control"
+                rows="2"></textarea>
+        </div>
+
+        <hr>
+        <h5>Prescription</h5>
+
+        <!-- Medicine -->
+        <div class="form-group mb-3">
+            <label class="form-label mb-2">Medicine:</label>
+
+            <select
+                name="medicineName"
+                [(ngModel)]="consultation.medicineName"
+                class="form-select">
+
+                <option [ngValue]="null">-- Select a medicine --</option>
+
+                <option
+                    *ngFor="let med of doctorService.availableMedicines()"
+                    [ngValue]="med.medicineName"
+                    [disabled]="med.availableStock === 0">
+
+                    {{ med.medicineName }}
+                    (Batch: {{ med.batchNumber }},
+                    Stock: {{ med.availableStock }})
+
+                </option>
+
+            </select>
+        </div>
+
+        <!-- Dosage -->
+        <div class="form-group mb-3">
+            <label class="form-label mb-2">Dosage:</label>
+
+            <input
+                type="text"
+                name="dosage"
+                [(ngModel)]="consultation.dosage"
+                placeholder="e.g. 500mg"
+                class="form-control" />
+        </div>
+
+        <!-- Frequency -->
+        <div class="form-group mb-3">
+            <label class="form-label mb-2">Frequency:</label>
+
+            <input
+                type="text"
+                name="frequency"
+                [(ngModel)]="consultation.frequency"
+                placeholder="e.g. Twice daily"
+                class="form-control" />
+        </div>
+
+        <!-- Duration -->
+        <div class="form-group mb-3">
+            <label class="form-label mb-2">Duration:</label>
+
+            <input
+                type="text"
+                name="duration"
+                [(ngModel)]="consultation.duration"
+                placeholder="e.g. 5 days"
+                class="form-control" />
+        </div>
+
+        <!-- Registration Fee -->
+        <div class="form-group mb-3">
+            <label class="form-label mb-2">Registration Fee:</label>
+
+            <input
+                type="number"
+                name="registrationFee"
+                [(ngModel)]="consultation.registrationFee"
+                min="0"
+                class="form-control" />
+        </div>
+
+        <hr>
+        <h5>Lab Tests</h5>
+
+        <div class="lab-test-list">
+
+            <label
+                class="lab-test-item"
+                *ngFor="let test of doctorService.labTests()">
+
+                <input
+                    type="checkbox"
+                    [checked]="isSelected(test.testId)"
+                    (change)="toggleTest(test.testId, $any($event.target).checked)" />
+
+                <span class="lab-test-name">
+                    {{ test.testName }}
+                </span>
+
+                <span class="lab-test-meta">
+                    {{ test.department }} · {{ test.baseFee | currency }}
+                </span>
+
+            </label>
+
+            <p class="text-muted"
+               *ngIf="doctorService.labTests().length === 0">
+                No lab tests available.
+            </p>
+
+        </div>
+
+        <div class="form-actions">
+            <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="consultationForm.invalid">
+
+                Save Consultation
+
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-secondary ms-2"
+                (click)="cancel()">
+
+                Cancel
+
+            </button>
+        </div>
+
+    </form>
+</div>

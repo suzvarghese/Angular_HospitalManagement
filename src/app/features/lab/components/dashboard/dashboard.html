@@ -1,1 +1,182 @@
-<p>dashboard works!</p>
+<div class="dashboard">
+
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <h1>
+                Laboratory Overview
+            </h1>
+
+            <p>
+                Live snapshot of lab tests, reports and billing activities.
+            </p>
+
+        </div>
+
+        <button
+            class="btn btn-success"
+            routerLink="/lab/add-test">
+
+            + Add Test
+
+        </button>
+
+    </div>
+
+
+
+    <!-- Cards -->
+
+    <div class="cards">
+
+        <div
+            class="card card-link"
+            (click)="openTestsModal()">
+
+            <label>
+                TOTAL TESTS
+            </label>
+
+            <h2>
+                {{totalTests()}}
+            </h2>
+
+        </div>
+
+
+
+        <div
+            class="card warning-card card-link"
+            routerLink="/lab/orders">
+
+            <label>
+                PENDING ORDERS
+            </label>
+
+            <h2>
+                {{pendingOrders()}}
+            </h2>
+
+        </div>
+
+
+
+        <div
+            class="card card-link"
+            routerLink="/lab/orders">
+
+            <label>
+                COMPLETED ORDERS
+            </label>
+
+            <h2>
+                {{completedOrders()}}
+            </h2>
+
+        </div>
+
+
+
+        <div
+            class="card card-link"
+            routerLink="/lab/reports">
+
+            <label>
+                REPORTS READY
+            </label>
+
+            <h2>
+                {{reportsReady()}}
+            </h2>
+
+        </div>
+
+
+
+        <div
+            class="card card-link"
+            routerLink="/lab/billing">
+
+            <label>
+                REVENUE
+            </label>
+
+            <h2>
+                ₹{{revenueTotal()}}
+            </h2>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Bottom Panels -->
+
+    <div class="panels">
+
+
+        <div
+            class="panel"
+            routerLink="/lab/orders">
+
+            <h3>
+                Pending Lab Orders
+            </h3>
+
+            <ng-container *ngIf="latestPendingOrder() as o; else noPending">
+                <p>
+                    Order #{{o.labOrderId}}
+                </p>
+
+                <span>
+                    Consultation: {{o.consultationId}} — {{o.status}}
+                </span>
+            </ng-container>
+
+            <ng-template #noPending>
+                <p>No pending orders</p>
+            </ng-template>
+
+        </div>
+
+
+
+        <div
+            class="panel"
+            routerLink="/lab/reports">
+
+            <h3>
+                Recent Reports
+            </h3>
+
+            <ng-container *ngIf="latestCompletedOrder() as o; else noReports">
+                <p>
+                    Order #{{o.labOrderId}}
+                </p>
+
+                <span>
+                    Completed
+                </span>
+            </ng-container>
+
+            <ng-template #noReports>
+                <p>No reports yet</p>
+            </ng-template>
+
+        </div>
+
+
+    </div>
+
+
+
+</div>
+
+
+<app-lab-tests-modal
+    *ngIf="showTestsModal()"
+    (close)="closeTestsModal()">
+</app-lab-tests-modal>

@@ -1,0 +1,252 @@
+<div class="page-wrapper">
+
+    <div class="card shadow-sm form-card">
+
+        <div class="card-header">
+            <h5 class="mb-0">Add Lab Test</h5>
+        </div>
+
+        <div class="card-body">
+
+            <form [formGroup]="labTestForm" (ngSubmit)="onSubmit()">
+
+                <div class="row g-4">
+
+                    <!-- Test Code -->
+                    <div class="col-md-6">
+                        <label class="form-label">Test Code</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="e.g. CBC001"
+                            formControlName="testCode">
+
+                        <small class="text-danger"
+                            *ngIf="showError('testCode')">
+
+                            Test Code is required (3-20 characters)
+
+                        </small>
+                    </div>
+
+                    <!-- Test Name -->
+                    <div class="col-md-6">
+                        <label class="form-label">Test Name</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="e.g. Complete Blood Count"
+                            formControlName="testName">
+
+                        <small class="text-danger"
+                            *ngIf="showError('testName')">
+
+                            Test Name is required
+
+                        </small>
+                    </div>
+
+                    <!-- Department -->
+                    <div class="col-md-6">
+                        <label class="form-label">Department</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="e.g. Pathology"
+                            formControlName="department">
+
+                        <small class="text-danger"
+                            *ngIf="showError('department')">
+
+                            Department is required
+
+                        </small>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="col-md-6">
+                        <label class="form-label">Category</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="e.g. Hematology"
+                            formControlName="category">
+
+                        <small class="text-danger"
+                            *ngIf="showError('category')">
+
+                            Category is required
+
+                        </small>
+                    </div>
+
+                    <!-- Sample Type -->
+                    <div class="col-md-6">
+                        <label class="form-label">Sample Type</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="e.g. Blood"
+                            formControlName="sampleType">
+
+                        <small class="text-danger"
+                            *ngIf="showError('sampleType')">
+
+                            Sample Type is required
+
+                        </small>
+                    </div>
+
+                    <!-- Parameter Name -->
+                    <div class="col-md-6">
+                        <label class="form-label">Parameter Name</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="e.g. Hemoglobin"
+                            formControlName="parameterName">
+
+                        <small class="text-danger"
+                            *ngIf="showError('parameterName')">
+
+                            Parameter Name is required
+
+                        </small>
+                    </div>
+
+                    <!-- Normal Range -->
+                    <div class="col-md-6">
+                        <label class="form-label">Normal Range</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="e.g. 13-17"
+                            formControlName="normalRange">
+
+                        <small class="text-danger"
+                            *ngIf="showError('normalRange')">
+
+                            Normal Range is required
+
+                        </small>
+                    </div>
+
+                    <!-- Unit -->
+                    <div class="col-md-6">
+                        <label class="form-label">Unit</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="e.g. g/dL"
+                            formControlName="unit">
+
+                        <small class="text-danger"
+                            *ngIf="showError('unit')">
+
+                            Unit is required
+
+                        </small>
+                    </div>
+
+                    <!-- Base Fee -->
+                    <div class="col-md-6">
+                        <label class="form-label">Base Fee</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₹</span>
+                            <input
+                                type="number"
+                                class="form-control"
+                                formControlName="baseFee">
+                        </div>
+
+                        <small class="text-danger"
+                            *ngIf="showError('baseFee')">
+
+                            Fee must be greater than 0
+
+                        </small>
+                    </div>
+
+                    <!-- Report Duration -->
+                    <div class="col-md-6">
+                        <label class="form-label">Report Duration (Hours)</label>
+                        <input
+                            type="number"
+                            class="form-control"
+                            formControlName="reportDurationHours">
+
+                        <small class="text-danger"
+                            *ngIf="showError('reportDurationHours')">
+
+                            Duration must be greater than 0
+
+                        </small>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="col-12">
+                        <label class="form-label">Description</label>
+                        <textarea
+                            rows="4"
+                            class="form-control"
+                            placeholder="Brief description of the test..."
+                            formControlName="description">
+                        </textarea>
+
+                        <small class="text-danger"
+                            *ngIf="showError('description')">
+
+                            Description must be 10-500 characters
+
+                        </small>
+                    </div>
+
+                    <!-- Active -->
+                    <div class="col-12">
+                        <div class="form-check form-switch">
+
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                role="switch"
+                                formControlName="isActive">
+
+                            <label class="form-check-label">
+                                Active
+                            </label>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="my-4">
+
+                <div class="actions d-flex justify-content-end gap-2">
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        routerLink="/lab/manage-tests">
+
+                        Cancel
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-success">
+
+                        Save
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

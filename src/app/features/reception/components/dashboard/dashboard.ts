@@ -1,30 +1,16 @@
-// import { Component } from '@angular/core';
-// import { RouterLink } from '@angular/router';
-
-// @Component({
-//   selector: 'app-dashboard',
-//   standalone: true,
-//   imports: [RouterLink],
-//   templateUrl: './dashboard.html',
-//   styleUrl: './dashboard.scss',
-// })
-// export class Dashboard {
-
-// }
-
-
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { Appointment } from '../../models/appointment';
 import { Appointment as AppointmentService } from '../../services/appointment';
 import { Patient as PatientService } from '../../services/patient';
+import { AuthService } from '../../../auth/services/auth';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],   // Remove RouterLink
+  imports: [CommonModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
@@ -38,7 +24,9 @@ export class Dashboard implements OnInit {
 
   constructor(
     private patientService: PatientService,
-    private appointmentService: AppointmentService
+    private appointmentService: AppointmentService,
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -65,5 +53,10 @@ export class Dashboard implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

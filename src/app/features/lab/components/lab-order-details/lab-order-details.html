@@ -1,0 +1,158 @@
+<div class="container mt-4" *ngIf="order() as ord">
+
+<button class="btn btn-outline-secondary btn-sm mb-3" (click)="backToOrders()">
+    ← Back to Orders
+</button>
+
+<div class="order-info card mb-4">
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <label>Order ID</label>
+            <p>{{ord.labOrderId}}</p>
+        </div>
+
+        <div class="col-md-3">
+            <label>Consultation ID</label>
+            <p>{{ord.consultationId}}</p>
+        </div>
+
+        <div class="col-md-3">
+            <label>Order Date</label>
+            <p>{{ord.orderDate}}</p>
+        </div>
+
+        <div class="col-md-3">
+            <label>Status</label>
+            <p>
+                <span
+                    class="status-badge"
+                    [ngClass]="{
+                        'status-ordered': ord.status === 'Ordered',
+                        'status-billgenerated': ord.status === 'BillGenerated',
+                        'status-paid': ord.status === 'Paid',
+                        'status-samplecollected': ord.status === 'SampleCollected',
+                        'status-processing': ord.status === 'Processing',
+                        'status-completed': ord.status === 'Completed'
+                    }">
+                    {{ord.status}}
+                </span>
+            </p>
+        </div>
+
+    </div>
+
+    <div class="row mt-2">
+
+        <div class="col-md-6">
+
+            <button
+                *ngIf="!ord.sampleCollected"
+                class="btn btn-warning btn-sm"
+                (click)="markSampleCollected()">
+                Mark Sample Collected
+            </button>
+
+            <span *ngIf="ord.sampleCollected" class="active-status">
+                Sample Collected
+            </span>
+
+        </div>
+
+        <div class="col-md-6 text-end">
+
+            <button
+                *ngIf="ord.status !== 'Completed'"
+                class="btn btn-success btn-sm"
+                [disabled]="!allRowsSaved()"
+                (click)="markCompleted()">
+                Mark Order Completed
+            </button>
+
+            <button
+                *ngIf="ord.status === 'Completed'"
+                class="btn btn-outline-primary btn-sm"
+                [disabled]="downloadingReport()"
+                (click)="downloadReport()">
+                {{ downloadingReport() ? 'Downloading...' : 'Download Report PDF' }}
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<h2>Test Results</h2>
+
+<form [formGroup]="resultsForm">
+
+    <div formArrayName="rows">
+
+        <div
+            class="result-row card mb-3"
+            *ngFor="let row of rows.controls; let i = index"
+            [formGroupName]="i">
+
+            <div class="row align-items-center">
+
+                <div class="col-md-3">
+                    <label class="form-label">Test</label>
+                    <p class="test-name">{{row.get('testName')?.value}}</p>
+                    <small class="text-muted">
+                        Normal: {{row.get('normalRange')?.value}} {{row.get('unit')?.value}}
+                    </small>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Result Value</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        formControlName="resultValue">
+
+                    <small
+                        class="text-danger"
+                        *ngIf="row.get('resultValue')?.touched && row.get('resultValue')?.invalid">
+                        Result value is required
+                    </small>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Remarks</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        formControlName="remarks">
+                </div>
+
+                <div class="col-md-2 text-end">
+                    <label class="form-label d-block">&nbsp;</label>
+                    <button
+                        type="button"
+                        class="btn btn-primary btn-sm"
+                        (click)="saveRow(i)">
+                        Save
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <p *ngIf="rows.length === 0" class="text-muted">
+            No tests found for this order.
+        </p>
+
+    </div>
+
+</form>
+
+</div>
+
+
+<div class="container mt-4" *ngIf="!order() && !loading()">
+    <p class="text-muted">Order not found.</p>
+</div>
