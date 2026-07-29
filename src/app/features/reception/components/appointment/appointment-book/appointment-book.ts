@@ -441,9 +441,10 @@ export class AppointmentBook implements OnInit {
     // Ensure required fields
     this.appointment.receptionistId = 1;
     this.appointment.status = 'Scheduled';
-
+    console.log("Sending JSON:", JSON.stringify(this.appointment));
     this.isLoading = true;
 
+    
     this.appointmentService.bookAppointment(this.appointment).subscribe({
       next: (response: any) => {
         this.isLoading = false;
