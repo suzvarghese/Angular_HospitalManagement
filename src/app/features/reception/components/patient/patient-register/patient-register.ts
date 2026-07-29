@@ -8,20 +8,16 @@ import { Patient as PatientService } from '../../../services/patient';
 @Component({
   selector: 'app-patient-register',
   standalone: true,
-  imports: [CommonModule, FormsModule],  //RouterLink
+  imports: [CommonModule, FormsModule],
   templateUrl: './patient-register.html',
   styleUrl: './patient-register.scss',
 })
 export class PatientRegister implements OnInit {
 
-  // Form model - MMRID is pre-filled + readonly, like PatientController.Create (GET)
   patient: Patient = new Patient();
 
   today: string = new Date().toISOString().split('T')[0];
 
-  // All existing patients - used to generate the next MMR ID and check for duplicate phone,
-  // since the Web API has no GenerateMMRID / IsPhoneExists endpoints (those lived in the
-  // MVC app's PatientServices, which wasn't part of the uploaded files).
   private existingPatients: Patient[] = [];
 
   isLoading = signal<boolean>(false);
@@ -32,15 +28,12 @@ export class PatientRegister implements OnInit {
   constructor(
     private patientService: PatientService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadPatientsAndGenerateMmrId();
   }
 
-  // Load all patients, then assign the next sequential MMR ID (MMR0001, MMR0002, ...)
-  // based on the highest existing MMR ID - equivalent to PatientController.Create (GET)
-  // calling _patientServices.GenerateMMRID().
   loadPatientsAndGenerateMmrId(): void {
     this.isLoading.set(true);
     this.errorMessage.set('');
@@ -48,7 +41,7 @@ export class PatientRegister implements OnInit {
     this.patientService.getAllPatients().subscribe({
       next: (response: Patient[]) => {
         this.existingPatients = response;
-        this.patient.Mmrid = this.generateNextMmrId(response);
+        this.patient.mmrid = this.generateNextMmrId(response);
         this.isLoading.set(false);
       },
       error: (err: any) => {
@@ -63,7 +56,7 @@ export class PatientRegister implements OnInit {
     let maxNumber = 0;
 
     for (const p of patients) {
-      const match = /^MMR(\d+)$/.exec(p.Mmrid ?? '');
+      const match = /^MMR(\d+)$/.exec(p.mmrid ?? '');
       if (match) {
         const num = parseInt(match[1], 10);
         if (num > maxNumber) {
@@ -76,16 +69,13 @@ export class PatientRegister implements OnInit {
     return 'MMR' + String(nextNumber).padStart(4, '0');
   }
 
-  // Recompute Age whenever DateOfBirth changes - same rule as
-  // PatientController.Create: Age = Today.Year - DOB.Year, minus 1 if the
-  // birthday hasn't occurred yet this year.
   onDateOfBirthChange(): void {
-    if (!this.patient.DateOfBirth) {
-      this.patient.Age = 0;
+    if (!this.patient.dateOfBirth) {
+      this.patient.age = 0;
       return;
     }
 
-    const dob = new Date(this.patient.DateOfBirth);
+    const dob = new Date(this.patient.dateOfBirth);
     const today = new Date();
 
     let age = today.getFullYear() - dob.getFullYear();
@@ -98,10 +88,9 @@ export class PatientRegister implements OnInit {
       age--;
     }
 
-    this.patient.Age = age;
+    this.patient.age = age;
   }
 
-  // POST: Patients/Create equivalent
   registerPatient(form: NgForm): void {
     this.errorMessage.set('');
     this.successMessage.set('');
@@ -111,9 +100,8 @@ export class PatientRegister implements OnInit {
       return;
     }
 
-    // Duplicate phone check (PatientController.Create -> IsPhoneExists)
     const phoneExists = this.existingPatients.some(
-      p => p.Phone === this.patient.Phone
+      p => p.phone === this.patient.phone
     );
 
     if (phoneExists) {
@@ -121,34 +109,34 @@ export class PatientRegister implements OnInit {
       return;
     }
 
-    // Validate DOB (PatientController.Create)
-    if (!this.patient.DateOfBirth) {
+    if (!this.patient.dateOfBirth) {
       this.errorMessage.set('Date Of Birth is required.');
       return;
     }
 
-    if (new Date(this.patient.DateOfBirth) > new Date(this.today)) {
+    if (new Date(this.patient.dateOfBirth) > new Date(this.today)) {
       this.errorMessage.set('Date of Birth cannot be in the future.');
       return;
     }
 
     this.onDateOfBirthChange();
 
-    if (this.patient.Age < 0 || this.patient.Age > 150) {
+    if (this.patient.age < 0 || this.patient.age > 150) {
       this.errorMessage.set('Age must be between 0 and 150.');
       return;
     }
 
-    this.patient.IsActive = true;
+    this.patient.isActive = true;
 
     this.isSaving.set(true);
 
     this.patientService.addPatient(this.patient).subscribe({
       next: () => {
         this.isSaving.set(false);
-        // TempData["SuccessMessage"] equivalent, then redirect to Patients/Index
         this.router.navigate(['/reception/patients'], {
-          state: { successMessage: `Patient '${this.patient.PatientName}' registered successfully.` }
+          state: {
+            successMessage: `Patient '${this.patient.patientName}' registered successfully.`
+          }
         });
       },
       error: (err: any) => {

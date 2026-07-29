@@ -43,8 +43,8 @@ export class TodayQueue implements OnInit {
     this.appointmentService.getAllAppointments().subscribe({
       next: (response: Appointment[]) => {
         const todays = response
-          .filter(a => a.AppointmentDate === todayStr)
-          .sort((a, b) => (a.TokenNumber || 0) - (b.TokenNumber || 0));
+          .filter(a => a.appointmentDate === todayStr)
+          .sort((a, b) => (a.tokenNumber || 0) - (b.tokenNumber || 0));
 
         this.appointments.set(todays);
         this.isLoading.set(false);
@@ -76,9 +76,9 @@ export class TodayQueue implements OnInit {
   cancelAppointment(appt: Appointment): void {
     if (!confirm('Cancel this appointment?')) return;
 
-    const updated: Appointment = { ...appt, Status: 'Cancelled' };
+    const updated: Appointment = { ...appt, status: 'Cancelled' };
 
-    this.appointmentService.updateAppointment(appt.AppointmentId, updated).subscribe({
+    this.appointmentService.updateAppointment(appt.appointmentId, updated).subscribe({
       next: () => {
         this.successMessage.set('Appointment cancelled successfully.');
         this.refreshQueue();
@@ -96,14 +96,14 @@ export class TodayQueue implements OnInit {
   }
 
   get scheduledCount(): number {
-    return this.appointments().filter(a => a.Status === 'Scheduled').length;
+    return this.appointments().filter(a => a.status === 'Scheduled').length;
   }
 
   get completedCount(): number {
-    return this.appointments().filter(a => a.Status === 'Completed').length;
+    return this.appointments().filter(a => a.status === 'Completed').length;
   }
 
   get cancelledCount(): number {
-    return this.appointments().filter(a => a.Status === 'Cancelled').length;
+    return this.appointments().filter(a => a.status === 'Cancelled').length;
   }
 }

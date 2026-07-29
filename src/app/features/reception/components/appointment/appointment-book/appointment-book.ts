@@ -366,7 +366,7 @@ export class AppointmentBook implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       if (params['patientId']) {
-        this.appointment.PatientId = +params['patientId'];
+        this.appointment.patientId = +params['patientId'];
         this.preFillPatientName(+params['patientId']);
       }
     });
@@ -375,9 +375,9 @@ export class AppointmentBook implements OnInit {
   private preFillPatientName(patientId: number) {
     this.patientService.getAllPatients().subscribe({
       next: (allPatients) => {
-        const patient = allPatients.find(p => p.PatientId === patientId);
+        const patient = allPatients.find(p => p.patientId === patientId);
         if (patient) {
-          this.selectedPatientName = `${patient.PatientName} (${patient.Mmrid})`;
+          this.selectedPatientName = `${patient.patientName} (${patient.mmrid})`;
         }
       }
     });
@@ -395,7 +395,7 @@ export class AppointmentBook implements OnInit {
     this.timeSlots = generateTimeSlots('09:00', '18:00');
 
     // Today's bookings only
-    if (this.appointment.AppointmentDate === this.todayDate) {
+    if (this.appointment.appointmentDate === this.todayDate) {
 
         const now = new Date();
 
@@ -439,8 +439,8 @@ export class AppointmentBook implements OnInit {
     }
 
     // Ensure required fields
-    this.appointment.ReceptionistId = 1;
-    this.appointment.Status = 'Scheduled';
+    this.appointment.receptionistId = 1;
+    this.appointment.status = 'Scheduled';
 
     this.isLoading = true;
 
@@ -468,7 +468,7 @@ export class AppointmentBook implements OnInit {
   clearPatientSelection(e: Event) {
     e.preventDefault();
     this.selectedPatientName = '';
-    this.appointment.PatientId = 0;
+    this.appointment.patientId = 0;
   }
 
   // setDate(type: string) {
@@ -481,9 +481,9 @@ export class AppointmentBook implements OnInit {
   setDate(type: string): void {
 
     if (type === 'today') {
-      this.appointment.AppointmentDate = this.todayDate;
+      this.appointment.appointmentDate = this.todayDate;
     } else {
-      this.appointment.AppointmentDate = this.tomorrowDate;
+      this.appointment.appointmentDate = this.tomorrowDate;
     }
   
     this.populateAvailableSlots();

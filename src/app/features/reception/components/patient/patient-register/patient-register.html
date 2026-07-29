@@ -9,7 +9,6 @@
         </a>
     </div>
 
-    <!-- Success / Error Messages -->
     <div class="alert alert-danger" *ngIf="errorMessage()">{{ errorMessage() }}</div>
 
     <div class="card shadow-sm" style="max-width: 700px;">
@@ -19,13 +18,19 @@
 
                 <div class="mb-3">
                     <label class="form-label">MMR ID</label>
-                    <input type="text" class="form-control" [(ngModel)]="patient.Mmrid" name="Mmrid" readonly />
+                    <input type="text" class="form-control" [(ngModel)]="patient.mmrid" name="mmrid" readonly />
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Patient Name</label>
-                    <input type="text" class="form-control" [(ngModel)]="patient.PatientName" name="PatientName"
-                        #patientName="ngModel" required maxlength="100" />
+                    <input
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="patient.patientName"
+                        name="patientName"
+                        #patientName="ngModel"
+                        required
+                        maxlength="100" />
                     <div class="text-danger small" *ngIf="patientName.invalid && patientName.touched">
                         Patient Name is required.
                     </div>
@@ -33,19 +38,30 @@
 
                 <div class="mb-3">
                     <label class="form-label">Date Of Birth</label>
-                    <input type="date" class="form-control" [(ngModel)]="patient.DateOfBirth" name="DateOfBirth"
-                        [max]="today" (ngModelChange)="onDateOfBirthChange()" #dob="ngModel" required />
+                    <input
+                        type="date"
+                        class="form-control"
+                        [(ngModel)]="patient.dateOfBirth"
+                        name="dateOfBirth"
+                        [max]="today"
+                        (ngModelChange)="onDateOfBirthChange()"
+                        #dob="ngModel"
+                        required />
                     <div class="text-danger small" *ngIf="dob.invalid && dob.touched">
                         Date Of Birth is required.
                     </div>
-                    <div class="form-text" *ngIf="patient.DateOfBirth">
-                        Age: {{ patient.Age }}
+                    <div class="form-text" *ngIf="patient.dateOfBirth">
+                        Age: {{ patient.age }}
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Gender</label>
-                    <select class="form-select" [(ngModel)]="patient.Gender" name="Gender" #gender="ngModel"
+                    <select
+                        class="form-select"
+                        [(ngModel)]="patient.gender"
+                        name="gender"
+                        #gender="ngModel"
                         required>
                         <option value="">Select Gender</option>
                         <option>Male</option>
@@ -59,8 +75,14 @@
 
                 <div class="mb-3">
                     <label class="form-label">Phone</label>
-                    <input type="text" class="form-control" [(ngModel)]="patient.Phone" name="Phone" #phone="ngModel"
-                        required maxlength="15" />
+                    <input
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="patient.phone"
+                        name="phone"
+                        #phone="ngModel"
+                        required
+                        maxlength="15" />
                     <div class="text-danger small" *ngIf="phone.invalid && phone.touched">
                         Phone is required.
                     </div>
@@ -68,13 +90,21 @@
 
                 <div class="mb-3">
                     <label class="form-label">Address</label>
-                    <textarea class="form-control" [(ngModel)]="patient.Address" name="Address" rows="3"></textarea>
+                    <textarea
+                        class="form-control"
+                        [(ngModel)]="patient.address"
+                        name="address"
+                        rows="3"></textarea>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Blood Group</label>
-                    <select class="form-select" [(ngModel)]="patient.BloodGroup" name="BloodGroup"
-                        #bloodGroup="ngModel" required>
+                    <select
+                        class="form-select"
+                        [(ngModel)]="patient.bloodGroup"
+                        name="bloodGroup"
+                        #bloodGroup="ngModel"
+                        required>
                         <option value="">Select Blood Group</option>
                         <option>A+</option>
                         <option>A-</option>
@@ -92,8 +122,12 @@
 
                 <div class="mb-3">
                     <label class="form-label">Emergency Contact</label>
-                    <input type="text" class="form-control" [(ngModel)]="patient.EmergencyContact"
-                        name="EmergencyContact" maxlength="15" />
+                    <input
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="patient.emergencyContact"
+                        name="emergencyContact"
+                        maxlength="15" />
                 </div>
 
                 <button type="submit" class="btn btn-success" [disabled]="isSaving() || isLoading()">

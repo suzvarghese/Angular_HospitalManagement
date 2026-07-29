@@ -121,10 +121,10 @@ export class PatientList implements OnInit {
     }
     const term = this.searchTerm.toLowerCase().trim();
     this.filteredPatients = this.patients.filter(p => 
-      (p.Mmrid?.toLowerCase() || '').includes(term) ||
-      (p.PatientName?.toLowerCase() || '').includes(term) ||
-      (p.Phone || '').includes(term) ||
-      (p.BloodGroup?.toLowerCase() || '').includes(term)
+      (p.mmrid?.toLowerCase() || '').includes(term) ||
+      (p.patientName?.toLowerCase() || '').includes(term) ||
+      (p.phone || '').includes(term) ||
+      (p.bloodGroup?.toLowerCase() || '').includes(term)
     );
   }
 
@@ -134,7 +134,7 @@ export class PatientList implements OnInit {
 
   bookAppointment(patient: Patient): void {
     this.router.navigate(['/reception/appointments/book'], { 
-      queryParams: { patientId: patient.PatientId } 
+      queryParams: { patientId: patient.patientId } 
     });
   }
 

@@ -42,8 +42,8 @@ export class Dashboard implements OnInit {
     this.appointmentService.getAllAppointments().subscribe({
       next: (appointments: any[]) => {
         const today = new Date().toISOString().split('T')[0];
-        const todayAppts = appointments.filter((a: any) => a.AppointmentDate === today);
-        
+        const todayAppts = appointments.filter((a: any) => a.appointmentDate === today);
+
         this.todayAppointments.set(todayAppts.length);
         this.todaysQueue.set(todayAppts.slice(0, 5));
         this.isLoading.set(false);

@@ -19,20 +19,20 @@ import { slotToDate, SLOT_INTERVAL_MINUTES } from '../../../utils/appointment-sl
 // A Pending Appointment Bill, joined in-memory with its Appointment, Patient
 // and Doctor - built once from the 4 existing services, no extra API calls.
 interface PendingBillRow {
-  AppointmentBillId: number;
-  AppointmentId: number;
-  PatientId: number;
-  PatientName: string;
-  Mmrid: string;
-  DoctorId: number;
-  DoctorName: string;
-  AppointmentDate: string;
-  TimeSlot: string;
-  TimeRangeLabel: string;   // e.g. "11:15 AM - 11:30 AM"
-  DateLabel: string;        // e.g. "23 Jul"
-  TotalAmount: number;
-  PaymentStatus: string;
-  DisplayLabel: string;     // full dropdown row text
+  appointmentBillId: number;
+  appointmentId: number;
+  patientId: number;
+  patientName: string;
+  mmrid: string;
+  doctorId: number;
+  doctorName: string;
+  appointmentDate: string;
+  timeSlot: string;
+  timeRangeLabel: string;   // e.g. "11:15 AM - 11:30 AM"
+  dateLabel: string;        // e.g. "23 Jul"
+  totalAmount: number;
+  paymentStatus: string;
+  displayLabel: string;     // full dropdown row text
 }
 
 @Component({
@@ -99,8 +99,8 @@ export class CollectPayment implements OnInit {
       return this.pendingBillRows;
     }
     return this.pendingBillRows.filter(row =>
-      row.PatientName.toLowerCase().includes(term) ||
-      row.Mmrid.toLowerCase().includes(term)
+      row.patientName.toLowerCase().includes(term) ||
+      row.mmrid.toLowerCase().includes(term)
     );
   }
 
@@ -153,43 +153,43 @@ export class CollectPayment implements OnInit {
 
   // Join: AppointmentBill -> Appointment -> Patient -> Doctor
   private buildPendingBillRows(): void {
-    const appointmentsById = new Map(this.allAppointments.map(a => [a.AppointmentId, a]));
-    const patientsById = new Map(this.allPatients.map(p => [p.PatientId, p]));
-    const doctorsById = new Map(this.allDoctors.map(d => [d.DoctorId, d]));
+    const appointmentsById = new Map(this.allAppointments.map(a => [a.appointmentId, a]));
+    const patientsById = new Map(this.allPatients.map(p => [p.patientId, p]));
+    const doctorsById = new Map(this.allDoctors.map(d => [d.doctorId, d]));
 
     this.pendingBillRows = this.allBills
-      .filter(bill => bill.PaymentStatus === 'Pending')
+      .filter(bill => bill.paymentStatus === 'Pending')
       .map(bill => {
-        const appt = appointmentsById.get(bill.AppointmentId);
-        const patient = appt ? patientsById.get(appt.PatientId) : undefined;
-        const doctor = appt ? doctorsById.get(appt.DoctorId) : undefined;
+        const appt = appointmentsById.get(bill.appointmentId);
+        const patient = appt ? patientsById.get(appt.patientId) : undefined;
+        const doctor = appt ? doctorsById.get(appt.doctorId) : undefined;
 
-        const patientName = patient?.PatientName || appt?.PatientName || 'Unknown Patient';
-        const mmrid = patient?.Mmrid || '-';
-        const doctorName = doctor?.DoctorName || appt?.DoctorName || 'Unknown Doctor';
-        const appointmentDate = appt?.AppointmentDate || '';
-        const timeSlot = appt?.TimeSlot || '';
+        const patientName = patient?.patientName || appt?.patientName || 'Unknown Patient';
+        const mmrid = patient?.mmrid || '-';
+        const doctorName = doctor?.doctorName || appt?.doctorName || 'Unknown Doctor';
+        const appointmentDate = appt?.appointmentDate || '';
+        const timeSlot = appt?.timeSlot || '';
         const timeRangeLabel = this.getSlotRangeLabel(appointmentDate, timeSlot);
         const dateLabel = this.formatShortDate(appointmentDate);
-        const amountLabel = Number.isInteger(bill.TotalAmount)
-          ? bill.TotalAmount.toString()
-          : bill.TotalAmount.toFixed(2);
+        const amountLabel = Number.isInteger(bill.totalAmount)
+          ? bill.totalAmount.toString()
+          : bill.totalAmount.toFixed(2);
 
         const row: PendingBillRow = {
-          AppointmentBillId: bill.AppointmentBillId,
-          AppointmentId: bill.AppointmentId,
-          PatientId: appt?.PatientId ?? patient?.PatientId ?? 0,
-          PatientName: patientName,
-          Mmrid: mmrid,
-          DoctorId: appt?.DoctorId ?? doctor?.DoctorId ?? 0,
-          DoctorName: doctorName,
-          AppointmentDate: appointmentDate,
-          TimeSlot: timeSlot,
-          TimeRangeLabel: timeRangeLabel,
-          DateLabel: dateLabel,
-          TotalAmount: bill.TotalAmount,
-          PaymentStatus: bill.PaymentStatus,
-          DisplayLabel: `${patientName} | ${mmrid} | Dr. ${doctorName} | ${dateLabel} | ${timeRangeLabel} | \u20B9${amountLabel}`
+          appointmentBillId: bill.appointmentBillId,
+          appointmentId: bill.appointmentId,
+          patientId: appt?.patientId ?? patient?.patientId ?? 0,
+          patientName: patientName,
+          mmrid: mmrid,
+          doctorId: appt?.doctorId ?? doctor?.doctorId ?? 0,
+          doctorName: doctorName,
+          appointmentDate: appointmentDate,
+          timeSlot: timeSlot,
+          timeRangeLabel: timeRangeLabel,
+          dateLabel: dateLabel,
+          totalAmount: bill.totalAmount,
+          paymentStatus: bill.paymentStatus,
+          displayLabel: `${patientName} | ${mmrid} | Dr. ${doctorName} | ${dateLabel} | ${timeRangeLabel} | \u20B9${amountLabel}`
         };
 
         return row;
@@ -237,7 +237,7 @@ export class CollectPayment implements OnInit {
     this.errorMessage.set('');
   
     const row = this.pendingBillRows.find(
-      r => r.AppointmentBillId === Number(this.selectedBillId)
+      r => r.appointmentBillId === Number(this.selectedBillId)
     );
   
     if (row) {
@@ -245,7 +245,7 @@ export class CollectPayment implements OnInit {
     }
   }
   selectBill(row: PendingBillRow): void {
-    this.selectedBillId = row.AppointmentBillId;
+    this.selectedBillId = row.appointmentBillId;
     this.selectedRow = row;
     this.paymentMethod = '';
   
@@ -275,7 +275,7 @@ export class CollectPayment implements OnInit {
 
     // Duplicate-payment guard: re-check the bill is still Pending in case its
     // status changed since the dropdown was loaded (e.g. paid in another tab).
-    if (this.selectedRow.PaymentStatus !== 'Pending') {
+    if (this.selectedRow.paymentStatus !== 'Pending') {
       this.errorMessage.set('This appointment bill has already been paid.');
       this.reloadBillsOnly();
       return;
@@ -293,12 +293,12 @@ export class CollectPayment implements OnInit {
     }
 
     const payment: Payment = new Payment();
-    payment.ReceptionistId = 1;
-    payment.AppointmentBillId = this.selectedRow.AppointmentBillId;
-    payment.PaidAmount = this.selectedRow.TotalAmount;   // not user-editable
-    payment.PaymentMethod = this.paymentMethod;
-    payment.PaidAt = new Date().toISOString();
-    payment.Status = 'Paid';
+    payment.receptionistId = 1;
+    payment.appointmentBillId = this.selectedRow.appointmentBillId;
+    payment.paidAmount = this.selectedRow.totalAmount;   // not user-editable
+    payment.paymentMethod = this.paymentMethod;
+    payment.paidAt = new Date().toISOString();
+    payment.status = 'Paid';
 
     this.isSaving.set(true);
 
@@ -335,7 +335,7 @@ export class CollectPayment implements OnInit {
 
   // Receipt Number, e.g. "RCPT-000042"
   get receiptNumber(): string {
-    const id = this.completedPayment()?.PaymentId ?? 0;
+    const id = this.completedPayment()?.paymentId ?? 0;
     return `RCPT-${id.toString().padStart(6, '0')}`;
   }
 

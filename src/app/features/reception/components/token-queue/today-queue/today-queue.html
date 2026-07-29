@@ -4,7 +4,7 @@
             <h3 class="fw-bold mb-1">Today's Queue</h3>
             <p class="text-muted mb-0">{{ getTodayStr() | date: 'EEEE, MMMM dd yyyy' }}</p>
         </div>
-        
+
         <div class="d-flex gap-2">
             <button (click)="refreshQueue()" class="btn btn-outline-primary">
                 <i class="bi bi-arrow-clockwise"></i> Refresh Queue
@@ -67,39 +67,68 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     <tr *ngFor="let appt of appointments()"
-                        [ngClass]="{'table-danger': appt.Status === 'Cancelled', 'table-success': appt.Status === 'Completed'}">
-                        <td><span class="badge bg-primary fs-6">{{ appt.TokenNumber }}</span></td>
-                        <td><strong>{{ appt.PatientName }}</strong></td>
-                        <td>{{ appt.DoctorName }}</td>
-                        <td>{{ appt.TimeSlot }}</td>
+                        [ngClass]="{
+                            'table-danger': appt.status === 'Cancelled',
+                            'table-success': appt.status === 'Completed'
+                        }">
+
+                        <td>
+                            <span class="badge bg-primary fs-6">{{ appt.tokenNumber }}</span>
+                        </td>
+
+                        <td>
+                            <strong>{{ appt.patientName }}</strong>
+                        </td>
+
+                        <td>{{ appt.doctorName }}</td>
+
+                        <td>{{ appt.timeSlot }}</td>
+
                         <td>
                             <span class="badge"
                                 [ngClass]="{
-                                    'bg-info text-dark': appt.Status === 'Scheduled',
-                                    'bg-danger': appt.Status === 'Cancelled',
-                                    'bg-success': appt.Status === 'Completed'
+                                    'bg-info text-dark': appt.status === 'Scheduled',
+                                    'bg-danger': appt.status === 'Cancelled',
+                                    'bg-success': appt.status === 'Completed'
                                 }">
-                                {{ appt.Status }}
+                                {{ appt.status }}
                             </span>
                         </td>
+
                         <td>
-                            <ng-container *ngIf="appt.Status !== 'Cancelled'">
-                                <button type="button" class="btn btn-warning btn-sm me-1" (click)="reschedule(appt.AppointmentId)">
+                            <ng-container *ngIf="appt.status !== 'Cancelled'">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-warning btn-sm me-1"
+                                    (click)="reschedule(appt.appointmentId)">
                                     Reschedule
                                 </button>
-                                <button type="button" class="btn btn-danger btn-sm me-1" (click)="cancelAppointment(appt)">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-danger btn-sm me-1"
+                                    (click)="cancelAppointment(appt)">
                                     Cancel
                                 </button>
-                                <button type="button" class="btn btn-secondary btn-sm" (click)="generateBill(appt.AppointmentId)">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary btn-sm"
+                                    (click)="generateBill(appt.appointmentId)">
                                     🧾 Bill
                                 </button>
+
                             </ng-container>
                         </td>
+
                     </tr>
                 </tbody>
             </table>
+
         </ng-container>
     </ng-container>
 </div>

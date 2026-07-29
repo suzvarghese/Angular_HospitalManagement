@@ -30,7 +30,7 @@
         <p class="text-muted mt-2 mb-0">{{ loadingMessage() }}</p>
     </div>
 
-    <!-- General error (appointment not found, etc.) -->
+    <!-- General error -->
     <div class="alert alert-danger alert-dismissible" *ngIf="errorMessage()">
         <i class="bi bi-x-circle-fill me-1"></i>
         {{ errorMessage() }}
@@ -44,26 +44,38 @@
         <button type="button" class="btn-close" (click)="successMessage.set('')"></button>
     </div>
 
-    <!-- Generated Bill Summary (shown after a successful save) -->
+    <!-- Generated Bill Summary -->
     <div class="card shadow-sm mb-4 border-success" *ngIf="generatedBill() as bill">
         <div class="card-body">
             <h5 class="card-title text-success">Bill Generated</h5>
+
             <div class="row">
-                <div class="col-sm-4"><strong>Bill ID:</strong> {{ bill.AppointmentBillId }}</div>
-                <div class="col-sm-4"><strong>Appointment ID:</strong> {{ bill.AppointmentId }}</div>
-                <div class="col-sm-4"><strong>Bill Date:</strong> {{ bill.BillDate | date: 'dd-MM-yyyy' }}</div>
+                <div class="col-sm-4"><strong>Bill ID:</strong> {{ bill.appointmentBillId }}</div>
+                <div class="col-sm-4"><strong>Appointment ID:</strong> {{ bill.appointmentId }}</div>
+                <div class="col-sm-4"><strong>Bill Date:</strong> {{ bill.billDate | date:'dd-MM-yyyy' }}</div>
             </div>
+
             <div class="row mt-2">
-                <div class="col-sm-4"><strong>Registration Fee:</strong> {{ bill.RegistrationFee | number: '1.2-2' }}
+                <div class="col-sm-4">
+                    <strong>Registration Fee:</strong>
+                    {{ bill.registrationFee | number:'1.2-2' }}
                 </div>
-                <div class="col-sm-4"><strong>Consultation Fee:</strong> {{ bill.ConsultationFee | number: '1.2-2' }}
+
+                <div class="col-sm-4">
+                    <strong>Consultation Fee:</strong>
+                    {{ bill.consultationFee | number:'1.2-2' }}
                 </div>
-                <div class="col-sm-4"><strong>Total Amount:</strong> {{ bill.TotalAmount | number: '1.2-2' }}</div>
+
+                <div class="col-sm-4">
+                    <strong>Total Amount:</strong>
+                    {{ bill.totalAmount | number:'1.2-2' }}
+                </div>
             </div>
+
             <div class="row mt-2">
                 <div class="col-sm-4">
                     <strong>Payment Status:</strong>
-                    <span class="badge bg-warning text-dark">{{ bill.PaymentStatus }}</span>
+                    <span class="badge bg-warning text-dark">{{ bill.paymentStatus }}</span>
                 </div>
             </div>
 
@@ -71,6 +83,7 @@
                 <button type="button" class="btn btn-success me-2" (click)="goCollectPayment()">
                     Proceed to Collect Payment
                 </button>
+
                 <a routerLink="/reception/bills" class="btn btn-outline-secondary">
                     View All Bills
                 </a>
@@ -78,20 +91,38 @@
         </div>
     </div>
 
-    <!-- Appointment Details (resolved directly from the id - no dropdown) -->
+    <!-- Appointment Details -->
     <div class="card shadow-sm mb-4" *ngIf="appointment && !generatedBill() && !billAlreadyExists()">
         <div class="card-body">
             <h5 class="card-title">Appointment Details</h5>
+
             <div class="row">
-                <div class="col-sm-4"><strong>Appointment ID:</strong> {{ appointment.AppointmentId }}</div>
-                <div class="col-sm-4"><strong>Patient Name:</strong> {{ appointment.PatientName }}</div>
-                <div class="col-sm-4"><strong>Doctor Name:</strong> {{ appointment.DoctorName }}</div>
-            </div>
-            <div class="row mt-2">
-                <div class="col-sm-4"><strong>Date:</strong> {{ appointment.AppointmentDate | date: 'dd-MM-yyyy' }}
+                <div class="col-sm-4">
+                    <strong>Appointment ID:</strong> {{ appointment.appointmentId }}
                 </div>
-                <div class="col-sm-4"><strong>Time Slot:</strong> {{ appointment.TimeSlot }}</div>
-                <div class="col-sm-4"><strong>Token Number:</strong> {{ appointment.TokenNumber }}</div>
+
+                <div class="col-sm-4">
+                    <strong>Patient Name:</strong> {{ appointment.patientName }}
+                </div>
+
+                <div class="col-sm-4">
+                    <strong>Doctor Name:</strong> {{ appointment.doctorName }}
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-sm-4">
+                    <strong>Date:</strong>
+                    {{ appointment.appointmentDate | date:'dd-MM-yyyy' }}
+                </div>
+
+                <div class="col-sm-4">
+                    <strong>Time Slot:</strong> {{ appointment.timeSlot }}
+                </div>
+
+                <div class="col-sm-4">
+                    <strong>Token Number:</strong> {{ appointment.tokenNumber }}
+                </div>
             </div>
         </div>
     </div>
@@ -101,17 +132,34 @@
         <div class="card-body">
             <h5 class="card-title">Bill Details</h5>
 
-            <form name="billForm" #billForm="ngForm" autocomplete="off" (ngSubmit)="generateBill(billForm)">
+            <form
+                name="billForm"
+                #billForm="ngForm"
+                autocomplete="off"
+                (ngSubmit)="generateBill(billForm)">
 
                 <!-- Registration Fee -->
                 <div class="form-group mb-3">
                     <label class="form-label mb-2">Registration Fee (Rs.):</label>
-                    <input type="number" name="registrationFee" #registrationFeeModel="ngModel" class="form-control"
-                        min="1" required [(ngModel)]="registrationFee"
+
+                    <input
+                        type="number"
+                        name="registrationFee"
+                        #registrationFeeModel="ngModel"
+                        class="form-control"
+                        min="1"
+                        required
+                        [(ngModel)]="registrationFee"
                         [ngClass]="{'is-invalid': registrationFeeModel.touched && registrationFeeModel.invalid}" />
 
-                    <div class="invalid-feedback" *ngIf="registrationFeeModel.touched && registrationFeeModel.invalid">
-                        <span *ngIf="registrationFeeModel.errors?.['required']">Registration Fee is required.</span>
+                    <div
+                        class="invalid-feedback"
+                        *ngIf="registrationFeeModel.touched && registrationFeeModel.invalid">
+
+                        <span *ngIf="registrationFeeModel.errors?.['required']">
+                            Registration Fee is required.
+                        </span>
+
                         <span *ngIf="!registrationFeeModel.errors?.['required'] && registrationFeeModel.errors?.['min']">
                             Registration Fee must be greater than 0.
                         </span>
@@ -121,42 +169,74 @@
                 <!-- Consultation Fee -->
                 <div class="form-group mb-3">
                     <label class="form-label mb-2">Consultation Fee (Rs.):</label>
-                    <input type="number" name="consultationFee" #consultationFeeModel="ngModel" class="form-control"
-                        min="1" required [(ngModel)]="consultationFee"
+
+                    <input
+                        type="number"
+                        name="consultationFee"
+                        #consultationFeeModel="ngModel"
+                        class="form-control"
+                        min="1"
+                        required
+                        [(ngModel)]="consultationFee"
                         [ngClass]="{'is-invalid': consultationFeeModel.touched && consultationFeeModel.invalid}" />
 
-                    <div class="invalid-feedback" *ngIf="consultationFeeModel.touched && consultationFeeModel.invalid">
-                        <span *ngIf="consultationFeeModel.errors?.['required']">Consultation Fee is required.</span>
+                    <div
+                        class="invalid-feedback"
+                        *ngIf="consultationFeeModel.touched && consultationFeeModel.invalid">
+
+                        <span *ngIf="consultationFeeModel.errors?.['required']">
+                            Consultation Fee is required.
+                        </span>
+
                         <span *ngIf="!consultationFeeModel.errors?.['required'] && consultationFeeModel.errors?.['min']">
                             Consultation Fee must be greater than 0.
                         </span>
                     </div>
                 </div>
 
-                <!-- Total Amount (auto-calculated) -->
+                <!-- Total Amount -->
                 <div class="form-group mb-3">
                     <label class="form-label mb-2">Total Amount (Rs.):</label>
-                    <input type="text" class="form-control fw-bold" [value]="totalAmount | number: '1.2-2'" disabled
+
+                    <input
+                        type="text"
+                        class="form-control fw-bold"
+                        [value]="totalAmount | number:'1.2-2'"
+                        disabled
                         readonly />
                 </div>
 
-                <!-- Bill Date (auto-set) -->
+                <!-- Bill Date -->
                 <div class="form-group mb-3">
                     <label class="form-label mb-2">Bill Date:</label>
-                    <input type="text" class="form-control" [value]="billDate | date: 'dd-MM-yyyy'" disabled
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        [value]="billDate | date:'dd-MM-yyyy'"
+                        disabled
                         readonly />
                 </div>
 
-                <!-- Payment Status (default) -->
+                <!-- Payment Status -->
                 <div class="form-group mb-3">
                     <label class="form-label mb-2">Payment Status:</label>
-                    <input type="text" class="form-control" value="Pending" disabled readonly />
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="Pending"
+                        disabled
+                        readonly />
                 </div>
 
                 <!-- Generate Bill -->
                 <div class="form-group">
-                    <button type="submit" class="btn btn-lg btn-primary form-control"
+                    <button
+                        type="submit"
+                        class="btn btn-lg btn-primary form-control"
                         [disabled]="billForm.invalid || isSaving()">
+
                         {{ isSaving() ? savingMessage() : 'Generate Bill' }}
                     </button>
                 </div>

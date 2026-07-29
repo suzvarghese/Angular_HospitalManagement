@@ -1,6 +1,6 @@
 export class Doctor {
-    DoctorId: number = 0;
-    DoctorName: string = '';
-    Specialization: string = '';
-    ConsultationFee: number = 0;
+    doctorId: number = 0;
+    doctorName: string = '';
+    specialization: string = '';
+    consultationFee: number = 0;
 }

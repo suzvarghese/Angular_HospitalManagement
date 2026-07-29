@@ -14,23 +14,23 @@ import { Patient as PatientService } from '../../../services/patient';
 
 // Combined view model for the Details screen (BillDetailViewModel equivalent)
 export interface BillDetailsViewModel {
-  AppointmentBillId: number;
-  AppointmentId: number;
-  RegistrationFee: number;
-  ConsultationFee: number;
-  TotalAmount: number;
-  BillDate: string;
-  PaymentStatus: string;
+  appointmentBillId: number;
+  appointmentId: number;
+  registrationFee: number;
+  consultationFee: number;
+  totalAmount: number;
+  billDate: string;
+  paymentStatus: string;
 
-  PatientName: string;
-  MmrId: string;
+  patientName: string;
+  mmrId: string;
 
-  DoctorName: string;
-  Specialization: string;
+  doctorName: string;
+  specialization: string;
 
-  AppointmentDate: string;
-  TimeSlot: string;
-  TokenNumber: number;
+  appointmentDate: string;
+  timeSlot: string;
+  tokenNumber: number;
 }
 
 @Component({
@@ -94,34 +94,34 @@ export class BillDetails implements OnInit {
   // the doctor (for Specialization), and the patient (for MMR ID).
   // AppointmentBillDto itself carries no names, only ids and fee fields.
   private resolveRelatedDetails(bill: AppointmentBill): void {
-    this.appointmentService.getAppointmentById(bill.AppointmentId).subscribe({
+    this.appointmentService.getAppointmentById(bill.appointmentId).subscribe({
       next: (appt: Appointment) => {
         forkJoin({
           doctors: this.doctorService.getAllDoctors(),
           patients: this.patientService.getAllPatients()
         }).subscribe({
           next: ({ doctors, patients }: { doctors: Doctor[]; patients: Patient[] }) => {
-            const doctor = doctors.find(d => d.DoctorId === appt.DoctorId);
-            const patient = patients.find(p => p.PatientId === appt.PatientId);
+            const doctor = doctors.find(d => d.doctorId === appt.doctorId);
+            const patient = patients.find(p => p.patientId === appt.patientId);
 
             this.bill = {
-              AppointmentBillId: bill.AppointmentBillId,
-              AppointmentId: bill.AppointmentId,
-              RegistrationFee: bill.RegistrationFee,
-              ConsultationFee: bill.ConsultationFee,
-              TotalAmount: bill.TotalAmount,
-              BillDate: bill.BillDate,
-              PaymentStatus: bill.PaymentStatus,
+              appointmentBillId: bill.appointmentBillId,
+              appointmentId: bill.appointmentId,
+              registrationFee: bill.registrationFee,
+              consultationFee: bill.consultationFee,
+              totalAmount: bill.totalAmount,
+              billDate: bill.billDate,
+              paymentStatus: bill.paymentStatus,
 
-              PatientName: appt.PatientName,
-              MmrId: patient?.Mmrid ?? '—',
+              patientName: appt.patientName,
+              mmrId: patient?.mmrid ?? '—',
 
-              DoctorName: appt.DoctorName,
-              Specialization: doctor?.Specialization ?? '—',
+              doctorName: appt.doctorName,
+              specialization: doctor?.specialization ?? '—',
 
-              AppointmentDate: appt.AppointmentDate,
-              TimeSlot: appt.TimeSlot,
-              TokenNumber: appt.TokenNumber
+              appointmentDate: appt.appointmentDate,
+              timeSlot: appt.timeSlot,
+              tokenNumber: appt.tokenNumber
             };
 
             this.isLoading.set(false);
