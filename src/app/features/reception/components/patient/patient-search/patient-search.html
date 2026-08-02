@@ -1,3 +1,4 @@
+<!--  -->
 <div class="container mt-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -18,14 +19,15 @@
 
             <form (ngSubmit)="onSearch()">
                 <div class="input-group">
+                    <span class="input-group-text bg-white">
+                        <i class="bi bi-search"></i>
+                    </span>
                     <input type="text" name="q" [(ngModel)]="searchTerm" class="form-control form-control-lg"
-                        placeholder="Search by Patient Name, MMR ID, or Phone Number..." />
-                    <button class="btn btn-primary" type="submit" [disabled]="isLoading()">
-                        Search
-                    </button>
+                        placeholder="Search by Patient Name, MMR ID, or Phone Number..."
+                        (ngModelChange)="onSearch()" [disabled]="isLoading()" />
                 </div>
                 <small class="text-muted mt-2 d-block">
-                    Enter full or partial Name, MMR ID or Phone Number
+                    Results update automatically as you type - full or partial Name, MMR ID or Phone Number
                 </small>
             </form>
 
@@ -58,7 +60,7 @@
                         <ng-container *ngFor="let patient of results">
 
                             <tr>
-                                <td><span class="badge bg-dark px-3 py-2">{{ patient.Mmrid }}</span></td>
+                                <td><span class="badge rc-mmr-badge px-3 py-2">{{ patient.Mmrid }}</span></td>
                                 <td>{{ patient.PatientName }}</td>
                                 <td>{{ patient.Age }}</td>
                                 <td>{{ patient.Gender }}</td>

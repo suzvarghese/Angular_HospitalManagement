@@ -1,9 +1,13 @@
 <div class="container mt-4">
-    <h3>Payment History</h3>
-    <hr>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Payment History</h3>
+            <p class="text-muted mb-0">All payments collected at the reception desk</p>
+        </div>
+    </div>
 
     <!-- Search -->
-    <div class="row mt-3 mb-3">
+    <div class="row mb-3">
         <div class="col-sm-6">
             <input type="search" class="form-control" placeholder="Search by Payment ID..."
                 [(ngModel)]="paymentIdSearch">
@@ -26,9 +30,10 @@
     </div>
 
     <!-- Table -->
-    <div class="table-responsive" *ngIf="!isLoading() && !errorMessage()">
-        <table class="table table-bordered table-striped align-middle">
-            <thead class="table-light">
+    <div class="card" *ngIf="!isLoading() && !errorMessage()">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-dark">
                 <tr>
                     <th scope="col">Payment ID</th>
                     <th scope="col">Appointment Bill ID</th>
@@ -64,5 +69,6 @@
             *ngIf="(payments() | filter : paymentIdSearch : 'PaymentId' | filter : billIdSearch : 'AppointmentBillId').length === 0">
             No payments found.
         </div>
+      </div>
     </div>
 </div>

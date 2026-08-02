@@ -31,32 +31,32 @@
         <ng-container *ngIf="appointments().length > 0">
             <div class="row g-4 mb-4">
                 <div class="col-md-3">
-                    <div class="queue-card queue-total">
-                        <div class="queue-number">{{ totalCount }}</div>
-                        <div class="queue-label">Total Today</div>
+                    <div class="rc-stat-card">
+                        <div class="rc-stat-number">{{ totalCount }}</div>
+                        <div class="rc-stat-label">Total Today</div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="queue-card queue-scheduled">
-                        <div class="queue-number">{{ scheduledCount }}</div>
-                        <div class="queue-label">Scheduled</div>
+                    <div class="rc-stat-card rc-accent-warning">
+                        <div class="rc-stat-number">{{ scheduledCount }}</div>
+                        <div class="rc-stat-label">Scheduled</div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="queue-card queue-completed">
-                        <div class="queue-number">{{ completedCount }}</div>
-                        <div class="queue-label">Completed</div>
+                    <div class="rc-stat-card rc-accent-success">
+                        <div class="rc-stat-number">{{ completedCount }}</div>
+                        <div class="rc-stat-label">Completed</div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="queue-card queue-cancelled">
-                        <div class="queue-number">{{ cancelledCount }}</div>
-                        <div class="queue-label">Cancelled</div>
+                    <div class="rc-stat-card rc-accent-danger">
+                        <div class="rc-stat-number">{{ cancelledCount }}</div>
+                        <div class="rc-stat-label">Cancelled</div>
                     </div>
                 </div>
             </div>
 
-            <table class="table table-bordered table-hover custom-table">
+            <table class="table table-hover rc-queue-table">
                 <thead class="table-dark">
                     <tr>
                         <th>Token #</th>
@@ -86,9 +86,9 @@
                         </td>
                         <td>
                             <ng-container *ngIf="appt.Status !== 'Cancelled'">
-                                <button type="button" class="btn btn-warning btn-sm me-1" (click)="reschedule(appt.AppointmentId)">
+                                <!-- <button type="button" class="btn btn-warning btn-sm me-1" (click)="reschedule(appt.AppointmentId)">
                                     Reschedule
-                                </button>
+                                </button> -->
                                 <button type="button" class="btn btn-danger btn-sm me-1" (click)="cancelAppointment(appt)">
                                     Cancel
                                 </button>

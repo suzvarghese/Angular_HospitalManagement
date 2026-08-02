@@ -54,11 +54,11 @@
                 <div class="col-sm-4"><strong>Bill Date:</strong> {{ bill.BillDate | date: 'dd-MM-yyyy' }}</div>
             </div>
             <div class="row mt-2">
-                <div class="col-sm-4"><strong>Registration Fee:</strong> {{ bill.RegistrationFee | number: '1.2-2' }}
+                <div class="col-sm-4"><strong>Registration Fee:</strong> ₹{{ bill.RegistrationFee | number: '1.2-2' }}
                 </div>
-                <div class="col-sm-4"><strong>Consultation Fee:</strong> {{ bill.ConsultationFee | number: '1.2-2' }}
+                <div class="col-sm-4"><strong>Consultation Fee:</strong> ₹{{ bill.ConsultationFee | number: '1.2-2' }}
                 </div>
-                <div class="col-sm-4"><strong>Total Amount:</strong> {{ bill.TotalAmount | number: '1.2-2' }}</div>
+                <div class="col-sm-4"><strong>Total Amount (incl. GST):</strong> ₹{{ bill.TotalAmount | number: '1.2-2' }}</div>
             </div>
             <div class="row mt-2">
                 <div class="col-sm-4">
@@ -133,11 +133,25 @@
                     </div>
                 </div>
 
-                <!-- Total Amount (auto-calculated) -->
-                <div class="form-group mb-3">
-                    <label class="form-label mb-2">Total Amount (Rs.):</label>
-                    <input type="text" class="form-control fw-bold" [value]="totalAmount | number: '1.2-2'" disabled
-                        readonly />
+                <!-- Fee Summary with GST breakdown (auto-calculated) -->
+                <div class="rc-fee-summary mb-3">
+                    <div class="rc-fee-summary__row">
+                        <span>Subtotal</span>
+                        <span>₹{{ subtotal | number: '1.2-2' }}</span>
+                    </div>
+                    <div class="rc-fee-summary__row rc-fee-summary__row--muted">
+                        <span>CGST ({{ CGST_RATE * 100 }}%)</span>
+                        <span>₹{{ cgstAmount | number: '1.2-2' }}</span>
+                    </div>
+                    <div class="rc-fee-summary__row rc-fee-summary__row--muted">
+                        <span>SGST ({{ SGST_RATE * 100 }}%)</span>
+                        <span>₹{{ sgstAmount | number: '1.2-2' }}</span>
+                    </div>
+                    <hr class="my-2">
+                    <div class="rc-fee-summary__row rc-fee-summary__row--total">
+                        <span>Total Amount (incl. GST)</span>
+                        <span>₹{{ totalAmount | number: '1.2-2' }}</span>
+                    </div>
                 </div>
 
                 <!-- Bill Date (auto-set) -->

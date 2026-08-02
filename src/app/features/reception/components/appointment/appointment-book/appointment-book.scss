@@ -1,0 +1,211 @@
+@use '../../../shared/reception-theme' as rc;
+
+@include rc.base;
+
+// ---------------------------------------------------------------------------
+// Card header — gradient bar (matches the module's primary accent)
+// ---------------------------------------------------------------------------
+.rc-book-card {
+  border-radius: rc.$rc-radius-lg;
+  overflow: hidden;
+}
+
+.rc-book-card__header {
+  background: linear-gradient(135deg, rc.$rc-primary, rc.$rc-primary-dark) !important;
+  color: #fff;
+  border: none;
+  padding: 1.1rem 1.5rem;
+
+  h4 { font-weight: 700; }
+}
+
+// ---------------------------------------------------------------------------
+// Field icon next to labels
+// ---------------------------------------------------------------------------
+.rc-field-icon {
+  color: rc.$rc-primary;
+  width: 1.1rem;
+  text-align: center;
+  margin-right: .15rem;
+}
+
+.rc-change-link {
+  color: rc.$rc-primary;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; }
+}
+
+// ---------------------------------------------------------------------------
+// Today / Tomorrow toggle
+// ---------------------------------------------------------------------------
+.rc-date-toggle {
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+
+.rc-date-toggle__btn {
+  flex: 1 1 200px;
+  padding: .9rem 1.25rem;
+  border-radius: rc.$rc-radius;
+  border: 2px solid rc.$rc-border;
+  background: #fff;
+  color: rc.$rc-body;
+  font-weight: 600;
+  font-size: .95rem;
+  cursor: pointer;
+  transition: rc.$rc-transition;
+
+  &:hover {
+    border-color: rc.$rc-primary;
+    background: rc.$rc-primary-light;
+  }
+
+  &.is-active {
+    background: linear-gradient(135deg, rc.$rc-primary, rc.$rc-primary-dark);
+    border-color: rc.$rc-primary-dark;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, .3);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Slot availability hint
+// ---------------------------------------------------------------------------
+.rc-slot-hint {
+  display: inline-flex;
+  align-items: center;
+  font-size: .85rem;
+  font-weight: 600;
+  padding: .3rem .7rem;
+  border-radius: 999px;
+
+  &.rc-slot-hint--ok {
+    color: rc.$rc-success;
+    background: rc.$rc-success-light;
+  }
+
+  &.rc-slot-hint--danger {
+    color: rc.$rc-danger;
+    background: rc.$rc-danger-light;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Submit / cancel buttons
+// ---------------------------------------------------------------------------
+.btn-success.btn-lg {
+  background: linear-gradient(135deg, rc.$rc-success, #059669);
+  border: none;
+  font-weight: 600;
+
+  &:hover { box-shadow: 0 4px 12px rgba(16, 185, 129, .3); transform: translateY(-1px); }
+
+  &:disabled { opacity: .7; transform: none; }
+}
+
+// ---------------------------------------------------------------------------
+// Live conflict panels - patient already booked today / same doctor / same slot
+// ---------------------------------------------------------------------------
+.rc-conflict-panel {
+  display: flex;
+  align-items: flex-start;
+  gap: .65rem;
+  padding: .75rem 1rem;
+  border-radius: rc.$rc-radius-sm;
+  border-left: 4px solid transparent;
+  font-size: .88rem;
+  line-height: 1.4;
+  animation: rc-panel-in .18s ease;
+
+  i { margin-top: .15rem; font-size: 1rem; }
+  strong { display: block; margin-bottom: .15rem; }
+
+  &.rc-conflict-panel--warning {
+    background: rc.$rc-warning-light;
+    border-left-color: rc.$rc-warning;
+    color: #92620a;
+  }
+
+  &.rc-conflict-panel--danger {
+    background: rc.$rc-danger-light;
+    border-left-color: rc.$rc-danger;
+    color: #b91c1c;
+  }
+}
+
+@keyframes rc-panel-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ---------------------------------------------------------------------------
+// Custom confirm dialog (replaces window.confirm())
+// ---------------------------------------------------------------------------
+.rc-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, .55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1080;
+  padding: 1rem;
+  animation: rc-panel-in .15s ease;
+}
+
+.rc-modal-card {
+  background: rc.$rc-surface;
+  border-radius: rc.$rc-radius-lg;
+  box-shadow: rc.$rc-shadow-md;
+  max-width: 420px;
+  width: 100%;
+  padding: 1.75rem 1.5rem 1.5rem;
+  text-align: center;
+}
+
+.rc-modal-card__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rc.$rc-warning-light;
+  color: rc.$rc-warning;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto .9rem;
+}
+
+.rc-modal-card__title {
+  font-weight: 700;
+  color: rc.$rc-ink;
+  margin-bottom: .5rem;
+}
+
+.rc-modal-card__message {
+  color: rc.$rc-body;
+  font-size: .92rem;
+  margin-bottom: 1.25rem;
+}
+
+.rc-modal-card__actions {
+  display: flex;
+  gap: .75rem;
+  justify-content: center;
+
+  .btn {
+    flex: 1 1 auto;
+    font-weight: 600;
+  }
+
+  .btn-warning {
+    background: rc.$rc-warning;
+    border-color: rc.$rc-warning;
+    color: #fff;
+
+    &:hover { background: #d97e06; }
+  }
+}

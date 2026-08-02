@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { Appointment } from '../../models/appointment';
 import { Appointment as AppointmentService } from '../../services/appointment';
@@ -10,7 +10,7 @@ import { AuthService } from '../../../auth/services/auth';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
@@ -43,7 +43,7 @@ export class Dashboard implements OnInit {
       next: (appointments: any[]) => {
         const today = new Date().toISOString().split('T')[0];
         const todayAppts = appointments.filter((a: any) => a.AppointmentDate === today);
-        
+
         this.todayAppointments.set(todayAppts.length);
         this.todaysQueue.set(todayAppts.slice(0, 5));
         this.isLoading.set(false);

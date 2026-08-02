@@ -1,0 +1,345 @@
+// =============================================================================
+// RECEPTION MODULE — SHARED DESIGN SYSTEM
+// -----------------------------------------------------------------------------
+// Single source of truth for the Receptionist module's look & feel.
+// Import into any reception component's .scss with:
+//
+//   @use '../../../shared/reception-theme' as rc;   // (3 folders deep)
+//   @use '../../shared/reception-theme' as rc;      // (2 folders deep)
+//
+// Angular emulates style encapsulation, so every rule the mixins below
+// generate is compiled into that ONE component's own stylesheet — it never
+// leaks into the Doctor / Laboratory / Pharmacy / Admin / Auth modules, even
+// though it restyles plain Bootstrap classes like `.card` or `.btn`.
+// =============================================================================
+
+@use "sass:color";
+
+// ---------------------------------------------------------------------------
+// 1. DESIGN TOKENS
+// ---------------------------------------------------------------------------
+$rc-primary: #2563eb;
+$rc-primary-dark: #1d4ed8;
+$rc-primary-light: #eff6ff;
+
+$rc-success: #10b981;
+$rc-success-light: #ecfdf5;
+
+$rc-warning: #f59e0b;
+$rc-warning-light: #fffbeb;
+
+$rc-danger: #ef4444;
+$rc-danger-light: #fef2f2;
+
+$rc-info: #0ea5e9;
+$rc-info-light: #f0f9ff;
+
+$rc-ink: #0f172a;    // headings / high-emphasis text
+$rc-body: #334155;   // body text
+$rc-muted: #64748b;  // secondary text
+$rc-border: #e5e7eb; // hairlines
+$rc-surface: #ffffff;
+$rc-bg: #f8fafc;
+
+$rc-radius-lg: 16px;
+$rc-radius: 12px;
+$rc-radius-sm: 8px;
+
+$rc-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+$rc-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+$rc-shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+
+$rc-font-heading: 700;
+$rc-transition: all 0.18s ease;
+
+// ---------------------------------------------------------------------------
+// 2. PAGE SHELL — background, base typography, entrance motion
+// ---------------------------------------------------------------------------
+@mixin page-shell {
+  :host { display: block; }
+
+  .container, .container-fluid {
+    animation: rc-fade-in-up .35s ease both;
+  }
+
+  h2, h3, h4 {
+    color: $rc-ink;
+    font-weight: $rc-font-heading;
+    letter-spacing: -0.01em;
+  }
+
+  p.text-muted, small.text-muted {
+    color: $rc-muted !important;
+  }
+
+  @keyframes rc-fade-in-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 3. PAGE HEADER — the `d-flex justify-content-between` title/actions row
+// ---------------------------------------------------------------------------
+@mixin page-header {
+  .d-flex.justify-content-between.mb-3,
+  .d-flex.justify-content-between.mb-4 {
+    padding-bottom: 20px;
+    margin-bottom: 24px !important;
+    border-bottom: 1px solid $rc-border;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 4. CARDS
+// ---------------------------------------------------------------------------
+@mixin cards {
+  .card {
+    border: 1px solid $rc-border;
+    border-radius: $rc-radius-lg;
+    box-shadow: $rc-shadow-sm;
+    transition: $rc-transition;
+
+    &.shadow-sm { box-shadow: $rc-shadow-sm; }
+  }
+
+  .card-header {
+    border-radius: $rc-radius-lg $rc-radius-lg 0 0 !important;
+    border-bottom: 1px solid $rc-border;
+    font-weight: 600;
+
+    &.bg-primary {
+      background: linear-gradient(135deg, $rc-primary, $rc-primary-dark) !important;
+      border: none;
+    }
+  }
+
+  .card-body { padding: 1.5rem; }
+
+  .card-title {
+    font-weight: 600;
+    color: $rc-ink;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 5. BUTTONS
+// ---------------------------------------------------------------------------
+@mixin buttons {
+  .btn {
+    border-radius: $rc-radius-sm;
+    font-weight: 500;
+    transition: $rc-transition;
+
+    &:focus { box-shadow: 0 0 0 3px rgba($rc-primary, 0.15); }
+  }
+
+  .btn-sm { border-radius: 7px; }
+  .btn-lg { border-radius: $rc-radius; }
+
+  .btn-primary {
+    background: $rc-primary;
+    border-color: $rc-primary;
+
+    &:hover, &:focus {
+      background: $rc-primary-dark;
+      border-color: $rc-primary-dark;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba($rc-primary, 0.25);
+    }
+  }
+
+  .btn-success:hover, .btn-danger:hover, .btn-warning:hover,
+  .btn-info:hover, .btn-secondary:hover {
+    transform: translateY(-1px);
+    box-shadow: $rc-shadow-sm;
+  }
+
+  .btn-outline-primary:hover, .btn-outline-secondary:hover {
+    transform: translateY(-1px);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 6. TABLES
+// ---------------------------------------------------------------------------
+@mixin tables {
+  .table {
+    --bs-table-hover-bg: #{$rc-primary-light};
+    margin-bottom: 0;
+    font-size: .925rem;
+
+    thead.table-dark th {
+      background: $rc-ink !important;
+      border-color: $rc-ink;
+      font-weight: 600;
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: #e2e8f0;
+    }
+
+    thead.table-light th {
+      background: $rc-bg !important;
+      font-weight: 600;
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: $rc-muted;
+      border-bottom-width: 1px;
+    }
+
+    tbody tr { transition: $rc-transition; }
+
+    td, th { vertical-align: middle; padding: .85rem 1rem; }
+  }
+
+  .table-responsive, .card > .table-responsive {
+    border-radius: $rc-radius-lg;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 7. BADGES
+// ---------------------------------------------------------------------------
+@mixin badges {
+  .badge {
+    font-weight: 600;
+    letter-spacing: .02em;
+    padding: .4em .75em;
+    border-radius: 999px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 8. ALERTS — soft, left-accented, no harsh Bootstrap default fills
+// ---------------------------------------------------------------------------
+@mixin alerts {
+  .alert {
+    border: 1px solid transparent;
+    border-left-width: 4px;
+    border-radius: $rc-radius-sm;
+    font-size: .925rem;
+  }
+
+  .alert-success { background: $rc-success-light; border-left-color: $rc-success; color: color.adjust($rc-success, $lightness: -25%); }
+  .alert-danger  { background: $rc-danger-light;  border-left-color: $rc-danger;  color: color.adjust($rc-danger, $lightness: -15%); }
+  .alert-warning { background: $rc-warning-light; border-left-color: $rc-warning; color: color.adjust($rc-warning, $lightness: -25%); }
+  .alert-info    { background: $rc-info-light;    border-left-color: $rc-info;    color: color.adjust($rc-info, $lightness: -25%); }
+}
+
+// ---------------------------------------------------------------------------
+// 9. FORMS
+// ---------------------------------------------------------------------------
+@mixin forms {
+  .form-label {
+    font-weight: 500;
+    color: $rc-body;
+    font-size: .9rem;
+  }
+
+  .form-control, .form-select {
+    border-radius: $rc-radius-sm;
+    border-color: $rc-border;
+    padding: .55rem .85rem;
+    transition: $rc-transition;
+
+    &:focus {
+      border-color: $rc-primary;
+      box-shadow: 0 0 0 3px rgba($rc-primary, 0.12);
+    }
+
+    &.is-invalid:focus { box-shadow: 0 0 0 3px rgba($rc-danger, 0.12); }
+  }
+
+  .form-control-lg, .form-select-lg { border-radius: $rc-radius; }
+
+  .input-group-text {
+    border-color: $rc-border;
+    background: $rc-bg;
+  }
+
+  .form-check-input:checked {
+    background-color: $rc-primary;
+    border-color: $rc-primary;
+  }
+
+  .form-check-input:focus { box-shadow: 0 0 0 3px rgba($rc-primary, 0.12); }
+}
+
+// ---------------------------------------------------------------------------
+// 10. LIST GROUP (bill/patient pick lists)
+// ---------------------------------------------------------------------------
+@mixin list-group {
+  .list-group-item {
+    border-color: $rc-border;
+    transition: $rc-transition;
+
+    &:first-child { border-top-left-radius: $rc-radius; border-top-right-radius: $rc-radius; }
+    &:last-child  { border-bottom-left-radius: $rc-radius; border-bottom-right-radius: $rc-radius; }
+
+    &.list-group-item-action:hover { background: $rc-primary-light; }
+
+    &.active { background: $rc-primary; border-color: $rc-primary; }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 11. SPINNER
+// ---------------------------------------------------------------------------
+@mixin spinner {
+  .spinner-border.text-primary { color: $rc-primary !important; }
+}
+
+// ---------------------------------------------------------------------------
+// 12. STAT / SUMMARY CARDS (dashboard tiles, queue counters, etc.)
+// ---------------------------------------------------------------------------
+@mixin stat-card {
+  .rc-stat-card {
+    border: 1px solid $rc-border;
+    border-radius: $rc-radius-lg;
+    background: $rc-surface;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: $rc-shadow-sm;
+    border-top: 4px solid $rc-primary;
+    transition: $rc-transition;
+    height: 100%;
+
+    &:hover { transform: translateY(-2px); box-shadow: $rc-shadow; }
+
+    &.rc-accent-success { border-top-color: $rc-success; }
+    &.rc-accent-warning  { border-top-color: $rc-warning; }
+    &.rc-accent-danger   { border-top-color: $rc-danger; }
+    &.rc-accent-info     { border-top-color: $rc-info; }
+  }
+
+  .rc-stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $rc-ink;
+    line-height: 1.1;
+  }
+
+  .rc-stat-label {
+    color: $rc-muted;
+    font-size: .85rem;
+    margin-top: 4px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 13. ALL-IN-ONE — everything most reception pages need in one @include
+// ---------------------------------------------------------------------------
+@mixin base {
+  @include page-shell;
+  @include page-header;
+  @include cards;
+  @include buttons;
+  @include tables;
+  @include badges;
+  @include alerts;
+  @include forms;
+  @include list-group;
+  @include spinner;
+}

@@ -1,0 +1,127 @@
+@use "sass:color";
+@use '../../../shared/reception-theme' as rc;
+
+@include rc.base;
+
+.table-borderless td {
+    padding: 0.4rem 0.5rem;
+}
+
+.card-header.bg-primary .badge {
+    font-size: 0.75rem;
+}
+
+.rc-mmr-badge {
+    background: rc.$rc-primary-light;
+    color: rc.$rc-primary-dark;
+    font-family: monospace;
+}
+
+.rc-spec-badge {
+    background: rc.$rc-info-light;
+    color: color.adjust(rc.$rc-info, $lightness: -20%);
+}
+
+// ---------------------------------------------------------------------------
+// Tax invoice layout
+// ---------------------------------------------------------------------------
+.rc-invoice {
+    background: rc.$rc-surface;
+    border: 1px solid rc.$rc-border;
+    border-radius: rc.$rc-radius-lg;
+    box-shadow: rc.$rc-shadow-sm;
+    padding: 2rem 2.25rem;
+}
+
+.rc-invoice__letterhead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.rc-invoice__brand {
+    display: flex;
+    gap: .9rem;
+    align-items: flex-start;
+
+    h3 { font-weight: 700; color: rc.$rc-ink; }
+    p { color: rc.$rc-muted; }
+}
+
+.rc-invoice__brand-icon {
+    font-size: 1.9rem;
+    color: rc.$rc-primary;
+    margin-top: .2rem;
+}
+
+.rc-invoice__meta h4 {
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: rc.$rc-primary-dark;
+}
+
+.rc-invoice__status {
+    font-size: .78rem;
+    padding: .35rem .7rem;
+}
+
+.rc-invoice__divider {
+    border-top: 1px dashed rc.$rc-border;
+    margin: 1.25rem 0;
+}
+
+.rc-invoice__parties {
+    margin-bottom: 1rem;
+}
+
+.rc-invoice__items {
+    thead th {
+        background: rc.$rc-bg;
+        font-size: .78rem;
+        text-transform: uppercase;
+        letter-spacing: .03em;
+        color: rc.$rc-muted;
+        border-bottom: 2px solid rc.$rc-border;
+    }
+
+    td { vertical-align: middle; }
+}
+
+.rc-invoice__words {
+    padding-top: .5rem;
+}
+
+.rc-invoice__totals {
+    td {
+        padding: .4rem .25rem;
+        border: none;
+    }
+}
+
+.rc-invoice__grand-total {
+    border-top: 2px solid rc.$rc-ink !important;
+
+    td {
+        padding-top: .6rem;
+        color: rc.$rc-ink;
+    }
+}
+
+.rc-invoice__footer {
+    text-align: center;
+}
+
+// ---------------------------------------------------------------------------
+// Print refinement — the global #receipt rule (styles.scss) already isolates
+// this card from the rest of the page; this just makes it look like paper.
+// ---------------------------------------------------------------------------
+@media print {
+    .rc-invoice {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+}
+

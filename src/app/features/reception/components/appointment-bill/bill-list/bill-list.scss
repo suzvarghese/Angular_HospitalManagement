@@ -1,0 +1,8 @@
+@use '../../../shared/reception-theme' as rc;
+@use '../../../shared/reception-animations' as anim;
+
+@include rc.base;
+
+tbody tr {
+    @include anim.pop-in;
+}

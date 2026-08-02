@@ -28,4 +28,9 @@ export class Patient {
   addPatient(patient: PatientModel): Observable<PatientModel> {
     return this.httpClient.post<PatientModel>(environment.apiUrl + 'receptionists/patients', patient);
   }
+
+  // 4 - Update an existing patient (ReceptionistController.UpdatePatient -> PUT receptionists/patients/{id})
+  updatePatient(id: number, patient: PatientModel): Observable<any> {
+    return this.httpClient.put<any>(environment.apiUrl + 'receptionists/patients/' + id, patient);
+  }
 }

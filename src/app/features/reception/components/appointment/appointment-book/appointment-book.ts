@@ -327,6 +327,15 @@ import { Patient as PatientService } from '../../../services/patient';
 
 import { generateTimeSlots,slotToDate} from '../../../utils/appointment-slots';
 
+// A small in-app confirm dialog (replaces the plain browser confirm()) so
+// warnings look like part of the app instead of a system popup.
+interface ConfirmModalState {
+  title: string;
+  message: string;
+  confirmLabel: string;
+  onConfirm: () => void;
+}
+
 @Component({
   selector: 'app-appointment-book',
   standalone: true,
@@ -340,6 +349,11 @@ export class AppointmentBook implements OnInit {
   doctors: any[] = [];
   patients: any[] = [];
   timeSlots: string[] = [];
+
+  // All appointments (excluding cancelled) - used to filter out slots the
+  // selected doctor is already booked for, and to count how many times the
+  // selected patient has already booked on the selected date.
+  private allAppointments: Appointment[] = [];
   
   todayDate: string = new Date().toISOString().split('T')[0];
   tomorrowDate: string = new Date(Date.now() + 86400000).toISOString().split('T')[0];
@@ -349,6 +363,17 @@ export class AppointmentBook implements OnInit {
   isLoading = false;
   successMessage = '';
   errorMessage = '';
+
+  // --- Same-patient conflict awareness (updates live as the receptionist fills the form) ---
+  // Every non-cancelled appointment this patient already has on the selected date.
+  patientTodayAppointments: Appointment[] = [];
+  // Set when the patient already has an appointment with the SAME doctor on this date.
+  sameDoctorConflict: Appointment | null = null;
+  // Set when the patient already has an appointment at the exact same time slot (any doctor).
+  duplicateSlotConflict: Appointment | null = null;
+
+  // Custom confirm dialog state - null means hidden.
+  confirmModal: ConfirmModalState | null = null;
 
   constructor(
     private appointmentService: AppointmentService,
@@ -361,6 +386,7 @@ export class AppointmentBook implements OnInit {
   ngOnInit(): void {
     this.loadDoctors();
     this.loadPatients();
+    this.loadAllAppointments();
     // this.generateTimeSlots();
     this.populateAvailableSlots();
 
@@ -368,8 +394,71 @@ export class AppointmentBook implements OnInit {
       if (params['patientId']) {
         this.appointment.PatientId = +params['patientId'];
         this.preFillPatientName(+params['patientId']);
+        this.refreshPatientConflicts();
       }
     });
+  }
+
+  // Load all appointments once, so we can filter out doctor slot conflicts
+  // and count same-day patient bookings client-side (no new API needed).
+  loadAllAppointments(): void {
+    this.appointmentService.getAllAppointments().subscribe({
+      next: (data) => {
+        this.allAppointments = data || [];
+        this.populateAvailableSlots();
+        this.refreshPatientConflicts();
+      },
+      error: (err) => console.error('Appointment load error', err)
+    });
+  }
+
+  // Recomputes what (if anything) this patient already has booked on the
+  // selected date, so the template can show a live warning banner and the
+  // submit handler can block/confirm real conflicts. Called whenever the
+  // patient, doctor, date, or time slot changes.
+  refreshPatientConflicts(): void {
+    this.patientTodayAppointments = [];
+    this.sameDoctorConflict = null;
+    this.duplicateSlotConflict = null;
+
+    const patientId = +this.appointment.PatientId;
+    if (!patientId || !this.appointment.AppointmentDate) {
+      return;
+    }
+
+    this.patientTodayAppointments = this.allAppointments.filter(a =>
+      a.PatientId === patientId &&
+      a.AppointmentDate === this.appointment.AppointmentDate &&
+      a.Status !== 'Cancelled'
+    );
+
+    const doctorId = +this.appointment.DoctorId;
+    if (doctorId) {
+      this.sameDoctorConflict = this.patientTodayAppointments.find(a => a.DoctorId === doctorId) ?? null;
+    }
+
+    if (this.appointment.TimeSlot) {
+      this.duplicateSlotConflict = this.patientTodayAppointments.find(a => a.TimeSlot === this.appointment.TimeSlot) ?? null;
+    }
+  }
+
+  // Fired from the Patient <select> on change.
+  onPatientChange(): void {
+    this.refreshPatientConflicts();
+  }
+
+  // Fired from the Time Slot <select> on change.
+  onTimeSlotChange(): void {
+    this.refreshPatientConflicts();
+  }
+
+  // Best-effort doctor name lookup, used when an appointment record from the
+  // API doesn't already carry a DoctorName.
+  doctorNameFor(appt: Appointment | null): string {
+    if (!appt) return '';
+    if (appt.DoctorName) return appt.DoctorName;
+    const doc = this.doctors.find((d: any) => d.DoctorId === appt.DoctorId);
+    return doc ? (doc.DoctorName || doc.Name || '') : `Doctor #${appt.DoctorId}`;
   }
 
   private preFillPatientName(patientId: number) {
@@ -409,6 +498,29 @@ export class AppointmentBook implements OnInit {
 
     }
 
+    // Remove slots the selected doctor is already booked for on the
+    // selected date, so two receptionists can't double-book the same
+    // doctor at the same time (Status !== 'Cancelled' - a cancelled
+    // appointment frees the slot back up).
+    if (this.appointment.DoctorId && this.appointment.AppointmentDate) {
+
+        const bookedSlots = this.allAppointments
+            .filter(a =>
+                a.DoctorId === +this.appointment.DoctorId &&
+                a.AppointmentDate === this.appointment.AppointmentDate &&
+                a.Status !== 'Cancelled'
+            )
+            .map(a => a.TimeSlot);
+
+        this.timeSlots = this.timeSlots.filter(slot => !bookedSlots.includes(slot));
+
+        // The previously-selected slot may no longer be valid (doctor/date changed) - clear it.
+        if (this.appointment.TimeSlot && !this.timeSlots.includes(this.appointment.TimeSlot)) {
+            this.appointment.TimeSlot = '';
+        }
+    }
+
+    this.refreshPatientConflicts();
 }
 
   loadPatients(): void {
@@ -432,13 +544,112 @@ export class AppointmentBook implements OnInit {
   bookAppointment(form: NgForm): void {
     this.errorMessage = '';
     this.successMessage = '';
+    this.confirmModal = null;
 
     if (!form.valid) {
       this.errorMessage = 'Please fill all required fields';
       return;
     }
 
-    // Ensure required fields
+    const doctorId = +this.appointment.DoctorId;
+    const patientId = +this.appointment.PatientId;
+
+    // Make sure we're checking against the latest known state, in case
+    // doctor/date/slot were changed without triggering populateAvailableSlots.
+    this.refreshPatientConflicts();
+
+    // 1) HARD BLOCK - the selected doctor must not already have a
+    // (non-cancelled) appointment at this exact date + time slot. The
+    // dropdown already excludes booked slots, but this guards against a
+    // stale list if another booking happened after the page loaded.
+    const doctorConflict = this.allAppointments.find(a =>
+      a.DoctorId === doctorId &&
+      a.AppointmentDate === this.appointment.AppointmentDate &&
+      a.TimeSlot === this.appointment.TimeSlot &&
+      a.Status !== 'Cancelled'
+    );
+
+    if (doctorConflict) {
+      this.errorMessage = `This doctor already has an appointment at ${this.appointment.TimeSlot}. Please choose another slot.`;
+      this.populateAvailableSlots();
+      return;
+    }
+
+    // 2) HARD BLOCK - this same patient cannot be booked into two
+    // appointments at the exact same time slot on the same day, even with
+    // a different doctor. e.g. patient already booked 9:00 AM -> trying to
+    // also book them at 9:00 AM again (or the slot already taken) is rejected.
+    const patientSlotConflict = this.allAppointments.find(a =>
+      a.PatientId === patientId &&
+      a.AppointmentDate === this.appointment.AppointmentDate &&
+      a.TimeSlot === this.appointment.TimeSlot &&
+      a.Status !== 'Cancelled'
+    );
+
+    if (patientSlotConflict) {
+      this.errorMessage =
+        `This patient is already booked at ${this.appointment.TimeSlot} on this date ` +
+        `(with ${this.doctorNameFor(patientSlotConflict)}). A patient can't hold two appointments at the same time.`;
+      return;
+    }
+
+    // 3) CONFIRM - same patient + same doctor, same day. Not always wrong
+    // (a genuine follow-up can happen), so we ask the receptionist to confirm
+    // instead of silently blocking it.
+    const sameDoctorToday = this.allAppointments.find(a =>
+      a.PatientId === patientId &&
+      a.DoctorId === doctorId &&
+      a.AppointmentDate === this.appointment.AppointmentDate &&
+      a.Status !== 'Cancelled'
+    );
+
+    if (sameDoctorToday) {
+      this.confirmModal = {
+        title: 'Duplicate Doctor Booking',
+        message:
+          `${this.selectedPatientName || 'This patient'} already has an appointment with ` +
+          `${this.doctorNameFor(sameDoctorToday)} today at ${sameDoctorToday.TimeSlot}. ` +
+          `Do you still want to book another appointment with the same doctor?`,
+        confirmLabel: 'Yes, Book Anyway',
+        onConfirm: () => {
+          this.confirmModal = null;
+          this.confirmSameDayLoad(patientId);
+        }
+      };
+      return;
+    }
+
+    this.confirmSameDayLoad(patientId);
+  }
+
+  // 4) CONFIRM - patient already has 2+ appointments today (any doctor) - a
+  // softer heads-up so the desk doesn't stack up appointments by mistake.
+  private confirmSameDayLoad(patientId: number): void {
+    const sameDayCount = this.allAppointments.filter(a =>
+      a.PatientId === patientId &&
+      a.AppointmentDate === this.appointment.AppointmentDate &&
+      a.Status !== 'Cancelled'
+    ).length;
+
+    if (sameDayCount >= 2) {
+      this.confirmModal = {
+        title: 'Multiple Appointments Today',
+        message: `This patient already has ${sameDayCount} appointment(s) booked on this date. Do you want to proceed with booking another one?`,
+        confirmLabel: 'Yes, Proceed',
+        onConfirm: () => {
+          this.confirmModal = null;
+          this.finalizeBooking();
+        }
+      };
+      return;
+    }
+
+    this.finalizeBooking();
+  }
+
+  // Actually sends the booking to the API once every conflict check has
+  // passed (or been explicitly confirmed by the receptionist).
+  private finalizeBooking(): void {
     this.appointment.ReceptionistId = 1;
     this.appointment.Status = 'Scheduled';
 
@@ -448,6 +659,11 @@ export class AppointmentBook implements OnInit {
       next: (response: any) => {
         this.isLoading = false;
         this.successMessage = `✅ Appointment booked successfully!`;
+
+        // Keep the local conflict/count checks accurate if the receptionist
+        // books again in the same session without reloading the page.
+        this.allAppointments.push({ ...this.appointment });
+        this.refreshPatientConflicts();
 
         // Optional: Go to bill generation
         const appointmentId = response?.AppointmentId || response?.appointmentId;
@@ -463,12 +679,18 @@ export class AppointmentBook implements OnInit {
         this.errorMessage = err?.error?.message || 'Failed to book appointment. Please try again.';
       }
     });
-}
+  }
+
+  // Cancel button on the custom confirm dialog.
+  cancelConfirmModal(): void {
+    this.confirmModal = null;
+  }
 
   clearPatientSelection(e: Event) {
     e.preventDefault();
     this.selectedPatientName = '';
     this.appointment.PatientId = 0;
+    this.refreshPatientConflicts();
   }
 
   // setDate(type: string) {

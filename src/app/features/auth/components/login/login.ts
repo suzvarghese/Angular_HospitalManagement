@@ -30,6 +30,7 @@ export class Login {
   { value: 'Doctor', label: 'Doctor', idLabel: 'Doctor ID', route: '/doctor' },
   { value: 'Pharmacist', label: 'Pharmacist', idLabel: 'Pharmacist ID', route: '/pharmacy' },
   { value: 'Receptionist', label: 'Receptionist', idLabel: 'Receptionist ID', route: '/reception' },
+  { value: 'LabTechnician', label: 'Lab Technician', idLabel: 'Lab Technician ID', route: '/lab' }
 ];
 
   constructor(private authService: AuthService, private router: Router) {}

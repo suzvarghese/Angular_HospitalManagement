@@ -1,8 +1,14 @@
-/* /home/workdir/artifacts/frontendwebapi/app/features/reception/components/patient/patient-list/patient-list.scss */
-.table th {
-    font-weight: 600;
+@use '../../../shared/reception-theme' as rc;
+@use '../../../shared/reception-animations' as anim;
+
+@include rc.base;
+
+.rc-mmr-badge {
+    background: rc.$rc-primary-light;
+    color: rc.$rc-primary-dark;
+    font-family: monospace;
 }
 
-.btn-group .btn {
-    padding: 0.25rem 0.5rem;
+tbody tr {
+    @include anim.pop-in;
 }

@@ -1,0 +1,17 @@
+@use '../../../shared/reception-theme' as rc;
+@use '../../../shared/reception-animations' as anim;
+
+@include rc.base;
+
+.rc-mmr-badge {
+    background: rc.$rc-primary;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 999px;
+    display: inline-block;
+    min-width: 90px;
+    text-align: center;
+}
+tbody tr {
+    @include anim.pop-in;
+}
