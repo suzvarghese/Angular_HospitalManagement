@@ -1,26 +1,40 @@
-.form-control.is-invalid {
-    border-color: #dc3545;
-    background-image: none;
+@use '../../../shared/reception-theme' as rc;
+
+@include rc.base;
+
+.card.border-success {
+    border-color: rc.$rc-success !important;
 }
 
-.invalid-feedback {
-    display: block;
-    font-size: 0.85rem;
+.card-title.text-success {
+    color: rc.$rc-success !important;
 }
 
-button[disabled] {
-    cursor: not-allowed;
-    opacity: 0.65;
+// ---------------------------------------------------------------------------
+// GST fee summary box (Subtotal / CGST / SGST / Total)
+// ---------------------------------------------------------------------------
+.rc-fee-summary {
+    background: rc.$rc-bg;
+    border: 1px solid rc.$rc-border;
+    border-radius: rc.$rc-radius-sm;
+    padding: .9rem 1rem;
 }
 
-.alert-success {
-    border-left: 4px solid #198754;
+.rc-fee-summary__row {
+    display: flex;
+    justify-content: space-between;
+    font-size: .92rem;
+    padding: .15rem 0;
+
+    &--muted {
+        color: rc.$rc-muted;
+        font-size: .85rem;
+    }
+
+    &--total {
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: rc.$rc-ink;
+    }
 }
 
-.alert-danger {
-    border-left: 4px solid #dc3545;
-}
-
-.alert-warning {
-    border-left: 4px solid #ffc107;
-}

@@ -1,0 +1,103 @@
+@use '../../shared/reception-theme' as rc;
+@use '../../shared/reception-animations' as anim;
+
+@include rc.base;
+@include rc.stat-card;
+
+.rc-stat-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    background: rc.$rc-primary-light;
+    color: rc.$rc-primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+
+    &.rc-icon-success {
+        background: rc.$rc-success-light;
+        color: rc.$rc-success;
+    }
+
+    &.rc-icon-info {
+        background: rc.$rc-info-light;
+        color: rc.$rc-info;
+    }
+}
+
+.rc-panel {
+    background: rc.$rc-surface;
+    border: 1px solid rc.$rc-border;
+    border-radius: rc.$rc-radius-lg;
+    box-shadow: rc.$rc-shadow-sm;
+    padding: 1.5rem;
+}
+
+.row.g-4 {
+    @include anim.stagger-in(3, 0.06s);
+}
+
+// ---------------------------------------------------------------------------
+// Quick actions
+// ---------------------------------------------------------------------------
+.rc-quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: .85rem;
+}
+
+.rc-quick-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .6rem;
+    padding: 1.1rem .75rem;
+    border-radius: rc.$rc-radius;
+    border: 1px solid rc.$rc-border;
+    background: rc.$rc-bg;
+    color: rc.$rc-body;
+    text-decoration: none;
+    font-size: .88rem;
+    font-weight: 600;
+    text-align: center;
+    transition: rc.$rc-transition;
+
+    &:hover {
+        background: rc.$rc-primary-light;
+        border-color: rc.$rc-primary;
+        color: rc.$rc-primary-dark;
+        transform: translateY(-2px);
+        box-shadow: rc.$rc-shadow-sm;
+    }
+}
+
+.rc-quick-action__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid rc.$rc-border;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: rc.$rc-primary;
+}
+
+// ---------------------------------------------------------------------------
+// Empty state
+// ---------------------------------------------------------------------------
+.rc-empty-state {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: rc.$rc-muted;
+
+    i {
+        font-size: 1.8rem;
+        display: block;
+        margin-bottom: .6rem;
+        color: rc.$rc-border;
+    }
+}

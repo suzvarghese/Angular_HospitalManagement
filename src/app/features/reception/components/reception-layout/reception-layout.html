@@ -1,79 +1,108 @@
-<div class="d-flex" style="min-height: 100vh;">
+<div class="rc-shell">
 
-    <!-- Sidebar / Menu -->
-    <nav class="bg-dark text-white p-3" style="width: 240px; flex-shrink: 0;">
-        <h5 class="text-white mb-4">Reception</h5>
-        <ul class="nav nav-pills flex-column gap-1">
-            <li class="nav-item">
-                <a class="nav-link text-white" routerLink="/reception" routerLinkActive="active"
-                    [routerLinkActiveOptions]="{exact: true}">
-                    Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" routerLink="/reception/patients" routerLinkActive="active">
-                    Patients
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white ps-4" routerLink="/reception/patients/register" routerLinkActive="active">
-                    Register Patient
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white ps-4" routerLink="/reception/patients/search" routerLinkActive="active">
-                    Search Patient
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" routerLink="/reception/doctors" routerLinkActive="active">
-                    Doctors
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" routerLink="/reception/appointments" routerLinkActive="active"
-                    [routerLinkActiveOptions]="{exact: true}">
-                    Appointments
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white ps-4" routerLink="/reception/appointments/book" routerLinkActive="active">
-                    Book Appointment
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" routerLink="/reception/bills" routerLinkActive="active"
-                    [routerLinkActiveOptions]="{exact: true}">
-                    Appointment Bills
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white ps-4" routerLink="/reception/bills/generate" routerLinkActive="active">
-                    Generate Bill
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" routerLink="/reception/payments" routerLinkActive="active"
-                    [routerLinkActiveOptions]="{exact: true}">
-                    Payments
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white ps-4" routerLink="/reception/payments/collect" routerLinkActive="active">
-                    Collect Payment
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" routerLink="/reception/token-queue" routerLinkActive="active">
-                    Token Queue
-                </a>
-            </li>
-        </ul>
-    </nav>
-
-    <!-- Page Content -->
-    <div class="flex-grow-1">
+    <!-- Backdrop (mobile only, closes drawer on tap-outside) -->
+    <div class="rc-backdrop" [class.rc-backdrop--visible]="isSidebarOpen()" (click)="closeSidebar()"></div>
+  
+    <!-- ============================ SIDEBAR ============================ -->
+    <aside class="rc-sidebar" [class.rc-sidebar--open]="isSidebarOpen()">
+  
+      <div class="rc-sidebar__brand">
+        <span class="rc-sidebar__brand-icon"><i class="fa fa-hospital-o"></i></span>
+        <span class="rc-sidebar__brand-text">SyntaxFlow <strong>HMS</strong></span>
+      </div>
+  
+      <nav class="rc-sidebar__nav">
+  
+        <a class="rc-nav-link" routerLink="/reception" routerLinkActive="is-active"
+           [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()">
+          <i class="fa fa-th-large rc-nav-link__icon"></i>
+          <span>Dashboard</span>
+        </a>
+  
+        <p class="rc-sidebar__group-label">Patients</p>
+  
+        <a class="rc-nav-link" routerLink="/reception/patients/search" routerLinkActive="is-active" (click)="closeSidebar()">
+          <i class="fa fa-search rc-nav-link__icon"></i>
+          <span>Search Patient</span>
+        </a>
+        <a class="rc-nav-link" routerLink="/reception/patients/register" routerLinkActive="is-active" (click)="closeSidebar()">
+          <i class="fa fa-user-plus rc-nav-link__icon"></i>
+          <span>Register Patient</span>
+        </a>
+        <a class="rc-nav-link" routerLink="/reception/patients" routerLinkActive="is-active"
+           [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()">
+          <i class="fa fa-users rc-nav-link__icon"></i>
+          <span>All Patients</span>
+        </a>
+  
+        <p class="rc-sidebar__group-label">Appointments</p>
+  
+        <a class="rc-nav-link" routerLink="/reception/token-queue" routerLinkActive="is-active" (click)="closeSidebar()">
+          <i class="fa fa-calendar-check-o rc-nav-link__icon"></i>
+          <span>Today's Queue</span>
+        </a>
+        <a class="rc-nav-link" routerLink="/reception/appointments/book" routerLinkActive="is-active" (click)="closeSidebar()">
+          <i class="fa fa-calendar-plus-o rc-nav-link__icon"></i>
+          <span>Book Appointment</span>
+        </a>
+        <a class="rc-nav-link" routerLink="/reception/appointments" routerLinkActive="is-active"
+           [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()">
+          <i class="fa fa-folder-open-o rc-nav-link__icon"></i>
+          <span>All Appointments</span>
+        </a>
+  
+        <p class="rc-sidebar__group-label">Billing</p>
+  
+        <a class="rc-nav-link" routerLink="/reception/bills" routerLinkActive="is-active"
+           [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()">
+          <i class="fa fa-file-text-o rc-nav-link__icon"></i>
+          <span>Bills</span>
+        </a>
+        <a class="rc-nav-link" routerLink="/reception/payments/collect" routerLinkActive="is-active" (click)="closeSidebar()">
+          <i class="fa fa-credit-card rc-nav-link__icon"></i>
+          <span>Collect Payment</span>
+        </a>
+        <a class="rc-nav-link" routerLink="/reception/payments" routerLinkActive="is-active"
+           [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()">
+          <i class="fa fa-line-chart rc-nav-link__icon"></i>
+          <span>Payment History</span>
+        </a>
+  
+        <p class="rc-sidebar__group-label">Doctors</p>
+  
+        <a class="rc-nav-link" routerLink="/reception/doctors" routerLinkActive="is-active" (click)="closeSidebar()">
+          <i class="fa fa-heartbeat rc-nav-link__icon"></i>
+          <span>View Doctors</span>
+        </a>
+  
+      </nav>
+  
+      <div class="rc-sidebar__footer">
+        <button type="button" class="rc-logout-btn" (click)="logout()">
+          <i class="fa fa-sign-out rc-nav-link__icon"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+  
+    <!-- ============================ MAIN ============================ -->
+    <div class="rc-main">
+  
+      <header class="rc-topbar">
+        <button type="button" class="rc-topbar__toggle" (click)="toggleSidebar()" aria-label="Toggle menu">
+          <i class="fa fa-bars"></i>
+        </button>
+        <span class="rc-topbar__title">Reception Desk</span>
+        <span class="rc-topbar__spacer"></span>
+        <span class="rc-topbar__badge">
+          <i class="fa fa-user-circle-o"></i> Receptionist
+        </span>
+      </header>
+  
+      <main class="rc-content">
         <router-outlet></router-outlet>
+      </main>
     </div>
-
-</div>
+  
+  </div>
+  

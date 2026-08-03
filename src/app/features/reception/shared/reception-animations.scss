@@ -1,0 +1,47 @@
+// =============================================================================
+// RECEPTION MODULE — SHARED ANIMATIONS
+// -----------------------------------------------------------------------------
+// Small, reusable motion utilities for the Receptionist module.
+// Usage:
+//   @use '../../../shared/reception-animations' as anim;
+//   .rc-row { @include anim.stagger-in; }
+// =============================================================================
+
+@keyframes rc-pop-in {
+  from { opacity: 0; transform: scale(.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes rc-slide-in-right {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes rc-pulse-soft {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, .25); }
+  50%      { box-shadow: 0 0 0 6px rgba(37, 99, 235, 0); }
+}
+
+// Applies a gentle "pop" entrance — good for cards/rows appearing after a load.
+@mixin pop-in($delay: 0s) {
+  animation: rc-pop-in .3s ease $delay both;
+}
+
+// Applies a rightward slide entrance — good for receipts/summaries appearing.
+@mixin slide-in($delay: 0s) {
+  animation: rc-slide-in-right .3s ease $delay both;
+}
+
+// A soft attention pulse — good for a newly-selected list item or active token.
+@mixin pulse-soft {
+  animation: rc-pulse-soft 1.8s ease-in-out infinite;
+}
+
+// Staggers direct child rows/cards of a container using nth-child delays.
+@mixin stagger-in($max: 8, $step: 0.04s) {
+  @for $i from 1 through $max {
+    > *:nth-child(#{$i}) {
+      animation: rc-pop-in .3s ease ($step * $i) both;
+    }
+  }
+}

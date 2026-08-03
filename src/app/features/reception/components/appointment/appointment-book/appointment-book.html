@@ -1,11 +1,12 @@
-<div class="container mt-4">
+<div class="container-fluid px-4 py-4">
+
   <div class="row justify-content-center">
     <div class="col-lg-9">
       <div class="card shadow-sm border-0">
 
         <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
           <h4 class="mb-0">
-            <i class="bi bi-calendar-plus me-2"></i> Book New Appointment
+            <i class="fa fa-calendar-plus-o me-2"></i> Book New Appointment
           </h4>
 
           <a routerLink="/reception/dashboard" class="btn btn-light btn-sm">
@@ -16,8 +17,9 @@
         <div class="card-body p-4">
 
           <!-- Messages -->
-          <div *ngIf="successMessage" class="alert alert-success alert-dismissible">
-            {{ successMessage }}
+          <div *ngIf="successMessage" class="alert alert-success alert-dismissible d-flex align-items-center">
+            <i class="fa fa-check-circle me-2"></i>
+            <span class="flex-grow-1">{{ successMessage }}</span>
             <button type="button" class="btn-close" (click)="successMessage=''"></button>
           </div>
 
@@ -67,6 +69,29 @@
                   Can't find patient? Search here
                 </a>
               </small>
+
+              <!-- Live "heads up" panel: what this patient already has booked today -->
+              <div class="rc-conflict-panel rc-conflict-panel--danger mt-3"
+                   *ngIf="sameDoctorConflict">
+                <i class="fa fa-exclamation-triangle"></i>
+                <div>
+                  <strong>Already booked with this doctor today</strong>
+                  <div>{{ selectedPatientName || 'This patient' }} has an appointment with
+                    {{ doctorNameFor(sameDoctorConflict) }} today at
+                    <strong>{{ sameDoctorConflict.TimeSlot }}</strong>.</div>
+                </div>
+              </div>
+
+              <div class="rc-conflict-panel rc-conflict-panel--warning mt-3"
+                   *ngIf="!sameDoctorConflict && patientTodayAppointments.length > 0">
+                <i class="fa fa-info-circle"></i>
+                <div>
+                  <strong>{{ patientTodayAppointments.length }} appointment(s) already booked today</strong>
+                  <div *ngFor="let a of patientTodayAppointments">
+                    {{ a.TimeSlot }} — {{ doctorNameFor(a) }}
+                  </div>
+                </div>
+              </div>
             </div>
 
             <!-- Doctor -->
@@ -172,6 +197,25 @@
           </form>
 
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom confirm dialog: replaces window.confirm() for a native, in-app feel -->
+  <div class="rc-modal-backdrop" *ngIf="confirmModal" (click)="cancelConfirmModal()">
+    <div class="rc-modal-card" (click)="$event.stopPropagation()">
+      <div class="rc-modal-card__icon">
+        <i class="fa fa-exclamation-triangle"></i>
+      </div>
+      <h5 class="rc-modal-card__title">{{ confirmModal.title }}</h5>
+      <p class="rc-modal-card__message">{{ confirmModal.message }}</p>
+      <div class="rc-modal-card__actions">
+        <button type="button" class="btn btn-outline-secondary" (click)="cancelConfirmModal()">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-warning" (click)="confirmModal.onConfirm()">
+          {{ confirmModal.confirmLabel }}
+        </button>
       </div>
     </div>
   </div>

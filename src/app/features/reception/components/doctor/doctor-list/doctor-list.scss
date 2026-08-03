@@ -1,0 +1,14 @@
+@use "sass:color";
+@use '../../../shared/reception-theme' as rc;
+@use '../../../shared/reception-animations' as anim;
+
+@include rc.base;
+
+.rc-spec-badge {
+    background: rc.$rc-info-light;
+    color: color.adjust(rc.$rc-info, $lightness: -20%);
+}
+
+tbody tr {
+    @include anim.pop-in;
+}

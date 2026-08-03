@@ -1,6 +1,6 @@
-<div class="container mt-4">
+<div class="container-fluid mt-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 no-print">
         <div>
             <h3 class="fw-bold mb-0" *ngIf="bill">Bill #{{ bill.appointmentBillId }}</h3>
             <h3 class="fw-bold mb-0" *ngIf="!bill">Bill Details</h3>
@@ -21,9 +21,9 @@
         </div>
     </div>
 
-    <div class="alert alert-danger" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+    <div class="alert alert-danger no-print" *ngIf="errorMessage()">{{ errorMessage() }}</div>
 
-    <div class="text-center my-4" *ngIf="isLoading()">
+    <div class="text-center py-5 no-print" *ngIf="isLoading()">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
@@ -105,6 +105,111 @@
 
                 </div>
             </div>
+            <div class="rc-invoice__meta text-end">
+                <h4 class="mb-1">TAX INVOICE</h4>
+                <span class="badge rc-invoice__status"
+                    [ngClass]="b.PaymentStatus === 'Paid' ? 'bg-success' : 'bg-warning text-dark'">
+                    {{ b.PaymentStatus }}
+                </span>
+                <p class="mb-0 mt-2 small"><strong>Invoice No:</strong> {{ b.InvoiceNumber }}</p>
+                <p class="mb-0 small"><strong>Invoice Date:</strong> {{ b.BillDate | date: 'dd MMM yyyy' }}</p>
+            </div>
+        </div>
+
+        <hr class="rc-invoice__divider">
+
+        <!-- Bill To / Doctor / Appointment -->
+        <div class="row rc-invoice__parties">
+            <div class="col-md-6">
+                <h6 class="text-uppercase text-muted small mb-2">Billed To</h6>
+                <p class="mb-1"><strong>{{ b.PatientName }}</strong></p>
+                <p class="mb-0 small text-muted">MMR ID: <span class="badge rc-mmr-badge">{{ b.MmrId }}</span></p>
+            </div>
+            <div class="col-md-6">
+                <h6 class="text-uppercase text-muted small mb-2">Consulting Doctor</h6>
+                <p class="mb-1"><strong>Dr. {{ b.DoctorName }}</strong></p>
+                <p class="mb-0 small text-muted">{{ b.Specialization }}</p>
+            </div>
+        </div>
+
+        <div class="row rc-invoice__parties">
+            <div class="col-md-4">
+                <h6 class="text-uppercase text-muted small mb-2">Appointment Date</h6>
+                <p class="mb-0">{{ b.AppointmentDate | date: 'dd MMM yyyy' }}</p>
+            </div>
+            <div class="col-md-4">
+                <h6 class="text-uppercase text-muted small mb-2">Time Slot</h6>
+                <p class="mb-0">{{ b.TimeSlot }}</p>
+            </div>
+            <div class="col-md-4">
+                <h6 class="text-uppercase text-muted small mb-2">Token Number</h6>
+                <p class="mb-0"><span class="badge bg-primary">#{{ b.TokenNumber }}</span></p>
+            </div>
+        </div>
+
+        <!-- Itemized charges -->
+        <table class="table rc-invoice__items mt-3">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Description</th>
+                    <th>SAC Code</th>
+                    <th class="text-end">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Registration Charges</td>
+                    <td>999312</td>
+                    <td class="text-end">₹{{ b.RegistrationFee | number: '1.2-2' }}</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Consultation Fee — Dr. {{ b.DoctorName }} ({{ b.Specialization }})</td>
+                    <td>999312</td>
+                    <td class="text-end">₹{{ b.ConsultationFee | number: '1.2-2' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Totals -->
+        <div class="row">
+            <div class="col-md-7 rc-invoice__words">
+                <h6 class="text-uppercase text-muted small mb-2">Amount in Words</h6>
+                <p class="mb-0 fst-italic">{{ b.AmountInWords }}</p>
+            </div>
+            <div class="col-md-5">
+                <table class="table rc-invoice__totals mb-0">
+                    <tr>
+                        <td>Subtotal</td>
+                        <td class="text-end">₹{{ b.Subtotal | number: '1.2-2' }}</td>
+                    </tr>
+                    <tr class="text-muted">
+                        <td>CGST ({{ b.CgstRate * 100 | number: '1.1-1' }}%)</td>
+                        <td class="text-end">₹{{ b.CgstAmount | number: '1.2-2' }}</td>
+                    </tr>
+                    <tr class="text-muted">
+                        <td>SGST ({{ b.SgstRate * 100 | number: '1.1-1' }}%)</td>
+                        <td class="text-end">₹{{ b.SgstAmount | number: '1.2-2' }}</td>
+                    </tr>
+                    <tr class="fw-bold fs-5 rc-invoice__grand-total">
+                        <td>Grand Total</td>
+                        <td class="text-end">₹{{ b.TotalAmount | number: '1.2-2' }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <hr class="rc-invoice__divider">
+
+        <div class="rc-invoice__footer">
+            <p class="mb-1 small text-muted">
+                This is a system-generated tax invoice and does not require a physical signature.
+            </p>
+            <p class="mb-0 small text-muted">
+                For billing queries, contact {{ clinicPhone }} or {{ clinicEmail }}.
+            </p>
         </div>
     </div>
 

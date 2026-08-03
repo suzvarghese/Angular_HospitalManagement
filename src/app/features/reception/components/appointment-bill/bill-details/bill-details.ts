@@ -1,3 +1,5 @@
+
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -11,6 +13,7 @@ import { Doctor } from '../../../models/doctor';
 import { Doctor as DoctorService } from '../../../services/doctor';
 import { Patient } from '../../../models/patient';
 import { Patient as PatientService } from '../../../services/patient';
+import { amountInWordsIndian } from '../../../utils/number-to-words';
 
 // Combined view model for the Details screen (BillDetailViewModel equivalent)
 export interface BillDetailsViewModel {
@@ -43,10 +46,21 @@ export interface BillDetailsViewModel {
 export class BillDetails implements OnInit {
 
   billId: number = 0;
-  bill: BillDetailsViewModel | null = null;
+  bill = signal<BillDetailsViewModel | null>(null);
 
   isLoading = signal<boolean>(false);
   errorMessage = signal<string>('');
+
+  // --- Clinic letterhead (kept here for now; move to a shared config once
+  // there's a real settings/branding source) ---
+  readonly clinicName = 'Syntax Flow';
+  readonly clinicAddress = 'Chennai, Tamil Nadu - 600040';
+  readonly clinicPhone = '+91 44 2345 6789';
+  readonly clinicEmail = 'billing@syntaxhospital.example';
+  readonly clinicGstin = '33ABCDE1234F1Z5';
+
+  readonly CGST_RATE = 0.09;
+  readonly SGST_RATE = 0.09;
 
   constructor(
     private appointmentBillService: AppointmentBillService,
@@ -139,5 +153,9 @@ export class BillDetails implements OnInit {
         this.errorMessage.set('Failed to load the linked appointment.');
       }
     });
+  }
+
+  printBill(): void {
+    window.print();
   }
 }
