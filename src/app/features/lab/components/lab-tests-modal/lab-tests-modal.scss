@@ -1,7 +1,7 @@
 .modal-backdrop-custom {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(21, 101, 192, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -15,7 +15,7 @@
     max-width: 720px;
     max-height: 85vh;
     overflow-y: auto;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 10px 30px rgba(21, 101, 192, 0.2);
 }
 
 .modal-header-custom {
@@ -23,32 +23,34 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px 20px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #D6EAFB;
     position: sticky;
     top: 0;
-    background: #fff;
+    background: linear-gradient(135deg, #42A5F5, #1976D2);
 }
 
 .modal-header-custom h3 {
     margin: 0;
     font-size: 18px;
-    color: #145447;
+    color: #fff;
 }
 
 .close-btn {
-    background: none;
+    background: transparent;
     border: none;
-    font-size: 18px;
+    font-size: 20px;
     cursor: pointer;
-    color: #666;
+    color: #fff;
+    transition: 0.2s;
 }
 
 .close-btn:hover {
-    color: #000;
+    color: #E3F2FD;
 }
 
 .modal-body-custom {
     padding: 20px;
+    background: #fff;
 }
 
 .alert-msg {
@@ -59,13 +61,15 @@
 }
 
 .alert-msg.success {
-    background: #d4edda;
-    color: #198754;
+    background: #E3F2FD;
+    color: #1565C0;
+    border: 1px solid #BBDEFB;
 }
 
 .alert-msg.error {
-    background: #f8d7da;
-    color: #dc3545;
+    background: #FDECEC;
+    color: #DC3545;
+    border: 1px solid #F5C2C7;
 }
 
 .list-toolbar {
@@ -76,6 +80,14 @@
 
 .list-toolbar input {
     flex: 1;
+    border: 1px solid #BBDEFB;
+    border-radius: 6px;
+}
+
+.list-toolbar input:focus {
+    border-color: #42A5F5;
+    box-shadow: 0 0 0 0.15rem rgba(66, 165, 245, 0.2);
+    outline: none;
 }
 
 .actions-cell {
@@ -91,6 +103,11 @@
 .back-link {
     padding-left: 0;
     margin-bottom: 10px;
+    color: #1565C0;
+}
+
+.back-link:hover {
+    color: #1976D2;
 }
 
 .form-grid {
@@ -101,9 +118,25 @@
 
 .form-grid label {
     font-size: 12px;
-    color: #666;
+    color: #1565C0;
     margin-bottom: 4px;
     display: block;
+    font-weight: 600;
+}
+
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+    border: 1px solid #BBDEFB;
+    border-radius: 6px;
+}
+
+.form-grid input:focus,
+.form-grid select:focus,
+.form-grid textarea:focus {
+    border-color: #42A5F5;
+    box-shadow: 0 0 0 0.15rem rgba(66, 165, 245, 0.2);
+    outline: none;
 }
 
 .full-width {

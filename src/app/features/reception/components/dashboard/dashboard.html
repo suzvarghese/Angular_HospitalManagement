@@ -1,92 +1,49 @@
-<div class="container-fluid px-4 py-4">
+<div class="container mt-4">
 
-    <!-- Page header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-      <div>
-        <h2 class="mb-1">Receptionist Dashboard</h2>
-        <p class="text-muted mb-0">A quick look at today at Syntax Hospital</p>
-      </div>
-  
-      <button class="btn btn-outline-danger" (click)="logout()">
-        <i class="fa fa-sign-out me-1"></i> Logout
-      </button>
-    </div>
-  
-    <!-- Stat cards -->
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="rc-stat-card">
-          <div class="rc-stat-icon"><i class="fa fa-users"></i></div>
-          <div class="rc-stat-number">{{ totalPatients() }}</div>
-          <div class="rc-stat-label">Total Patients</div>
-        </div>
-      </div>
-  
-      <div class="col-md-4">
-        <div class="rc-stat-card rc-accent-success">
-          <div class="rc-stat-icon rc-icon-success"><i class="fa fa-calendar-check-o"></i></div>
-          <div class="rc-stat-number">{{ todayAppointments() }}</div>
-          <div class="rc-stat-label">Today's Appointments</div>
-        </div>
-      </div>
-  
-      <div class="col-md-4">
-        <div class="rc-stat-card rc-accent-info">
-          <div class="rc-stat-icon rc-icon-info"><i class="fa fa-list-ol"></i></div>
-          <div class="rc-stat-number">{{ todaysQueue().length }}</div>
-          <div class="rc-stat-label">Today's Queue</div>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Receptionist Dashboard</h2>
+
+    <button class="btn btn-primary" (click)="logout()">
+      Logout
+    </button>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card text-center h-100">
+        <div class="card-body">
+          <h5>Total Patients</h5>
+          <h2 class="text-primary">{{ totalPatients() }}</h2>
         </div>
       </div>
     </div>
-  
-    <!-- Quick actions -->
-    <div class="rc-panel mt-4">
-      <h5 class="mb-3">Quick Actions</h5>
-      <div class="rc-quick-actions">
-        <a routerLink="/reception/patients/register" class="rc-quick-action">
-          <span class="rc-quick-action__icon"><i class="fa fa-user-plus"></i></span>
-          Register Patient
-        </a>
-        <a routerLink="/reception/appointments/book" class="rc-quick-action">
-          <span class="rc-quick-action__icon"><i class="fa fa-calendar-plus-o"></i></span>
-          Book Appointment
-        </a>
-        <a routerLink="/reception/payments/collect" class="rc-quick-action">
-          <span class="rc-quick-action__icon"><i class="fa fa-credit-card"></i></span>
-          Collect Payment
-        </a>
-        <a routerLink="/reception/token-queue" class="rc-quick-action">
-          <span class="rc-quick-action__icon"><i class="fa fa-list-ol"></i></span>
-          Today's Queue
-        </a>
+
+    <div class="col-md-4">
+      <div class="card text-center h-100">
+        <div class="card-body">
+          <h5>Today's Appointments</h5>
+          <h2 class="text-success">{{ todayAppointments() }}</h2>
+        </div>
       </div>
     </div>
-  
-    <!-- Recent queue -->
-    <div class="rc-panel mt-4">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0">Recent Queue</h5>
-        <a routerLink="/reception/token-queue" class="btn btn-sm btn-outline-primary">
-          View Full Queue <i class="fa fa-arrow-right ms-1"></i>
-        </a>
-      </div>
-  
-      <ul class="list-group" *ngIf="todaysQueue().length > 0; else emptyQueue">
-        <li *ngFor="let appt of todaysQueue()" class="list-group-item d-flex justify-content-between align-items-center">
-          <span>
-            <span class="badge bg-primary me-2">#{{ appt.TokenNumber }}</span>
-            {{ appt.PatientName }}
-          </span>
-          <span class="text-muted small"><i class="fa fa-clock-o me-1"></i>{{ appt.TimeSlot }}</span>
-        </li>
-      </ul>
-  
-      <ng-template #emptyQueue>
-        <div class="rc-empty-state">
-          <i class="fa fa-calendar-o"></i>
-          <p class="mb-0">No appointments queued for today yet.</p>
+
+    <div class="col-md-4">
+      <div class="card text-center h-100">
+        <div class="card-body">
+          <h5>Today's Queue</h5>
+          <h2 class="text-info">{{ todaysQueue().length }}</h2>
         </div>
-      </ng-template>
+      </div>
     </div>
   </div>
-  
+
+  <div class="mt-4">
+    <h5>Recent Queue</h5>
+    <ul class="list-group">
+      <li *ngFor="let appt of todaysQueue()" class="list-group-item">
+        Token #{{ appt.tokenNumber }} - {{ appt.patientName }} ({{ appt.timeSlot }})
+      </li>
+    </ul>
+  </div>
+
+</div>

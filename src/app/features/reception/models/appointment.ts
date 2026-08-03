@@ -1,30 +1,13 @@
-// export class Appointment {
-//     AppointmentId: number = 0;
-//     PatientId: number = 0;
-//     PatientName: string = '';
-//     DoctorId: number = 0;
-//     DoctorName: string = '';
-//     ReceptionistId: number = 0;   
-
-//     AppointmentDate: string = '';   // yyyy-MM-dd
-//     TimeSlot: string = '';
-//     TokenNumber: number = 0;
-//     Status: string = 'Scheduled';
-// }
-
-
-
 export class Appointment {
-    AppointmentId: number = 0;
-    PatientId: number = 0;
-    PatientName: string = '';
-    DoctorId: number = 0;
-    DoctorName: string = '';
-    ReceptionistId: number = 1;   // ← Important: Default value
+    appointmentId: number = 0;
+    patientId: number = 0;
+    patientName: string = '';
+    doctorId: number = 0;
+    doctorName: string = '';
+    receptionistId: number = 1;   // Default value
 
-    AppointmentDate: string = '';   // yyyy-MM-dd
-    TimeSlot: string = '';
-    TokenNumber: number = 0;
-    Status: string = 'Scheduled';
+    appointmentDate: string = '';   // yyyy-MM-dd
+    timeSlot: string = '';
+    tokenNumber: number = 0;
+    status: string = 'Scheduled';
 }
-

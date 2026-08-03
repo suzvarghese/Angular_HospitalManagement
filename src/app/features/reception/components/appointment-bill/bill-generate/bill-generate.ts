@@ -321,7 +321,7 @@ savingMessage = signal<string>('Generating...');
     this.loadingMessage.set('Checking for an existing bill...');
     this.appointmentBillService.getAllAppointmentBills().subscribe({
       next: (bills: AppointmentBill[]) => {
-        const exists = bills.some(b => b.AppointmentId === this.appointmentId);
+        const exists = bills.some(b => b.appointmentId === this.appointmentId);
 
         if (exists) {
           this.billAlreadyExists.set(true);
@@ -345,10 +345,10 @@ savingMessage = signal<string>('Generating...');
     this.loadingMessage.set('Loading consultation fee...');
     this.doctorService.getAllDoctors().subscribe({
       next: (doctors: Doctor[]) => {
-        const doctor = doctors.find(d => d.DoctorId === this.appointment?.DoctorId);
+        const doctor = doctors.find(d => d.doctorId === this.appointment?.doctorId);
 
         this.registrationFee = 100;
-        this.consultationFee = doctor?.ConsultationFee ?? 0;
+        this.consultationFee = doctor?.consultationFee ?? 0;
 
         this.isLoading.set(false);
       },
@@ -399,12 +399,12 @@ savingMessage = signal<string>('Generating...');
     }
 
     const bill: AppointmentBill = new AppointmentBill();
-    bill.AppointmentId = this.appointmentId;
-    bill.RegistrationFee = this.registrationFee;
-    bill.ConsultationFee = this.consultationFee;
-    bill.TotalAmount = this.totalAmount;
-    bill.BillDate = this.billDate;        // set automatically
-    bill.PaymentStatus = 'Pending';       // default
+    bill.appointmentId = this.appointmentId;
+    bill.registrationFee = this.registrationFee;
+    bill.consultationFee = this.consultationFee;
+    bill.totalAmount = this.totalAmount;
+    bill.billDate = this.billDate;        // set automatically
+    bill.paymentStatus = 'Pending';       // default
 
     this.isSaving.set(true);
     this.savingMessage.set('Checking for an existing bill...');
@@ -431,7 +431,7 @@ savingMessage = signal<string>('Generating...');
         // Open the generated bill directly
         this.router.navigate([
             '/reception/bills/details',
-            response.AppointmentBillId
+            response.appointmentBillId
         ]);
     
     },
@@ -447,7 +447,7 @@ savingMessage = signal<string>('Generating...');
 
   // Move on to collecting payment for the bill just generated
   goCollectPayment(): void {
-    const billId = this.generatedBill()?.AppointmentBillId ?? 0;
+    const billId = this.generatedBill()?.appointmentBillId ?? 0;
     this.router.navigate(['/reception/payments/collect'], {
       queryParams: { billId }
     });

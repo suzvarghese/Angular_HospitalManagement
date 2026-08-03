@@ -185,30 +185,16 @@ import { AppointmentBill as AppointmentBillService } from '../../../services/app
 })
 export class PatientSearch implements OnInit {
 
-  // Search box - matches PatientController.Search(string q)
   searchTerm: string = '';
   searched = signal<boolean>(false);
   isLoading = signal<boolean>(false);
   errorMessage = signal<string>('');
 
-  // All patients loaded once, then filtered client-side - reuses the SAME
-  // getAllPatients() API already used by Patient List / Book Appointment.
-  // NOTE: the Web API only exposes GetAllPatients() and a single-record
-  // SelectPatientByIdOrPhoneAsync (PatientId or Phone, exact match only -
-  // it does NOT match MmrId or PatientName). There is no equivalent of the
-  // MVC app's multi-result SearchPatients(q). To replicate "search by Name,
-  // MMR ID, or Phone" without changing the backend, this filters the same
-  // already-loaded patient list client-side - it does not duplicate the
-  // Book Appointment search, it reuses its data source (getAllPatients).
   private allPatients: Patient[] = [];
   results: Patient[] = [];
 
-  // Inline "View" details toggle - avoids needing a separate Patient
-  // Details page/route for this feature
   expandedPatientId = signal<number>(0);
 
-  // Inline "History" toggle - lazy loads this patient's appointments + bills
-  // using the existing Appointment / AppointmentBill services (no new API)
   historyPatientId = signal<number>(0);
   historyLoading = signal<boolean>(false);
   historyAppointments: Appointment[] = [];
@@ -221,7 +207,7 @@ export class PatientSearch implements OnInit {
     private appointmentService: AppointmentService,
     private appointmentBillService: AppointmentBillService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.isLoading.set(true);
@@ -239,7 +225,6 @@ export class PatientSearch implements OnInit {
     });
   }
 
-  // GET: Patients/Search (q) equivalent
   onSearch(): void {
     this.expandedPatientId.set(0);
     this.historyPatientId.set(0);
@@ -253,41 +238,37 @@ export class PatientSearch implements OnInit {
     }
 
     this.results = this.allPatients.filter(p =>
-      (p.PatientName ?? '').toLowerCase().includes(term) ||
-      (p.Mmrid ?? '').toLowerCase().includes(term) ||
-      (p.Phone ?? '').toLowerCase().includes(term)
+      (p.patientName ?? '').toLowerCase().includes(term) ||
+      (p.mmrid ?? '').toLowerCase().includes(term) ||
+      (p.phone ?? '').toLowerCase().includes(term)
     );
 
     this.searched.set(true);
   }
 
-  // Action: View - toggle inline details for this row
   toggleView(patient: Patient): void {
     this.historyPatientId.set(0);
     this.expandedPatientId.set(
-      this.expandedPatientId() === patient.PatientId ? 0 : patient.PatientId
+      this.expandedPatientId() === patient.patientId ? 0 : patient.patientId
     );
   }
 
-  // Action: Book Appointment - navigate to the existing Book Appointment page
-  // with the selected PatientId, so it can be preselected there.
   bookAppointment(patient: Patient): void {
     this.router.navigate(['/reception/appointments/book'], {
-      queryParams: { patientId: patient.PatientId }
+      queryParams: { patientId: patient.patientId }
     });
   }
 
-  // Action: History - toggle inline appointment/billing history for this row
   toggleHistory(patient: Patient): void {
     this.expandedPatientId.set(0);
 
-    if (this.historyPatientId() === patient.PatientId) {
+    if (this.historyPatientId() === patient.patientId) {
       this.historyPatientId.set(0);
       return;
     }
 
-    this.historyPatientId.set(patient.PatientId);
-    this.loadHistory(patient.PatientId);
+    this.historyPatientId.set(patient.patientId);
+    this.loadHistory(patient.patientId);
   }
 
   private loadHistory(patientId: number): void {
@@ -295,11 +276,10 @@ export class PatientSearch implements OnInit {
     this.historyAppointments = [];
     this.historyBills = [];
 
-    // Appointments for this patient (Appointment model already has PatientId)
     this.appointmentService.getAllAppointments().subscribe({
       next: (response: Appointment[]) => {
         this.allAppointments = response;
-        this.historyAppointments = response.filter(a => a.PatientId === patientId);
+        this.historyAppointments = response.filter(a => a.patientId === patientId);
         this.loadBillsForHistory();
       },
       error: (err: any) => {
@@ -314,10 +294,10 @@ export class PatientSearch implements OnInit {
       next: (response: AppointmentBill[]) => {
         this.allBills = response;
 
-        const appointmentIds = this.historyAppointments.map(a => a.AppointmentId);
+        const appointmentIds = this.historyAppointments.map(a => a.appointmentId);
 
         this.historyBills = response.filter(b =>
-          appointmentIds.includes(b.AppointmentId)
+          appointmentIds.includes(b.appointmentId)
         );
 
         this.historyLoading.set(false);

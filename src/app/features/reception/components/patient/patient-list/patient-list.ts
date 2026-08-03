@@ -271,12 +271,12 @@ export class PatientList implements OnInit {
       return;
     }
     const term = this.searchTerm.toLowerCase().trim();
-    this.filteredPatients.set(this.patients().filter(p =>
-      (p.Mmrid?.toLowerCase() || '').includes(term) ||
-      (p.PatientName?.toLowerCase() || '').includes(term) ||
-      (p.Phone || '').includes(term) ||
-      (p.BloodGroup?.toLowerCase() || '').includes(term)
-    ));
+    this.filteredPatients = this.patients.filter(p => 
+      (p.mmrid?.toLowerCase() || '').includes(term) ||
+      (p.patientName?.toLowerCase() || '').includes(term) ||
+      (p.phone || '').includes(term) ||
+      (p.bloodGroup?.toLowerCase() || '').includes(term)
+    );
   }
 
   // Action: View - expand/collapse the inline details row for this patient
@@ -288,7 +288,7 @@ export class PatientList implements OnInit {
 
   bookAppointment(patient: Patient): void {
     this.router.navigate(['/reception/appointments/book'], { 
-      queryParams: { patientId: patient.PatientId } 
+      queryParams: { patientId: patient.patientId } 
     });
   }
 

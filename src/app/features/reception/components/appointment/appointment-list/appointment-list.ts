@@ -70,7 +70,7 @@ export class AppointmentList implements OnInit {
       next: (bills) => {
   
         const existingBill = bills.find(
-          b => b.AppointmentId === appointmentId
+          b => b.appointmentId === appointmentId
         );
   
         if (existingBill) {
@@ -78,7 +78,7 @@ export class AppointmentList implements OnInit {
           // Bill already exists
           this.router.navigate([
             '/reception/bills/details',
-            existingBill.AppointmentBillId
+            existingBill.appointmentBillId
           ]);
   
         } else {
@@ -110,9 +110,9 @@ export class AppointmentList implements OnInit {
     this.errorMessage.set('');
     this.successMessage.set('');
 
-    const updated: Appointment = { ...appt, Status: 'Cancelled' };
+    const updated: Appointment = { ...appt, status: 'Cancelled' };
 
-    this.appointmentService.updateAppointment(appt.AppointmentId, updated).subscribe({
+    this.appointmentService.updateAppointment(appt.appointmentId, updated).subscribe({
       next: () => {
         this.successMessage.set('Appointment cancelled successfully.');
         this.loadAppointments();

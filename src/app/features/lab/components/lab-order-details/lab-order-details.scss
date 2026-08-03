@@ -6,21 +6,21 @@
 h2 {
     font-size: 24px;
     font-weight: 700;
-    color: #145447;
+    color: #1565C0;
     margin-bottom: 20px;
 }
 
 .card {
     background: #fff;
-    border: 1px solid #ddd;
+    border: 1px solid #D6EAFB;
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 10px rgba(21, 101, 192, 0.12);
 }
 
 .order-info label {
     font-size: 12px;
-    color: #777;
+    color: #5F6F81;
     display: block;
 }
 
@@ -28,26 +28,34 @@ h2 {
     font-size: 16px;
     font-weight: 600;
     margin: 4px 0 0;
+    color: #1565C0;
 }
 
 .result-row .test-name {
     font-weight: 600;
     margin-bottom: 2px;
+    color: #1565C0;
 }
 
 .form-label {
     font-weight: 500;
     font-size: 0.85rem;
-    color: #333;
+    color: #1565C0;
     margin-bottom: 0.3rem;
 }
 
 .form-control {
+    border: 1px solid #BBD9F6;
     border-radius: 0.4rem;
 }
 
+.form-control:focus {
+    border-color: #42A5F5;
+    box-shadow: 0 0 0 0.15rem rgba(66, 165, 245, 0.2);
+}
+
 .active-status {
-    color: #198754;
+    color: #1976D2;
     font-weight: bold;
 }
 
@@ -60,35 +68,47 @@ h2 {
 }
 
 .status-pending {
-    background: #f6e8cc;
-    color: #b8860b;
+    background: #FFF3CD;
+    color: #B8860B;
 }
 
 .status-completed {
-    background: #d4edda;
+    background: #D4EDDA;
     color: #198754;
 }
 
 .btn-warning {
-    background-color: #e8a33d;
-    border-color: #e8a33d;
+    background: #FFB74D;
+    border-color: #FFB74D;
     color: #fff;
     font-weight: 600;
 }
 
+.btn-warning:hover {
+    background: #FFA726;
+    border-color: #FFA726;
+}
+
 .btn-primary {
-    background-color: #317b67;
-    border-color: #317b67;
+    background: linear-gradient(135deg, #42A5F5, #1976D2);
+    border: none;
+    color: #fff;
     font-weight: 600;
 }
 
 .btn-primary:hover {
-    background-color: #145447;
-    border-color: #145447;
+    background: linear-gradient(135deg, #1E88E5, #1565C0);
 }
 
 .btn-success {
+    background: linear-gradient(135deg, #42A5F5, #1976D2);
+    border: none;
+    color: #fff;
     font-weight: 600;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #1E88E5, #1565C0);
 }
 
 @media (max-width: 768px) {

@@ -2,15 +2,15 @@
 
   <div class="row justify-content-center">
     <div class="col-lg-9">
+      <div class="card shadow-sm border-0">
 
-      <div class="card rc-book-card shadow-sm border-0">
-
-        <div class="card-header rc-book-card__header d-flex justify-content-between align-items-center">
+        <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
           <h4 class="mb-0">
             <i class="fa fa-calendar-plus-o me-2"></i> Book New Appointment
           </h4>
-          <a routerLink="/reception" class="btn btn-light btn-sm">
-            <i class="fa fa-arrow-left me-1"></i> Back
+
+          <a routerLink="/reception/dashboard" class="btn btn-light btn-sm">
+            ← Back
           </a>
         </div>
 
@@ -22,9 +22,9 @@
             <span class="flex-grow-1">{{ successMessage }}</span>
             <button type="button" class="btn-close" (click)="successMessage=''"></button>
           </div>
-          <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible d-flex align-items-center">
-            <i class="fa fa-exclamation-circle me-2"></i>
-            <span class="flex-grow-1">{{ errorMessage }}</span>
+
+          <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible">
+            {{ errorMessage }}
             <button type="button" class="btn-close" (click)="errorMessage=''"></button>
           </div>
 
@@ -32,27 +32,41 @@
 
             <!-- Patient -->
             <div class="mb-4">
-              <label class="form-label">
-                <i class="fa fa-user rc-field-icon"></i> Patient <span class="text-danger">*</span>
+              <label class="form-label fw-bold">
+                Patient <span class="text-danger">*</span>
               </label>
 
-              <div *ngIf="selectedPatientName" class="alert alert-info d-flex justify-content-between align-items-center mb-0">
-                <span><strong>Selected:</strong> {{ selectedPatientName }}</span>
-                <a href="#" class="rc-change-link" (click)="clearPatientSelection($event)">Change</a>
+              <div
+                *ngIf="selectedPatientName"
+                class="alert alert-info d-flex justify-content-between align-items-center">
+
+                <span>
+                  <strong>Selected:</strong> {{ selectedPatientName }}
+                </span>
+
+                <a href="#" class="text-primary" (click)="clearPatientSelection($event)">
+                  Change
+                </a>
               </div>
 
-              <select *ngIf="!selectedPatientName" class="form-select form-select-lg"
-                      [(ngModel)]="appointment.PatientId" name="PatientId"
-                      (ngModelChange)="onPatientChange()" required>
+              <select
+                *ngIf="!selectedPatientName"
+                class="form-select form-select-lg"
+                [(ngModel)]="appointment.patientId"
+                name="patientId"
+                required>
+
                 <option value="">-- Select Patient --</option>
-                <option *ngFor="let p of patients" [value]="p.PatientId">
-                  {{ p.PatientName }} ({{ p.Mmrid }})
+
+                <option *ngFor="let p of patients" [value]="p.patientId">
+                  {{ p.patientName }} ({{ p.mmrid }})
                 </option>
+
               </select>
 
-              <small class="d-block mt-2">
-                <a routerLink="/reception/patients/search" class="rc-change-link">
-                  <i class="fa fa-search me-1"></i> Can't find patient? Search here
+              <small class="text-muted d-block mt-1">
+                <a routerLink="/reception/patients/search" class="text-primary">
+                  Can't find patient? Search here
                 </a>
               </small>
 
@@ -82,84 +96,106 @@
 
             <!-- Doctor -->
             <div class="mb-4">
-              <label class="form-label">
-                <i class="fa fa-user-md rc-field-icon"></i> Doctor <span class="text-danger">*</span>
+              <label class="form-label fw-bold">
+                Doctor <span class="text-danger">*</span>
               </label>
-              <select class="form-select form-select-lg" [(ngModel)]="appointment.DoctorId" name="DoctorId"
-                      (ngModelChange)="populateAvailableSlots()" required>
+
+              <select
+                class="form-select form-select-lg"
+                [(ngModel)]="appointment.doctorId"
+                name="doctorId"
+                required>
+
                 <option value="">-- Select Doctor --</option>
-                <option *ngFor="let d of doctors" [value]="d.DoctorId">
-                  {{ d.DoctorName }} - {{ d.Specialization }}
+
+                <option *ngFor="let d of doctors" [value]="d.doctorId">
+                  {{ d.doctorName }} - {{ d.specialization }}
                 </option>
+
               </select>
             </div>
 
             <!-- Date Selection -->
             <div class="mb-4">
-              <label class="form-label">
-                <i class="fa fa-calendar rc-field-icon"></i> Appointment Date <span class="text-danger">*</span>
+              <label class="form-label fw-bold">
+                Appointment Date <span class="text-danger">*</span>
               </label>
 
-              <div class="rc-date-toggle" role="group">
-                <button type="button"
-                        class="rc-date-toggle__btn"
-                        [class.is-active]="appointment.AppointmentDate === todayDate"
-                        (click)="setDate('today')">
-                  <i class="fa fa-check-circle me-2" *ngIf="appointment.AppointmentDate === todayDate"></i>
+              <div class="btn-group w-100" role="group">
+
+                <button
+                  type="button"
+                  class="btn btn-primary flex-fill"
+                  [class.active]="appointment.appointmentDate === todayDate"
+                  (click)="setDate('today')">
+
                   Today ({{ todayDate | date:'EEE dd MMM' }})
                 </button>
-                <button type="button"
-                        class="rc-date-toggle__btn"
-                        [class.is-active]="appointment.AppointmentDate === tomorrowDate"
-                        (click)="setDate('tomorrow')">
-                  <i class="fa fa-check-circle me-2" *ngIf="appointment.AppointmentDate === tomorrowDate"></i>
+
+                <button
+                  type="button"
+                  class="btn btn-outline-primary flex-fill"
+                  [class.active]="appointment.appointmentDate === tomorrowDate"
+                  (click)="setDate('tomorrow')">
+
                   Tomorrow ({{ tomorrowDate | date:'EEE dd MMM' }})
                 </button>
+
               </div>
             </div>
 
             <!-- Time Slot -->
             <div class="mb-4">
-              <label class="form-label">
-                <i class="fa fa-clock-o rc-field-icon"></i> Time Slot <span class="text-danger">*</span>
+              <label class="form-label fw-bold">
+                Time Slot <span class="text-danger">*</span>
               </label>
-              <select class="form-select form-select-lg"
-                      [(ngModel)]="appointment.TimeSlot"
-                      name="TimeSlot" (ngModelChange)="onTimeSlotChange()" required>
+
+              <select
+                class="form-select form-select-lg"
+                [(ngModel)]="appointment.timeSlot"
+                name="timeSlot"
+                required>
+
                 <option value="">-- Select Time Slot --</option>
-                <option *ngFor="let slot of timeSlots" [value]="slot">{{ slot }}</option>
+
+                <option *ngFor="let slot of timeSlots" [value]="slot">
+                  {{ slot }}
+                </option>
+
               </select>
 
-              <span class="rc-slot-hint rc-slot-hint--ok mt-2" *ngIf="timeSlots.length > 0">
-                <i class="fa fa-check-circle me-1"></i> Available Slots: {{ timeSlots.length }}
-              </span>
+              <div class="text-success mt-2" *ngIf="timeSlots.length > 0">
+                Available Slots: {{ timeSlots.length }}
+              </div>
 
-              <span class="rc-slot-hint rc-slot-hint--danger mt-2" *ngIf="timeSlots.length === 0">
-                <i class="fa fa-exclamation-triangle me-1"></i> No slots available.
-              </span>
-
-              <!-- This exact slot is already taken by the same patient (different doctor) -->
-              <div class="rc-conflict-panel rc-conflict-panel--danger mt-2" *ngIf="duplicateSlotConflict">
-                <i class="fa fa-ban"></i>
-                <div>
-                  <strong>Slot clash for this patient</strong>
-                  <div>Already booked at <strong>{{ duplicateSlotConflict.TimeSlot }}</strong> today with
-                    {{ doctorNameFor(duplicateSlotConflict) }}. Please pick a different time.</div>
-                </div>
+              <div class="text-danger mt-2" *ngIf="timeSlots.length === 0">
+                No slots available.
               </div>
             </div>
 
             <div class="d-flex gap-3 mt-4">
-              <button type="submit" class="btn btn-success btn-lg flex-grow-1"
-                      [disabled]="isLoading || !!duplicateSlotConflict">
-                <i class="fa" [ngClass]="isLoading ? 'fa-spinner fa-spin' : 'fa-check-circle'"></i>
+
+              <button
+                type="submit"
+                class="btn btn-success btn-lg flex-grow-1"
+                [disabled]="isLoading">
+
+                <i class="bi bi-check-circle"></i>
                 {{ isLoading ? 'Booking...' : 'Book Appointment' }}
               </button>
-              <button type="button" class="btn btn-outline-secondary btn-lg" routerLink="/reception">
+
+              <button
+                type="button"
+                class="btn btn-outline-secondary btn-lg"
+                routerLink="/reception/dashboard">
+
                 Cancel
               </button>
+
             </div>
+
           </form>
+
         </div>
       </div>
     </div>

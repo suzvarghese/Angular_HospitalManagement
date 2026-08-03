@@ -392,7 +392,7 @@ export class AppointmentBook implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       if (params['patientId']) {
-        this.appointment.PatientId = +params['patientId'];
+        this.appointment.patientId = +params['patientId'];
         this.preFillPatientName(+params['patientId']);
         this.refreshPatientConflicts();
       }
@@ -464,9 +464,9 @@ export class AppointmentBook implements OnInit {
   private preFillPatientName(patientId: number) {
     this.patientService.getAllPatients().subscribe({
       next: (allPatients) => {
-        const patient = allPatients.find(p => p.PatientId === patientId);
+        const patient = allPatients.find(p => p.patientId === patientId);
         if (patient) {
-          this.selectedPatientName = `${patient.PatientName} (${patient.Mmrid})`;
+          this.selectedPatientName = `${patient.patientName} (${patient.mmrid})`;
         }
       }
     });
@@ -484,7 +484,7 @@ export class AppointmentBook implements OnInit {
     this.timeSlots = generateTimeSlots('09:00', '18:00');
 
     // Today's bookings only
-    if (this.appointment.AppointmentDate === this.todayDate) {
+    if (this.appointment.appointmentDate === this.todayDate) {
 
         const now = new Date();
 
@@ -551,110 +551,13 @@ export class AppointmentBook implements OnInit {
       return;
     }
 
-    const doctorId = +this.appointment.DoctorId;
-    const patientId = +this.appointment.PatientId;
-
-    // Make sure we're checking against the latest known state, in case
-    // doctor/date/slot were changed without triggering populateAvailableSlots.
-    this.refreshPatientConflicts();
-
-    // 1) HARD BLOCK - the selected doctor must not already have a
-    // (non-cancelled) appointment at this exact date + time slot. The
-    // dropdown already excludes booked slots, but this guards against a
-    // stale list if another booking happened after the page loaded.
-    const doctorConflict = this.allAppointments.find(a =>
-      a.DoctorId === doctorId &&
-      a.AppointmentDate === this.appointment.AppointmentDate &&
-      a.TimeSlot === this.appointment.TimeSlot &&
-      a.Status !== 'Cancelled'
-    );
-
-    if (doctorConflict) {
-      this.errorMessage = `This doctor already has an appointment at ${this.appointment.TimeSlot}. Please choose another slot.`;
-      this.populateAvailableSlots();
-      return;
-    }
-
-    // 2) HARD BLOCK - this same patient cannot be booked into two
-    // appointments at the exact same time slot on the same day, even with
-    // a different doctor. e.g. patient already booked 9:00 AM -> trying to
-    // also book them at 9:00 AM again (or the slot already taken) is rejected.
-    const patientSlotConflict = this.allAppointments.find(a =>
-      a.PatientId === patientId &&
-      a.AppointmentDate === this.appointment.AppointmentDate &&
-      a.TimeSlot === this.appointment.TimeSlot &&
-      a.Status !== 'Cancelled'
-    );
-
-    if (patientSlotConflict) {
-      this.errorMessage =
-        `This patient is already booked at ${this.appointment.TimeSlot} on this date ` +
-        `(with ${this.doctorNameFor(patientSlotConflict)}). A patient can't hold two appointments at the same time.`;
-      return;
-    }
-
-    // 3) CONFIRM - same patient + same doctor, same day. Not always wrong
-    // (a genuine follow-up can happen), so we ask the receptionist to confirm
-    // instead of silently blocking it.
-    const sameDoctorToday = this.allAppointments.find(a =>
-      a.PatientId === patientId &&
-      a.DoctorId === doctorId &&
-      a.AppointmentDate === this.appointment.AppointmentDate &&
-      a.Status !== 'Cancelled'
-    );
-
-    if (sameDoctorToday) {
-      this.confirmModal = {
-        title: 'Duplicate Doctor Booking',
-        message:
-          `${this.selectedPatientName || 'This patient'} already has an appointment with ` +
-          `${this.doctorNameFor(sameDoctorToday)} today at ${sameDoctorToday.TimeSlot}. ` +
-          `Do you still want to book another appointment with the same doctor?`,
-        confirmLabel: 'Yes, Book Anyway',
-        onConfirm: () => {
-          this.confirmModal = null;
-          this.confirmSameDayLoad(patientId);
-        }
-      };
-      return;
-    }
-
-    this.confirmSameDayLoad(patientId);
-  }
-
-  // 4) CONFIRM - patient already has 2+ appointments today (any doctor) - a
-  // softer heads-up so the desk doesn't stack up appointments by mistake.
-  private confirmSameDayLoad(patientId: number): void {
-    const sameDayCount = this.allAppointments.filter(a =>
-      a.PatientId === patientId &&
-      a.AppointmentDate === this.appointment.AppointmentDate &&
-      a.Status !== 'Cancelled'
-    ).length;
-
-    if (sameDayCount >= 2) {
-      this.confirmModal = {
-        title: 'Multiple Appointments Today',
-        message: `This patient already has ${sameDayCount} appointment(s) booked on this date. Do you want to proceed with booking another one?`,
-        confirmLabel: 'Yes, Proceed',
-        onConfirm: () => {
-          this.confirmModal = null;
-          this.finalizeBooking();
-        }
-      };
-      return;
-    }
-
-    this.finalizeBooking();
-  }
-
-  // Actually sends the booking to the API once every conflict check has
-  // passed (or been explicitly confirmed by the receptionist).
-  private finalizeBooking(): void {
-    this.appointment.ReceptionistId = 1;
-    this.appointment.Status = 'Scheduled';
-
+    // Ensure required fields
+    this.appointment.receptionistId = 1;
+    this.appointment.status = 'Scheduled';
+    console.log("Sending JSON:", JSON.stringify(this.appointment));
     this.isLoading = true;
 
+    
     this.appointmentService.bookAppointment(this.appointment).subscribe({
       next: (response: any) => {
         this.isLoading = false;
@@ -689,8 +592,7 @@ export class AppointmentBook implements OnInit {
   clearPatientSelection(e: Event) {
     e.preventDefault();
     this.selectedPatientName = '';
-    this.appointment.PatientId = 0;
-    this.refreshPatientConflicts();
+    this.appointment.patientId = 0;
   }
 
   // setDate(type: string) {
@@ -703,9 +605,9 @@ export class AppointmentBook implements OnInit {
   setDate(type: string): void {
 
     if (type === 'today') {
-      this.appointment.AppointmentDate = this.todayDate;
+      this.appointment.appointmentDate = this.todayDate;
     } else {
-      this.appointment.AppointmentDate = this.tomorrowDate;
+      this.appointment.appointmentDate = this.tomorrowDate;
     }
   
     this.populateAvailableSlots();

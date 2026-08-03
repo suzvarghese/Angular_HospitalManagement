@@ -49,12 +49,12 @@ export class AuthService {
 
   // Called after a successful login response
   setSession(response: LoginResponse): void {
-    localStorage.setItem(TOKEN_KEY, response.Token);
-    localStorage.setItem(USER_ID_KEY, response.UserId.toString());
-    localStorage.setItem(ROLE_ID_KEY, response.RoleId.toString());
-    this.token.set(response.Token);
-    this.userId.set(response.UserId);
-    this.roleId.set(response.RoleId);
+    localStorage.setItem(TOKEN_KEY, response.token);
+    localStorage.setItem(USER_ID_KEY, response.userId.toString());
+    localStorage.setItem(ROLE_ID_KEY, response.roleId.toString());
+    this.token.set(response.token);
+    this.userId.set(response.userId);
+    this.roleId.set(response.roleId);
   }
 
   // Called with what was picked/typed on the login form: which role

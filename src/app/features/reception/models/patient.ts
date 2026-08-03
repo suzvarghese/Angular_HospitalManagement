@@ -1,14 +1,13 @@
 export class Patient {
-    PatientId: number = 0;
-    Mmrid: string = '';
-    PatientName: string = '';
-    DateOfBirth: string | null = null; // yyyy-MM-dd, sent/received as DateOnly
-    Age: number = 0;
-    Gender: string = '';
-    Phone: string = '';
-    Address: string = '';
-    BloodGroup: string = '';
-    EmergencyContact: string = '';
-    IsActive: boolean = true;
+    patientId: number = 0;
+    mmrid: string = '';
+    patientName: string = '';
+    dateOfBirth: string | null = null; // yyyy-MM-dd
+    age: number = 0;
+    gender: string = '';
+    phone: string = '';
+    address: string = '';
+    bloodGroup: string = '';
+    emergencyContact: string = '';
+    isActive: boolean = true;
 }
-

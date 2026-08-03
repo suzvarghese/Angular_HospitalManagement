@@ -2,20 +2,16 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4 no-print">
         <div>
-            <h2 class="fw-bold text-dark mb-1" *ngIf="bill()">Bill #{{ bill()!.AppointmentBillId }}</h2>
-            <h2 class="fw-bold text-dark mb-1" *ngIf="!bill()">Bill Details</h2>
-            <p class="text-muted mb-0">Appointment Billing Details</p>
+            <h3 class="fw-bold mb-0" *ngIf="bill">Bill #{{ bill.appointmentBillId }}</h3>
+            <h3 class="fw-bold mb-0" *ngIf="!bill">Bill Details</h3>
+            <small class="text-muted">Appointment Billing Details</small>
         </div>
 
-        <div class="d-flex gap-2">
-            <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-2"
-                *ngIf="bill()" (click)="printBill()">
-                <i class="bi bi-printer"></i> Print Bill
-            </button>
-
-            <a *ngIf="bill() && bill()!.PaymentStatus === 'Pending'"
-                [routerLink]="['/reception/payments/collect']" [queryParams]="{ billId: bill()!.AppointmentBillId }"
-                class="btn btn-success d-flex align-items-center gap-2">
+        <div>
+            <a *ngIf="bill && bill.paymentStatus === 'Pending'"
+                [routerLink]="['/reception/payments/collect']"
+                [queryParams]="{ billId: bill.appointmentBillId }"
+                class="btn btn-success me-2">
                 <i class="bi bi-credit-card"></i> Collect Payment
             </a>
 
@@ -33,18 +29,80 @@
         </div>
     </div>
 
-    <!-- The printable invoice itself -->
-    <div id="receipt" class="rc-invoice" style="max-width: 820px;" *ngIf="bill() as b" [hidden]="isLoading()">
+    <div class="row" *ngIf="bill && !isLoading()">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between">
+                    <span>Appointment Bill</span>
+                    <span class="badge"
+                        [ngClass]="bill.paymentStatus === 'Paid' ? 'bg-success' : 'bg-warning text-dark'">
+                        {{ bill.paymentStatus }}
+                    </span>
+                </div>
 
-        <!-- Letterhead -->
-        <div class="rc-invoice__letterhead">
-            <div class="rc-invoice__brand">
-                <i class="fa fa-hospital-o rc-invoice__brand-icon"></i>
-                <div>
-                    <h3 class="mb-0">{{ clinicName }}</h3>
-                    <p class="mb-0 small">{{ clinicAddress }}</p>
-                    <p class="mb-0 small">Ph: {{ clinicPhone }} &middot; {{ clinicEmail }}</p>
-                    <p class="mb-0 small">GSTIN: {{ clinicGstin }}</p>
+                <div class="card-body">
+
+                    <h6 class="text-uppercase text-muted small mb-2">Patient Details</h6>
+                    <table class="table table-borderless mb-3">
+                        <tr>
+                            <td class="text-muted" width="40%">Patient Name</td>
+                            <td><strong>{{ bill.patientName }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">MMR ID</td>
+                            <td>{{ bill.mmrId }}</td>
+                        </tr>
+                    </table>
+
+                    <h6 class="text-uppercase text-muted small mb-2">Doctor Details</h6>
+                    <table class="table table-borderless mb-3">
+                        <tr>
+                            <td class="text-muted" width="40%">Doctor</td>
+                            <td><strong>{{ bill.doctorName }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Specialization</td>
+                            <td>{{ bill.specialization }}</td>
+                        </tr>
+                    </table>
+
+                    <h6 class="text-uppercase text-muted small mb-2">Appointment Date &amp; Time</h6>
+                    <table class="table table-borderless mb-3">
+                        <tr>
+                            <td class="text-muted" width="40%">Appointment Date</td>
+                            <td>{{ bill.appointmentDate | date: 'dd MMM yyyy' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Time Slot</td>
+                            <td>{{ bill.timeSlot }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Token Number</td>
+                            <td><span class="badge bg-primary">#{{ bill.tokenNumber }}</span></td>
+                        </tr>
+                    </table>
+
+                    <hr />
+
+                    <table class="table">
+                        <tr>
+                            <td>Consultation Fee</td>
+                            <td class="text-end">₹{{ bill.consultationFee | number: '1.2-2' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Registration Fee <small class="text-muted">(Additional Charges)</small></td>
+                            <td class="text-end">₹{{ bill.registrationFee | number: '1.2-2' }}</td>
+                        </tr>
+                        <tr class="fw-bold fs-5">
+                            <td>Total Amount</td>
+                            <td class="text-end text-success">₹{{ bill.totalAmount | number: '1.2-2' }}</td>
+                        </tr>
+                    </table>
+
+                    <p class="text-muted small mb-0">
+                        Generated Date: {{ bill.billDate | date: 'dd MMM yyyy' }}
+                    </p>
+
                 </div>
             </div>
             <div class="rc-invoice__meta text-end">

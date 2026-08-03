@@ -154,16 +154,16 @@ export class BillList implements OnInit {
       next: ({ bills, appointments }: { bills: AppointmentBill[]; appointments: Appointment[] }) => {
 
         const rows: BillListRow[] = bills.map(bill => {
-          const appt = appointments.find(a => a.AppointmentId === bill.AppointmentId);
+          const appt = appointments.find(a => a.appointmentId === bill.appointmentId);
 
           return {
-            AppointmentBillId: bill.AppointmentBillId,
-            AppointmentId: bill.AppointmentId,
-            PatientName: appt?.PatientName ?? '—',
-            DoctorName: appt?.DoctorName ?? '—',
-            TotalAmount: bill.TotalAmount,
-            PaymentStatus: bill.PaymentStatus,
-            BillDate: bill.BillDate
+            AppointmentBillId: bill.appointmentBillId,
+            AppointmentId: bill.appointmentId,
+            PatientName: appt?.patientName ?? '—',
+            DoctorName: appt?.doctorName ?? '—',
+            TotalAmount: bill.totalAmount,
+            PaymentStatus: bill.paymentStatus,
+            BillDate: bill.billDate
           };
         });
 

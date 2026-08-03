@@ -25,7 +25,7 @@ export class AppointmentBill {
   // Until it's re-enabled, resolve the bill client-side from the "get all" endpoint.
   getAppointmentBillById(id: number): Observable<AppointmentBillModel | undefined> {
     return this.getAllAppointmentBills().pipe(
-      map(bills => bills.find(b => b.AppointmentBillId === id))
+      map(bills => bills.find(b => b.appointmentBillId === id))
     );
   }
 
